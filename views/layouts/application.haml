@@ -1,0 +1,9 @@
+!!!html
+%html
+  %head
+    %title= @title || App.config.site.title
+    %link(rel="stylesheet" href="/assets/normalize.css")
+    %link(rel="stylesheet" href="/assets/foundation.css")
+    %link(rel="stylesheet" href="/assets/application.css")
+  %body
+    = yield

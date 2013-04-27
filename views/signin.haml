@@ -1,0 +1,18 @@
+.row
+  .small-centered.small-8.columns
+    %h2 Sign in
+    %form(action='/signin' method='post')
+      .row
+        .small-10.columns
+          .row.collapse
+            %label(for='email')
+              Email
+            .small-9.columns
+              %input(type='text' name='user[email]' id='email')
+          .row.collapse
+            %label(for='password')
+              Password
+            .small-9.columns
+              %input(type='password' name='user[password]' id='password')
+          .row.collapse
+            %button.radius.button(type='submit') Sign in
