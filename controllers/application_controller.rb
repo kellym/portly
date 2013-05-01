@@ -1,11 +1,17 @@
+TUNNELS = Hash.new {|h, k| h[k] = [] }
 class ApplicationController < Scorched::Controller
 
   render_defaults << { :engine => :haml, :layout => :'layouts/application' }
 
   include Middleware
+  include ViewHelpers
 
   def current_user
     env['warden'].user
+  end
+
+  def signed_in?
+    !!env['warden'].user
   end
 
   def authenticate_user!
@@ -62,12 +68,29 @@ class ApplicationController < Scorched::Controller
     end
   end
 
-  get '/hello' do
-    'hello'
+  # Public: The homepage for the site.
+  get '/' do
+    if signed_in?
+      redirect '/tunnels'
+    else
+      render :homepage
+    end
   end
 
-  get '/' do
-    current_user ? current_user.email : 'Hello.'
+  get '/tunnels' do
+    render :tunnels, :layout => :'layouts/user'
+  end
+
+  get '/subscribe/tunnels' do |channel|
+    body = EventSource.new
+    TUNNELS[current_user.id] = body
+    EM.next_tick { request.env['async.callback'].call [200, {'Content-Type' => 'text/event-stream'}, body] }
+    throw :async
+  end
+
+  get '/publish_tunnel/:channel' do |channel|
+    TUNNELS[channel].send(request[:data]) if TUNNELS.include?(channel)
+    'done'
   end
 
   self << {pattern: '/api', priority: 10, target: ApiController}

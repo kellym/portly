@@ -69,6 +69,10 @@
         this
           .css(dropdown
             .addClass(this.settings.activeClass), target);
+        var input = $(dropdown).find('input');
+        if(input.length > 0) {
+          $(input[0]).focus();
+        }
       }
     },
 

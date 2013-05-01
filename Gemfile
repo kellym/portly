@@ -19,6 +19,7 @@ gem 'sprockets'
 gem 'sshkey'
 gem 'warden'
 gem 'kgio'
+gem 'coffee-script'
 gem 'faye'
 gem 'thin'
 
@@ -26,4 +27,5 @@ group :development do
   gem 'foreman'
   gem 'shotgun'
   gem 'tux'
+  gem 'bourbon'
 end

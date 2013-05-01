@@ -1,0 +1,25 @@
+%script(type="text/javascript" src="/io/client.js")
+:javascript
+  var client = new Faye.Client('/io');
+  var subscription = client.subscribe('/connect', function(message) {
+    // handle message
+    console.log('connection made');
+  });
+.row
+  .large-12.columns
+    %h2 Tunnels
+    %table.width-100
+      %thead
+        %tr
+          %th.width-30
+          %th Subdomain
+          %th Host:Port
+          %th
+      %tbody
+        - current_user.connectors.each do |c|
+          %tr
+            %td= c.connected?
+            %td= c.subdomain
+            %td #{c.user_host}:#{c.user_port}
+            %td
+              = link_to 'Connect', '/connect'

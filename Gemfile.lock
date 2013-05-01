@@ -18,7 +18,14 @@ GEM
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     bond (0.4.3)
+    bourbon (3.1.5)
+      sass (>= 3.2.0)
+      thor
     builder (3.0.4)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.6.2)
     cookiejar (0.3.0)
     daemons (1.1.9)
     dalli (2.6.2)
@@ -36,6 +43,8 @@ GEM
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.5.3)
     eventmachine (1.0.3)
+    execjs (1.4.0)
+      multi_json (~> 1.0)
     faye (0.8.9)
       cookiejar (>= 0.3.0)
       em-http-request (>= 0.3.0)
@@ -116,6 +125,8 @@ DEPENDENCIES
   activerecord
   activerecord-postgresql-adapter
   bcrypt-ruby
+  bourbon
+  coffee-script
   dalli
   em-hiredis
   em-websocket

@@ -1,9 +1,25 @@
+- @body_class ||= ''
 !!!html
 %html
   %head
     %title= @title || App.config.site.title
-    %link(rel="stylesheet" href="/assets/normalize.css")
-    %link(rel="stylesheet" href="/assets/foundation.css")
     %link(rel="stylesheet" href="/assets/application.css")
-  %body
+    %script(type="text/javascript" src="//use.typekit.net/xrn5yvu.js")
+    %script(type="text/javascript") try{Typekit.load();}catch(e){}
+    %script(type="text/javascript" src="/assets/vendor/zepto.js")
+    %script(type="text/javascript" src="/assets/vendor/eventsource.js")
+    %script(type="text/javascript" src="/assets/application.js")
+    :javascript
+      var es = new EventSource('/subscribe/whatever');
+      es.addEventListener('open', function (event) {
+        console.log('opened: ' + es.url);
+      });
+      es.addEventListener('message', function (event) {
+        console.log(event.data);
+      });
+      es.addEventListener('error', function (event) {
+        console.log(event);
+        console.log('closed');
+      });
+  %body{:class => @body_class}
     = yield

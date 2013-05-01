@@ -20,8 +20,8 @@ module Middleware
       middleware << proc {
         use ActiveRecord::ConnectionAdapters::ConnectionManagement
         use Rack::ActiveRecord
-        use Faye::RackAdapter, :mount      => '/io',
-                               :timeout    => 25
+#        use Faye::RackAdapter, :mount      => '/io',
+#                               :timeout    => 25
         use Rack::Session::Dalli,
           :compression => true,
           :memcache_server => 'localhost:11211',
@@ -34,7 +34,7 @@ module Middleware
             :strategies => [:password],
             :action     => 'unauthenticated'
           config.scope_defaults :api,
-            :strategies => [:api_token, :api_password],
+            :strategies => [:api_token, :api_password, :password],
             :action     => 'api/unauthenticated'
           config.scope_defaults :basic,
             :strategies => [:basic],

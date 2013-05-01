@@ -23,7 +23,7 @@ class ApiController < Scorched::Controller
   end
 
   before do
-    @user = env['warden'].authenticate! :scope => :api
+    @user = env['warden'].user || env['warden'].authenticate!(:scope => :api)
     # check that account is still active
     halt 403 unless @user.active?
   end
@@ -259,6 +259,10 @@ class ApiController < Scorched::Controller
 
   post '/unauthenticated' do
     halt 401
+  end
+
+  after do
+    response['Content-Type'] = 'application/json'
   end
 
   after status: 400 do

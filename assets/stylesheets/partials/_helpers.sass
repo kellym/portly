@@ -1,0 +1,165 @@
+.big
+  font-size: 1.25em
+
+.block
+  display: block
+
+.clearfix
+  &:after
+    clear: both
+    content: ' '
+    display: table
+
+.inline
+  display: inline-block
+
+.italic
+  font-style: italic
+
+.lowercase
+  text-transform: lowercase
+
+.mute
+  color: $gray4 !important
+
+.nowrap
+  white-space: nowrap
+
+.small
+  font-size: 0.75em
+
+.strong
+  font-weight: bold
+
+.uppercase
+  text-transform: uppercase
+
+.color-black
+  color: $black
+.color-blue
+  color: $blue
+.color-blue-light
+  color: $blue_light
+.color-facebook
+  color: $color-facebook
+.color-twitter
+  color: $color-twitter
+.color-gray0
+  color: $gray0
+.color-gray1
+  color: $gray1
+.color-gray2
+  color: $gray2
+.color-gray3
+  color: $gray3
+.color-gray4
+  color: $gray4
+.color-gray5
+  color: $gray5
+.color-gray6
+  color: $gray6
+.color-gray7
+  color: $gray7
+.color-gray8
+  color: $gray8
+.color-gray9
+  color: $gray9
+.color-gray10
+  color: $gray10
+.color-green
+  color: $green
+.color-red
+  color: $red
+.color-white
+  color: $white
+.color-yellow
+  color: $yellow
+
+// Border helpers
+// .border-top-solid, .border-left-dashed, etc.
+@each $type in solid, dashed
+  @each $side in top, right, bottom, left
+    .border-#{$side}-#{$type}
+      border-#{$side}: 2px #{$type} $gray4
+
+// Width helpers
+// .width-0 - .width-100
+@for $i from 0 through 100
+  .width-#{$i}
+    width: $i * 1%
+  .max-width-#{$i}
+    max-width: $i * 1%
+
+// Margin and padding helpers
+.padding-0
+  padding: 0px !important
+.margin-0
+  margin: 0px !important
+// .margin-top-10, .padding-left-5, etc.
+@each $type in margin, padding
+  @each $side in top, right, bottom, left
+    @for $i from 0 through 75
+      .#{$type}-#{$side}-#{$i}
+        #{$type}-#{$side}: $i * 1px !important
+
+// Negative margin helpers
+// .negative-margin-top-10, .negative-margin-right-5, etc.
+@each $side in top, right, bottom, left
+  @for $i from 0 through 30
+    .negative-margin-#{$side}-#{$i}
+      margin-#{$side}: -$i * 1px !important
+
+// Step List
+ol.step-list
+  margin-left: 0px
+  border-collapse: collapse
+  display: table
+  list-style: none
+  position: relative
+  table-layout: fixed
+  width: 100%
+  &:before
+    border-top: 2px dashed $gray7
+    content: ''
+    display: block
+    height: 0px
+    margin-left: 16.665%
+    position: absolute
+    top: 13px
+    visibility: visible
+    width: 66.66%
+  // Could add conditional classes for 4, 5, 6, etc.
+
+  li
+    font-family: $body-font-family
+    display: table-cell
+    padding-top: 40px
+    position: relative
+    text-align: center
+    vertical-align: middle
+    width: 33.33%
+    &:before
+      border-radius: 13px
+      background: $green
+      color: #fff
+      content: ''
+      height: 26px
+      font-family: $body-font-family
+      font-size: 16px
+      line-height: 26px
+      left: 50%
+      margin-left: -13px
+      position: absolute
+      top: 0px
+      width: 26px
+    &:nth-child(1):before
+      content: '1'
+    &:nth-child(2):before
+      content: '2'
+    &:nth-child(3):before
+      content: '3'
+    &:nth-child(4):before
+      content: '4'
+    &:nth-child(5):before
+      content: '5'
+

@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   # property :created_at, DateTime
   # property :updated_at, DateTime
 
-  has_many :connections
+  has_many :connectors
   has_many :tokens
   belongs_to :account
   has_one :admin_account, class_name: 'Account', :foreign_key => :admin_id
