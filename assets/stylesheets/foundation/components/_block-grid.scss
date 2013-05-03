@@ -24,7 +24,7 @@ $block-grid-media-queries: true !default;
     @include clearfix;
 
     &>li {
-      display: block;
+      display: inline;
       height: auto;
       float: $default-float;
       padding: 0 $spacing $spacing;
@@ -36,6 +36,7 @@ $block-grid-media-queries: true !default;
       width: 100%/$per-row;
       padding: 0 $spacing $spacing;
 
+      &:nth-of-type(n) { clear: none; }
       &:nth-of-type(#{$per-row}n+1) { clear: both; }
     }
   }
@@ -56,11 +57,14 @@ $block-grid-media-queries: true !default;
 
   /* Foundation Block Grids for above small breakpoint */
   @media #{$small} {
+    /* Remove small grid clearing */
+    @for $i from 1 through $block-grid-elements {
+      .small-block-grid-#{($i)} > li:nth-of-type(#{$i}n+1) { clear: none; }
+    }
     @for $i from 1 through $block-grid-elements {
       .large-block-grid-#{($i)} {
         @include block-grid($i,$block-grid-default-spacing,false);
       }
     }
-    [class*="small-block-grid-"] > li { clear: none !important; }
   }
 }

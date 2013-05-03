@@ -32,8 +32,8 @@ $custom-dropdown-font-color-selected:   #000 !default;
 $custom-dropdown-shadow:                0 2px 2px 0px rgba(0,0,0,0.1) !default;
 $custom-dropdown-offset-top:            auto !default;
 $custom-dropdown-list-padding:          emCalc(4px) !default;
-$custom-dropdown-left-padding:          emCalc(6px) !default;
-$custom-dropdown-right-padding:         emCalc(38px) !default;
+$custom-dropdown-default-float-padding: emCalc(6px) !default;
+$custom-dropdown-opposite-padding:      emCalc(38px) !default;
 $custom-dropdown-list-item-min-height:  emCalc(24px) !default;
 $custom-dropdown-width-small:           134px !default;
 $custom-dropdown-width-medium:          254px !default;
@@ -44,11 +44,17 @@ $custom-dropdown-width-large:           434px !default;
 // We may look at updating this in the future.
 
 // Only include these classes if the variable is true, otherwise they'll be left out.
-@if $include-html-button-classes {
-  
+@if $include-html-button-classes != false {
+
   /* Custom Checkbox and Radio Inputs */
   form.custom {
-  
+
+    .hidden-field {
+      margin-#{$default-float}: -99999px;
+      position: absolute;
+      visibility: hidden;
+    }
+
     .custom {
       display: inline-block;
       width: 16px;
@@ -57,9 +63,9 @@ $custom-dropdown-width-large:           434px !default;
       top: 2px;
       border: solid 1px $custom-form-border-color;
       background: $custom-form-bg;
-  
+
       &.radio { @include radius(1000px); }
-  
+
       &.checkbox {
         &:before {
           content: "";
@@ -75,7 +81,7 @@ $custom-dropdown-width-large:           434px !default;
           color: #fff;
         }
       }
-  
+
       &.radio.checked {
         &:before {
           content: "";
@@ -89,7 +95,7 @@ $custom-dropdown-width-large:           434px !default;
           #{$default-float}: 3px;
         }
       }
-  
+
       &.checkbox.checked {
         &:before {
           content: "\00d7";
@@ -98,7 +104,7 @@ $custom-dropdown-width-large:           434px !default;
       }
     }
   }
-  
+
   /* Custom Select Options and Dropdowns */
   form.custom {
     .custom.dropdown {
@@ -116,14 +122,14 @@ $custom-dropdown-width-large:           434px !default;
       background: linear-gradient(to bottom, $custom-dropdown-bg 0%,$custom-select-fade-to-color 100%);
       -webkit-box-shadow: none;
       box-shadow: none;
-      font-size: emCalc(14px);
+      font-size: $custom-dropdown-font-size;
       vertical-align: top;
-  
+
       ul {
         overflow-y: auto;
         max-height: $custom-dropdown-height;
       }
-  
+
       .current {
         cursor:default;
         white-space: nowrap;
@@ -132,35 +138,35 @@ $custom-dropdown-width-large:           434px !default;
         text-decoration: none;
         overflow: hidden;
         display: block;
-        margin-left: $form-spacing / 2;
-        margin-right: $custom-select-height;
+        margin-#{$default-float}: $form-spacing / 2;
+        margin-#{$opposite-direction}: $custom-select-height;
       }
-  
+
       .selector {
         cursor:default;
         position: absolute;
         width: $form-spacing * 2.5;
         height: $custom-select-height;
         display: block;
-        #{$default-opposite}: 0;
+        #{$opposite-direction}: 0;
         top: 0;
         &:after {
           content: "";
           display: block;
           @include css-triangle(5px, $custom-select-triangle-color, top);
           position: absolute;
-          left: ($form-spacing * 2.5) / 2 - emCalc(5px);
+          #{$default-float}: ($form-spacing * 2.5) / 2 - emCalc(5px);
           top: 50%;
           margin-top: -3px;
         }
       }
-  
+
       &:hover, &.open {
         a.selector {
           &:after { @include css-triangle(5px, $custom-select-triangle-color-open, top); }
         }
       }
-  
+
       .disabled {
         color: $custom-select-disabled-color;
         &:hover {
@@ -169,24 +175,24 @@ $custom-dropdown-width-large:           434px !default;
           &:after { display: none; }
         }
       }
-  
+
       &.open ul {
         display: block;
         z-index: 10;
         min-width:100%;
         @include box-sizing(content-box);
       }
-  
+
       &.small { max-width: $custom-dropdown-width-small; }
       &.medium { max-width: $custom-dropdown-width-medium; }
       &.large { max-width: $custom-dropdown-width-large; }
       &.expand { width: 100% !important; }
-  
+
       &.open.small ul { min-width: $custom-dropdown-width-small; @include box-sizing(border-box); }
       &.open.medium ul { min-width: $custom-dropdown-width-medium; @include box-sizing(border-box); }
       &.open.large ul { min-width: $custom-dropdown-width-large; @include box-sizing(border-box); }
     }
-  
+
     .custom.dropdown ul {
       position: absolute;
       width: auto;
@@ -201,21 +207,21 @@ $custom-dropdown-width-large:           434px !default;
       background: $custom-dropdown-bg;
       border: $custom-dropdown-border-style $custom-dropdown-border-width $custom-dropdown-border-color;
       font-size: $em-base;
-  
+
       li {
         color: $custom-dropdown-font-color;
         font-size: $custom-dropdown-font-size;
         cursor: default;
         padding-top: $custom-dropdown-list-padding;
         padding-bottom: $custom-dropdown-list-padding;
-        padding-#{$default-float}: $custom-dropdown-left-padding;
-        padding-#{$default-opposite}: $custom-dropdown-right-padding;
+        padding-#{$default-float}: $custom-dropdown-default-float-padding;
+        padding-#{$opposite-direction}: $custom-dropdown-opposite-padding;
         min-height: $custom-dropdown-list-item-min-height;
         line-height: $custom-dropdown-list-item-min-height;
         margin: 0;
         white-space: nowrap;
         list-style: none;
-  
+
         &.selected {
           background: $custom-dropdown-color-selected;
           color: $custom-dropdown-font-color-selected;
@@ -230,10 +236,10 @@ $custom-dropdown-width-large:           434px !default;
           color: $custom-dropdown-font-color-selected;
         }
       }
-  
+
       &.show { display: block; }
     }
-  
+
     /* Custom input, disabled */
     .custom.disabled { background-color: $custom-form-bg-disabled; }
   }
