@@ -1,6 +1,8 @@
-TUNNELS = Hash.new {|h, k| h[k] = [] }
+SOCKETS = Hash.new {|h, k| h[k] = [] }
+
 class ApplicationController < Scorched::Controller
 
+  config[:show_http_error_pages] = false
   render_defaults << { :engine => :haml, :layout => :'layouts/application' }
 
   include Middleware
@@ -78,18 +80,20 @@ class ApplicationController < Scorched::Controller
   end
 
   get '/tunnels' do
+    authenticate_user!
     render :tunnels, :layout => :'layouts/user'
   end
 
   get '/subscribe/tunnels' do |channel|
-    body = EventSource.new
-    TUNNELS[current_user.id] = body
-    EM.next_tick { request.env['async.callback'].call [200, {'Content-Type' => 'text/event-stream'}, body] }
+    authenticate_user!
+    body = EventSource.new(current_user.id)
+    SOCKETS[current_user.id] << body
+    request.env['async.callback'].call [200, {'X-Accel-Buffering' => 'no', 'Content-Type' => 'text/event-stream'}, body]
     throw :async
   end
 
   get '/publish_tunnel/:channel' do |channel|
-    TUNNELS[channel].send(request[:data]) if TUNNELS.include?(channel)
+    SOCKETS[channel].send(request[:data]) if SOCKETS.include?(channel)
     'done'
   end
 

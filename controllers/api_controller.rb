@@ -13,12 +13,20 @@ class ApiController < Scorched::Controller
   end
 
   def current_token
-    @token ||= Token.where(:user_id => current_user.id, :code => request[:access_token]).first
+    if request[:access_token]
+      @token ||= Token.where(:user_id => current_user.id, :code => request[:access_token]).first
+    elsif request[:access_id] && env['warden'].user # this means we're signed in from the app
+      # include both the user_id and token_id so we can't hack it
+      @token ||= Token.where(:user_id => current_user.id, :id => request[:access_id]).first
+    end
   end
 
   def publish_action(action)
     if request[:publish] != 'false'
       Redis.current.publish("socket:#{current_token.code}", action)
+      true
+    else
+      false
     end
   end
 
@@ -76,8 +84,9 @@ class ApiController < Scorched::Controller
 
     if tunnel.save
       response.status = 201
-      publish_action "connect:#{request[:connector_id]}"
-      tunnel.to_json
+      unless publish_action "connect:#{request[:connector_id]}|#{tunnel.connection_string}|#{tunnel.tunnel_string}"
+        tunnel.to_json
+      end
     else
       # handle errors
       if tunnel.errors.include? :not_authorized

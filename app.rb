@@ -13,10 +13,7 @@ require 'json'
 require 'socket'
 require 'sprockets'
 require 'bcrypt'
-require 'faye'
 require 'haml'
-
-# Faye::WebSocket.load_adapter('thin')
 
 ActiveRecord::Base.establish_connection(
   :adapter  => 'postgresql',

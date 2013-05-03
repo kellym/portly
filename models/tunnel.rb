@@ -22,13 +22,15 @@ class Tunnel
                                  'host', "#{connector.user_host}:#{connector.user_port}",
                                  'token', @token
       end
+      EventSource.publish(connector.user_id, 'connect', @connector_id)
+
       Redis.current.sadd('ports_in_use',port)
       Redis.current.sadd "watching:#{@token}", @connector_id
       Redis.current.hincrby(active_key, @token, 1)
       Redis.current.sadd('connectors_online',"#{@connector_id}")
-      if @publish
-        Redis.current.publish("socket:#{@token}", "connect:#{@connector_id}|#{connection_string}|#{tunnel_string}")
-      end
+      #if @publish
+      #  Redis.current.publish("socket:#{@token}", "connect:#{@connector_id}|#{connection_string}|#{tunnel_string}")
+      #end
       true
     else
       false
@@ -107,6 +109,7 @@ class Tunnel
       port ||= Redis.current.hget key, 'port'
       Redis.current.del key
     end
+    EventSource.publish(connector.user_id, 'disconnect', @connector_id)
     Redis.current.srem('ports_in_use', port) if port
     Redis.current.srem('connectors_online',"#{@connector_id}")
     Redis.current.srem "watching:#{@token}", @connector_id

@@ -1,14 +1,7 @@
-%script(type="text/javascript" src="/io/client.js")
-:javascript
-  var client = new Faye.Client('/io');
-  var subscription = client.subscribe('/connect', function(message) {
-    // handle message
-    console.log('connection made');
-  });
 .row
   .large-12.columns
     %h2 Tunnels
-    %table.width-100
+    %table.width-100#tunnels
       %thead
         %tr
           %th.width-30
@@ -17,9 +10,12 @@
           %th
       %tbody
         - current_user.connectors.each do |c|
-          %tr
-            %td= c.connected?
+          %tr{'data-id' => c.id}
+            %td.connected-state= c.connected?
             %td= c.subdomain
             %td #{c.user_host}:#{c.user_port}
-            %td
-              = link_to 'Connect', '/connect'
+            %td.width-20
+              .switch.radius.small
+                %input.connect{name: "connected_state_#{c.id}", checked: c.connected?, type: 'radio', 'data-post' => '/api/tunnels', 'data-connector_id' => c.id, 'data-access_id' => c.token_id }
+                %input.disconnect{name: "connected_state_#{c.id}", checked: !c.connected?, type: 'radio', 'data-delete' => "/api/tunnels/#{c.id}", 'data-access_id' => c.token_id }
+                %span

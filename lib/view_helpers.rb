@@ -5,7 +5,7 @@ module ViewHelpers
     opts[:href] = args.pop if args.length > 1
     a = "<a "
     opts.each do |k,v|
-      a << "#{k}=\"#{v.gsub('"','&quot;')}\" "
+      a << "#{k}=\"#{v.to_s.gsub('"','&quot;')}\" "
     end
     a << ">#{args[0] || yield}</a>"
   end

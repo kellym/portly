@@ -51,6 +51,7 @@ class EventServer < EM::Connection
     token = SOCKETS.key(self)
     puts "disconnected from #{token}"
     redis.srem 'sockets_online', token do
+
       puts '-- socket removed'
     end
   end

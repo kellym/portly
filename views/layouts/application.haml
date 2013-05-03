@@ -9,17 +9,53 @@
     %script(type="text/javascript" src="/assets/vendor/zepto.js")
     %script(type="text/javascript" src="/assets/vendor/eventsource.js")
     %script(type="text/javascript" src="/assets/application.js")
-    :javascript
-      var es = new EventSource('/subscribe/whatever');
-      es.addEventListener('open', function (event) {
-        console.log('opened: ' + es.url);
-      });
-      es.addEventListener('message', function (event) {
-        console.log(event.data);
-      });
-      es.addEventListener('error', function (event) {
-        console.log(event);
-        console.log('closed');
-      });
+    - if signed_in?
+      :javascript
+        $(function(){
+
+        var es = new EventSource('/subscribe/tunnels');
+        es.addEventListener('open', function (event) {
+          console.log('opened: ' + es.url);
+        });
+        es.addEventListener('message', function (event) {
+          console.log(event.data);
+        });
+        es.addEventListener('connect', function (event) {
+          data = $.parseJSON(event.data);
+          row = $('#tunnels tr[data-id="'+data['id']+'"]')
+          row.find('td:first').text('true');
+          row.find('.connect').hide();
+          row.find('.disconnect').show();
+          console.log('connect');
+          console.log(event.data);
+        });
+        es.addEventListener('disconnect', function (event) {
+          data = $.parseJSON(event.data);
+          row = $('#tunnels tr[data-id="'+data['id']+'"]')
+          row.find('td:first').text('false');
+          row.find('.connect').show();
+          row.find('.disconnect').hide();
+          console.log('disconnect');
+          console.log(event.data);
+        });
+        es.addEventListener('error', function (event) {
+          console.log('closed');
+        });
+        $('a[data-post]').click(function(ev) {
+          ev.preventDefault();
+          el = $(ev.currentTarget);
+          data = el.data();
+          href = data.post;
+          $.post(href, data);
+        });
+        $('a[data-delete]').click(function(ev) {
+          ev.preventDefault();
+          el = $(ev.currentTarget);
+          data = el.data();
+          href = data.delete;
+          $.ajax( { url: href, data: data, type: 'DELETE' });
+        });
+
+        });
   %body{:class => @body_class}
     = yield
