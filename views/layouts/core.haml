@@ -1,0 +1,20 @@
+- @html_class ||= ''
+!!!html
+%html{:class => @html_class}
+  %head
+    %title= @title || App.config.site.title
+    %link(rel="stylesheet" href="/assets/application.css")
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %script(type="text/javascript" src="//use.typekit.net/xrn5yvu.js")
+    %script(type="text/javascript") try{Typekit.load();}catch(e){}
+    %script(type="text/javascript" src="/assets/application.js")
+    - if signed_in?
+      %script(type="text/javascript" src="/assets/vendor/eventsource.js")
+  %body
+    = yield
+    :coffeescript
+      new Portly.DOM.Index()
+      $(document).foundation('reveal forms')
+    = content_for :javascripts
+    :javascript
+      $(function(){/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {   window.scrollTo(0, 1); }, 1000); });

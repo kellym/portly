@@ -1,48 +1,10 @@
-%header#main
-  .row
-    .large-4.columns
-      %h1.logo.margin-top-30.margin-bottom-40
-        %a{:href => '/'} Portly
-    .large-8.columns
-      %ul.front-page-nav
-        %li= nav_link_to 'Pricing', '/pricing'
-        %li= nav_link_to 'Support', '/support'
-        %li= nav_link_to 'Sign In', '#!/signin', class: 'button signin-button', 'data-dropdown' => 'signin'
-      #signin.f-dropdown
-        %form{:action => '/signin', :method => 'post'}
-          .row.collapse.margin-bottom-5
-            %input.email{:name => 'user[email]', :type => 'text', :placeholder => 'Email Address'}
-          .row.collapse
-            .large-9.columns
-              %input.password{:name => 'user[password]', :type => 'password', :placeholder => 'Password'}
-            .large-3.columns
-              %button.ss-navigateright.prefix{:type => 'submit'}
 .content-area
-  .row
+  .row.homepage
     .large-offset-4.large-7.columns
       %h2.source Keep yourself protected while <br />showing off your work with clients.
       %p
         Portly creates a secure tunnel from your computer to a public address so show-and-tell is effortless.
       .trial
-        %a.button.large{:href => '/signup'} TRY IT OUT
+        %a.button.large.margin-right-15{:href => '/signup'} TRY IT OUT
         or
-        %a{:href => '/about'} Learn More
-%footer
-  .row.padding-top-20
-    .large-3.columns
-      %h6.header Portly
-      %ul.side-nav.padding-top-0
-        %li
-          %a{:href => '/about'} How It Works
-          %a{:href => '/blog'} Blog
-          %a{:href => '/download'} Download
-    .large-3.columns
-      %h6.header Support
-      %ul.side-nav.padding-top-0
-        %li
-          %a{:href => '/support'} Help Center
-          %a{:href => '/terms'} Terms &amp; Privacy
-          %a{:href => '/contact'} Contact Us
-    .large-3.large-offset-3.columns.padding-top-75.text-right
-      %small Copyright &copy; 2013 Portly
-
+        %a.margin-left-10{:href => '/about'} Learn More

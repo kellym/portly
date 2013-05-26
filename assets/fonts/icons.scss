@@ -1,0 +1,95 @@
+@font-face {
+	font-family: 'pictos';
+	src:url('/fonts/pictos.eot');
+	src:url('/fonts/pictos.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/pictos.woff') format('woff'),
+		url('/fonts/pictos.ttf') format('truetype'),
+		url('/fonts/pictos.svg#pictos') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+	font-family: 'pictos';
+	content: attr(data-icon);
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+/*
+Instead of a list of all class selectors,
+you can use the generic selector below, but it's slower:
+[class*="p-"] {
+*/
+.p-gear, .p-pause, .p-play, .p-minus, .p-plus, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-layers-alt, .p-exit {
+  position: relative;
+  top: 2px;
+	font-family: 'pictos';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+.huge {
+  font-size: 2em;
+  top: 13px;
+}
+.small .p-plus {
+  top: 1px;
+}
+
+.p-gear:before {
+	content: "\e001";
+}
+.p-pause:before {
+	content: "\e003";
+}
+.p-play:before {
+	content: "\e004";
+}
+.p-minus:before {
+	content: "\e005";
+}
+.p-plus:before {
+	content: "\e006";
+}
+.p-laptop:before {
+	content: "\e002";
+}
+.p-desktop:before {
+	content: "\e000";
+}
+.p-clock:before {
+	content: "\e007";
+}
+.p-shield:before {
+	content: "\e008";
+}
+.p-menu:before {
+	content: "\e009";
+}
+.p-download:before {
+	content: "\e00a";
+}
+.p-lock-fill:before {
+	content: "\e00d";
+}
+.p-unlock-fill:before {
+	content: "\e00e";
+}
+.p-layers-alt:before {
+	content: "\e00b";
+}
+.p-exit:before {
+	content: "\e00c";
+}

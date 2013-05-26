@@ -1,0 +1,78 @@
+- ordinal = current_user.schedule.good_until.day.ordinalize
+
+.banner{:class => current_user.active? ? 'green' : 'red' }
+  .row
+    .large-12.columns
+      - if current_user.trial?
+        No worries, you're still running for free until #{current_user.schedule.good_until.strftime("%B %e")}.
+        - unless current_user.account.customer?
+          = succeed '.' do
+            %a{:href => '/account/billing'} Set up payment information now
+      - elsif current_user.schedule.valid?
+        Your next payment is scheduled for the #{ordinal} of the month.
+.section.padding-bottom-50
+  .row.padding-top-20.padding-bottom-20
+    .large-12.columns
+      %h3 Your Account
+    .large-5.columns
+      %h4 Your Plan: #{current_user.schedule.plan.name}
+      .table
+        .row
+          .large-6.columns Payment Frequency:
+          .large-6.columns.strong 1 month
+        .row
+          .large-6.columns Next Billing Date:
+          .large-6.columns.strong= current_user.schedule.good_until.strftime("%B %e, %Y")
+        .row
+          .large-6.columns #{current_user.schedule.plan.name}:
+          .large-6.columns.strong $#{sprintf('%.02f', current_user.schedule.plan.monthly)}
+      .row
+        .large-12.columns
+          .panel.callout.radius
+            - if current_user.trial?
+              You signed up on #{current_user.created_at.strftime("%B %e")}, so it's all good.
+      %h4.margin-top-30 Payment Information
+      .row.form
+        .large-12.columns
+          .toggle
+            .show
+              - if current_user.account.customer?
+
+              - else
+                .panel.radius
+                  We've got nothing. You probably want to set something up soon.
+                  .text-center.margin-top-10
+                    %a.trigger{:href => '/account/billing'} Set up payment information
+            .hide= render :'account/_card', :layout => nil
+      %h4.margin-top-30 Login Information
+      .toggle.login-information
+        .show
+          .table
+            .row
+              .large-5.columns Email Address:
+              .large-7.columns.strong.login-email= current_user.email
+            .row
+              .large-5.columns Password:
+              .large-7.columns.strong *****
+          .row.margin-top-20
+            .large-12.columns.text-right
+              %a.trigger{:href => '/account/login'} Edit
+        .hide= render :'account/_login', :layout => nil
+    .large-6.large-offset-1.columns
+      %h4 Free Donuts
+      .circle-container
+        .amount= current_user.account.bonus_months
+        #{current_user.account.bonus_months == 1 ? 'month' : 'months'}
+        .circle-shadow
+          .circle-amount{style: "height: #{(350 * ((current_user.account.bonus_months > 5) ? 5 : (current_user.account.bonus_months.to_f / 5))).to_i}px"}
+            .circle
+      .headline.text-center
+        EARN GLAZE CREDITS<br />for<br/> FREE MONTHS
+      .row
+        .large-8.large-centered.columns.margin-top-10.block.big-block.text-justify
+          Share Portly with your friends. Everyone who sticks around
+          past the trial period earns you
+          %strong $#{sprintf '%.02f', Plan.basic.monthly}
+          to apply to your account. That means 1000 people gets you #{(current_user.schedule.plan.monthly*1000/12/5).to_i}
+          years of Portly for free!
+

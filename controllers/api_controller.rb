@@ -1,4 +1,4 @@
-class ApiController < Scorched::Controller
+class ApiController < SharedController
 
   middleware << proc {
     use Rack::RestApiVersioning
@@ -39,10 +39,22 @@ class ApiController < Scorched::Controller
   # Public: Generates a token for the client to use for additional requests.
   post '/authorizations' do
     match_client = request[:client_id]==App.config.client_id && request[:client_secret]==App.config.client_secret
-    if match_client && request[:computer_name]
+    if match_client && request[:computer_name] && request[:computer_model] && request[:mac_address]
       # generate a token here for this user or return one if available
-      token = Token.create(:user_id => current_user.id, :computer_name => request[:computer_name])
-      {code: token.code, private_key: token.authorized_key.private_key}.to_json
+      if request[:token]
+        token = Token.where(:user_id => current_user.id, :code => request[:token]).first
+      end
+      # now find it by mac address if it exists
+      unless token
+        token = Token.where(:user_id => current_user.id, :mac_address => request[:mac_address]).first
+      end
+      unless token
+        token = Token.create(:user_id => current_user.id, :computer_name => request[:computer_name], :computer_model => request[:computer_model])
+      end
+      puts ({code: token.code, private_key: token.authorized_key.private_key, suffix: current_user.full_domain}.to_json)
+      {code: token.code, private_key: token.authorized_key.private_key, suffix: current_user.full_domain}.to_json
+    else
+      puts 'missing params'
     end
   end
 
@@ -54,7 +66,24 @@ class ApiController < Scorched::Controller
     end
   end
 
+  put '/tokens/*' do |token_code|
+    token = Token.where(user_id: current_user.id, code: token_code).first
+    if token
+      attrs = {}
+      attrs[:computer_name] = request[:computer_name] if request[:computer_name].present?
+      attrs[:computer_model] = request[:computer_model] if request[:computer_model].present?
+      attrs[:mac_address] = request[:mac_address] if request[:mac_address].present?
+      token.update_attributes(attrs)
+      halt 200
+    else
+      halt 403
+    end
+  end
+
   delete '/tokens/*' do |token_code|
+    if token_code == 'current'
+      token_code = current_token.code
+    end
     token = Token.where(user_id: current_user.id, code: token_code).first
     if token && token.destroy
       halt 204
@@ -109,8 +138,9 @@ class ApiController < Scorched::Controller
   delete '/tunnels/*' do |connector_id|
     authorize! connector_id
     if Tunnel.destroy(connector_id: connector_id.to_i, user_id: current_user.id, token: current_token.code)
+      #EventSource.publish('')
       publish_action "kill:#{connector_id}"
-      halt 204
+      halt 200
     else
       halt 400
     end
@@ -183,7 +213,11 @@ class ApiController < Scorched::Controller
     authorize! connector_id
     connector = connector(connector_id)
     if connector
-      connector.to_json
+      if media_type.html?
+        render :'tunnels/_connector.haml', locals: { c: connector, token: current_token }
+      else
+        connector.to_hash.to_json
+      end
     else
       halt 403
     end
@@ -199,7 +233,8 @@ class ApiController < Scorched::Controller
   #
   # Returns a Status code of 201 on creation, or 400/409 otherwise.
   post '/connectors' do
-    if request[:port] && request[:host]
+    if request[:connection_string] || (request[:port] && request[:host])
+      parse_connection_string
       connector = Connector.create(
         user_id: current_user.id,
         token_id: current_token.id,
@@ -211,8 +246,9 @@ class ApiController < Scorched::Controller
       )
       if connector
         response.status = 201
-        response.body = {:id => connector.id}.to_json
+        EventSource.publish(current_user.id, 'new_connector', id: connector.id, token_id: current_token.id)
         publish_action "create:#{connector.id}"
+        response.body = {:id => connector.id}.to_json
       else
         halt 409
       end
@@ -233,19 +269,25 @@ class ApiController < Scorched::Controller
   # Returns a Status code of 200 on update, or 400/401.
   put '/connectors/*' do |connector_id|
     authorize! connector_id
-    if request[:port] && request[:host]
+    if (request[:port] && request[:host]) || request[:connection_string]
+      parse_connection_string
       connector = connector(connector_id)
       if connector
-        puts request.POST.inspect
-        response.status = connector.update_attributes(
+        data = {
           user_port: request[:port],
           user_host: request[:host],
           token_id: current_token.id,
           subdomain: request[:subdomain],
-          cname: request[:cname],
-          auth_type: request[:auth_type]
-        ) ? 204 : 400
-        publish_action "update:#{connector.id}"
+          cname: request[:cname]
+        }
+        data[:auth_type] = request[:auth_type] if request[:auth_type]
+        if connector.update_attributes(data)
+          EventSource.publish(current_user.id, 'update', id: connector.id, token_id: connector.token_id)
+          publish_action "update:#{connector.id}"
+          halt 204
+        else
+          halt 400
+        end
       else
         halt 403
       end
@@ -260,6 +302,7 @@ class ApiController < Scorched::Controller
     connector = connector(connector_id.to_i)
     if connector
       connector.destroy
+      EventSource.publish(current_user.id, 'delete', id: connector.id, token_id: connector.token_id)
       publish_action "destroy:#{connector_id}"
     else
       halt 404
@@ -271,11 +314,16 @@ class ApiController < Scorched::Controller
   end
 
   after do
-    response['Content-Type'] = 'application/json'
+    response['Content-Type'] = media_type.to_s
   end
 
   after status: 400 do
     response.body = {error: @error}.to_json if @error
+  end
+
+  after status: 404 do
+    puts '404'
+    puts request.inspect
   end
 
   # Public: Used to return the current_user in regards to the the API
@@ -291,5 +339,22 @@ class ApiController < Scorched::Controller
 
   def authorize!(connector_id)
     halt 403 unless Connector.where(id: connector_id.to_i, user_id: current_user.id).exists?
+  end
+
+
+  # Public: Parses the connection string supplied and assigns the values to
+  # :host and :request
+  #
+  # Returns the host, port combo.
+  def parse_connection_string
+    if request[:connection_string]
+      if request[:connection_string].match(':')
+        request[:host], request[:port] = request[:connection_string].split(':',2)
+      elsif request[:connection_string].to_i.to_s == request[:connection_string]
+        request[:host], request[:port] = 'localhost', request[:connection_string]
+      else
+        request[:host], request[:port] = request[:connection_string].present? ? request[:connection_string] : 'localhost', 80
+      end
+    end
   end
 end

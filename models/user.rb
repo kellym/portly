@@ -1,20 +1,20 @@
+class EmailValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    unless value =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+      record.errors[attribute] << (options[:message] || "is not a valid email")
+    end
+  end
+end
+
 class User < ActiveRecord::Base
   extend Forwardable
 
   attr_reader :password
   attr_accessor :password_confirmation
   validates_confirmation_of :password
-  validates_length_of :password, within: 8..50, :allow_blank => :persisted?
-
-  # property :id, Serial
-  # property :email, String, unique: true, length: 128, :format => :email_address
-  # property :encrypted_password, String, length: 128
-  # property :reset_password_token, String
-  # property :reset_password_sent_at, DateTime
-  # property :remember_created_at, DateTime
-  # property :state, String, length: 20, default: 'active'
-  # property :created_at, DateTime
-  # property :updated_at, DateTime
+  validates_length_of :password, within: 6..50, :allow_blank => :persisted?
+  validates :subdomain, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true, email: true
 
   has_many :connectors
   has_many :tokens
@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
   has_one :admin_account, class_name: 'Account', :foreign_key => :admin_id
   has_one :schedule
   has_many :orders
+
+  before_save :downcase_email
 
   def_delegators :schedule, :plan_id, :plan_id=
 
@@ -33,7 +35,7 @@ class User < ActiveRecord::Base
 
   # Public: Checks to see if there is a user with the specific authentication
   def self.authenticate(email, password)
-    user = User.where(:email => email).first
+    user = User.where(:email => email.downcase).first
     if user && user.valid_password?(password)
       user
     else
@@ -78,9 +80,11 @@ class User < ActiveRecord::Base
     unless self.account
       self.build_account
       self.account.admin = self
+      self.account.plan ||= Plan.basic
     end
     self.build_schedule
-    self.schedule.good_until = (Date.today >> 1)
+    self.schedule.good_until = self.schedule.trial_end = (Date.today >> 1)
+    self.schedule.plan = self.account.plan
     self.state ||= self.schedule.state
   end
 
@@ -96,4 +100,19 @@ class User < ActiveRecord::Base
     ::BCrypt::Password.create("#{password}#{App.config.authentication.pepper}", :cost => App.config.authentication.stretches).to_s
   end
 
+  # Internal: Makes email addresses case-insensitive by saving them as lowercase
+  def downcase_email
+    email.downcase! if email_changed?
+  end
+
+  # Public: Determines if this account is still in the trial period
+  # Returns a Boolean.
+  def trial?
+    schedule.trial_end >= Date.today
+  end
+
+  # Public: Provide the full domain to the user's subdomaining routes.
+  def full_domain
+    @full_domain ||= "#{subdomain}#{App.config.suffix}"
+  end
 end

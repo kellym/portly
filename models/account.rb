@@ -6,6 +6,10 @@ class Account < ActiveRecord::Base
 
   before_create :generate_account_code
 
+  def bonus_months
+    (self.balance.to_f / self.plan.monthly).to_i
+  end
+
   # Internal: Generates the unique account code for internal referencing.
   def generate_account_code
     self.code ||= loop do

@@ -1,0 +1,6 @@
+= render :'layouts/core' do
+  - capture_haml do
+    = render :'application/_marketing_menu'
+    = yield
+    = render :'application/_marketing_footer'
+

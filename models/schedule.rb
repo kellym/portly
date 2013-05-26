@@ -12,4 +12,6 @@ class Schedule < ActiveRecord::Base
   # property :updated_at, DateTime
 
   belongs_to :user
+  belongs_to :plan
+
 end

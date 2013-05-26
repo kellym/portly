@@ -203,7 +203,7 @@ $include-html-progress-classes: $include-html-classes !default;
 $include-html-magellan-classes: $include-html-classes !default;
 
 // Media Queries
-$small-screen: emCalc(768px) !default;
+$small-screen: emCalc(767px) !default;
 $medium-screen: emCalc(1280px) !default;
 $large-screen: emCalc(1440px) !default;
 

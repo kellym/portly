@@ -1,0 +1,9 @@
+.reveal-modal{:id => "remove-token-#{token.id}" }
+  %h2 Remove this Computer
+  %p.small
+    Just so you know what you're doing... there's no turning back from here. Remove this computer,
+    and you'll lose the connections you've built for this computer. Plus, you'll have to remember
+    your email and password to sign back into the app (shocker!).
+  %p
+    = link_to 'Positively remove this computer.', '#', 'data-delete' => "/api/tokens/current?access_id=#{token.id}", class: 'button'
+    = link_to 'Whoa, get me outta here!', '#', class: 'close-reveal margin-left-20'

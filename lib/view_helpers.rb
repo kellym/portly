@@ -1,5 +1,18 @@
 module ViewHelpers
 
+  def content_for(key, &block)
+    @content_for ||= Hash.new {|h, k| h[k] = [] }
+    if block_given?
+      @content_for[key] << block
+    else
+      content = ''
+      @content_for[key].each do |b|
+        content << capture_haml(&b)
+      end
+      content
+    end
+  end
+
   def link_to(*args)
     opts = args.extract_options!
     opts[:href] = args.pop if args.length > 1
@@ -7,7 +20,7 @@ module ViewHelpers
     opts.each do |k,v|
       a << "#{k}=\"#{v.to_s.gsub('"','&quot;')}\" "
     end
-    a << ">#{args[0] || yield}</a>"
+    a << "><span>#{args[0] || yield}</span></a>"
   end
 
   # Public: Generates a navigational link for the views.
@@ -33,7 +46,8 @@ module ViewHelpers
     @nav_depth ||= 0
     @nav_depth += 1
     @subnav_active = false if @nav_depth == 1
-    if path == args.last || (opts[:restful] && path.match(/^#{path}\/[^\/]*(\/edit)?/))
+
+    if path == args.last || (opts[:restful] && path.match(/^#{args.last}\/[^\/]+(\/edit)?$/))
       @subnav_active = true
     end
     if block_given?

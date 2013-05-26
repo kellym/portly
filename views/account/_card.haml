@@ -1,0 +1,44 @@
+%form.stripe-form
+  .row.margin-top-20
+    .input.large-6.columns
+      %label{for: 'card-number'}
+        Card Number
+      %input.card-number{ type: 'text', 'data-stripe' => 'number'}
+    .large-6.columns.margin-top-20
+      .card-icon.visa.disabled
+      .card-icon.mastercard.disabled
+      .card-icon.discover.disabled
+      .card-icon.amex.disabled
+
+  .row
+    .input.large-4.columns
+      %label{for: 'card-cvc'} CVC
+      %input.card-cvc{type: 'text', size: 4, 'data-stripe' => 'cvc'}
+    .input.large-8.columns
+      %label{for: 'card-exp-month'} Expiration
+      .row
+        .large-6.columns
+          %select.card-exp-month{'data-stripe' => 'exp-month'}
+            %option Month
+            - Date::MONTHNAMES.slice(1,12).each_with_index do |m, i|
+              %option{value: i+1} #{i+1} - #{m}
+        .large-6.columns
+          %select.card-exp-year{'data-stripe' => 'exp-year'}
+            %option Year
+            - (Date.today.year..(Date.today.year+10)).each do |year|
+              %option{value: year}= year
+
+    %hr.full-bleed
+
+  .row
+    .large-12.columns
+      %button.margin-right-20.card-submit{type: 'submit', disabled: true} Save Card Information
+      %a.trigger Cancel
+
+- content_for :javascripts do
+  %script(type="text/javascript" src="https://js.stripe.com/v2/")
+  :coffeescript
+    new Portly.Forms.Views.CreditCard
+      key: '#{App.config.stripe_publishable_key}'
+      post: '/account/billing'
+

@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'activesupport'
 gem 'activerecord'
 gem 'activerecord-postgresql-adapter'
 gem 'bcrypt-ruby'
@@ -20,12 +21,17 @@ gem 'sshkey'
 gem 'warden'
 gem 'kgio'
 gem 'coffee-script'
-gem 'faye'
+# gem 'faye'
 gem 'thin'
+gem 'mail'
+gem 'omniauth'
+gem 'omniauth-github'# , :git => 'git://github.com/intridea/omniauth-github.git'
+gem 'msgpack'
 
 group :development do
   gem 'foreman'
   gem 'shotgun'
   gem 'tux'
   gem 'bourbon'
+  gem 'post_office'
 end

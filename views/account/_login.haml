@@ -1,0 +1,24 @@
+%form.login-form{:method => 'POST', :action => '/account'}
+  .row.margin-top-20
+    .input.large-12.columns
+      %label{for: 'email'}
+        Email
+      %input{ type: 'text', name: 'email', value: request[:email] || current_user.email}
+  .row
+    .input.large-12.columns
+      %label{for: 'password'} Password
+      %input{type: 'password', name: 'password'}
+  .row
+    .input.large-12.columns
+      %label{for: 'password_confirmation'} Password Confirmation
+      %input{type: 'password', name: 'password_confirmation'}
+  .row
+    .large-12.columns
+      %button.margin-right-20{type: 'submit'} Save
+      %a.trigger Cancel
+
+- content_for :javascripts do
+  :coffeescript
+    new Portly.Forms.Views.Login
+      post: '/account'
+

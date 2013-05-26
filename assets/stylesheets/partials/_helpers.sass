@@ -84,7 +84,8 @@
 
 // Width helpers
 // .width-0 - .width-100
-@for $i from 0 through 100
+@for $a from 0 through 20
+  $i: $a * 5
   .width-#{$i}
     width: $i * 1%
   .max-width-#{$i}
@@ -98,14 +99,16 @@
 // .margin-top-10, .padding-left-5, etc.
 @each $type in margin, padding
   @each $side in top, right, bottom, left
-    @for $i from 0 through 75
+    @for $a from 0 through 20
+      $i: $a * 5
       .#{$type}-#{$side}-#{$i}
         #{$type}-#{$side}: $i * 1px !important
 
 // Negative margin helpers
 // .negative-margin-top-10, .negative-margin-right-5, etc.
 @each $side in top, right, bottom, left
-  @for $i from 0 through 30
+  @for $a from 0 through 6
+    $i: $a * 5
     .negative-margin-#{$side}-#{$i}
       margin-#{$side}: -$i * 1px !important
 

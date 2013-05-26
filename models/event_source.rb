@@ -9,9 +9,14 @@ class EventSource
     super()
   end
 
-  def send(data, id = nil)
+  def send(event, data = nil)
     return unless @body_callback
-    @body_callback.call %Q(event: #{data.strip}\ndata: { "id": "#{id}" }\n\n)
+    if data.is_a? Hash
+      data = data.to_json
+    else
+      data = %Q({ "id": "#{data}" })
+    end
+    @body_callback.call "event: #{event.strip}\ndata: #{data}\n\n"
   end
 
   def ping
@@ -27,6 +32,7 @@ class EventSource
     @body_callback.call "retry: 2000\n"
 
     timer = EventMachine::PeriodicTimer.new(20) { self.ping }
+
     errback do
       puts 'Session Killed'
       timer.cancel
@@ -36,6 +42,10 @@ class EventSource
 
   # Public: Send an action to any open sockets for a particular user.
   def self.publish(user_id, action, id)
-    SOCKETS[user_id].each { |s| s.send(action, id) } if SOCKETS.include?(user_id)
+    if SOCKETS.include?(user_id)
+      puts 'sending:'
+      puts action
+      SOCKETS[user_id].each { |s| s.send(action, id) }
+    end
   end
 end

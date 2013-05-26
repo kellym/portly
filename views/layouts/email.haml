@@ -1,0 +1,86 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    / If you delete this meta tag, Half Life 3 will never be released.
+    %meta{:content => "width=device-width", :name => "viewport"}/
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title= mail.subject
+    %link{:href => "http://localhost:9393/assets/email.css", :rel => "stylesheet", :type => "text/css"}/
+  %body{:bgcolor => "#FFFFFF"}
+    / HEADER
+    %table.head-wrap{:bgcolor => "#FFFFFF"}
+      %tr
+        %td
+        %td.header.container
+          .content
+            %table{:bgcolor => "#FFFFFF"}
+              %tr
+                %td{:style => "float:left;min-width:150px;max-width:217px;"}
+                  %a{:href => 'https://getportly.com'}
+                    %img{:src => "http://localhost:9393/images/logo-sm.png", :style => "float:left;height:auto;max-height:60px;max-width:200px;width:100%;"}/
+                %td{:align => "right"}
+                  %h6.collapse
+        %td
+    / /HEADER
+    / BODY
+    %table.body-wrap
+      %tr
+        %td
+        %td.container{:bgcolor => "#FFFFFF"}
+          .content
+            %table
+              %tr
+                %td
+                  = yield
+                  / social & contact
+                  -#%table.social{:width => "100%"}
+                    %tr
+                      %td
+                        / column 1
+                        %table.column{:align => "left"}
+                          %tr
+                            %td
+                              %h5 Connect with Us:
+                              %p
+                                %a.soc-btn.fb{:href => "#"} Facebook
+                                %a.soc-btn.tw{:href => "#"} Twitter
+                                %a.soc-btn.gp{:href => "#"} Google+
+                        / /column 1
+                        / column 2
+                        %table.column{:align => "left"}
+                          %tr
+                            %td
+                              %h5 Contact Info:
+                              %p
+                                Phone:
+                                %strong 408.341.0600
+                                %br/
+                                Email:
+                                %strong
+                                  %a{:href => "emailto:hseldon@trantor.com"} hseldon@trantor.com
+                        / /column 2
+                        %span.clear
+                  / /social & contact
+          / /content
+        %td
+    / /BODY
+    / FOOTER
+    %table.footer-wrap{:bgcolor => "#8C7B6F"}
+      %tr
+        %td
+        %td.container
+          / content
+          .content
+            %table{:bgcolor => "#8C7B6F"}
+              %tr
+                %td{:align => "center"}
+                  %p
+                    %a{:href => "#"} Terms
+                    |
+                    %a{:href => "#"} Privacy
+                    |
+                    %a{:href => "#"}
+                      %unsubscribe Unsubscribe
+          / /content
+        %td
+    / /FOOTER

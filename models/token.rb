@@ -10,11 +10,14 @@ class Token < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :authorized_key
+  has_many :connectors
 
   validates_presence_of :user_id
   before_create :generate_token
   before_create :generate_authorized_key
   before_destroy :remove_tunnels
+
+  scope :active, where('tokens.computer_name IS NOT NULL')
 
   # Internal: Generates an authentication token for the user to
   # access their data via the app.
@@ -33,9 +36,22 @@ class Token < ActiveRecord::Base
 
   # Internal: Remove all the active tunnels for this
   # token so we don't end up with stagnant connections.
-  def remove_tunnels
-
+  def disconnect
+    puts "DELETING (connectors_enabled:#{code}) "
+    connectors.map(&:close_tunnels)
+    Redis.current.del("connectors_enabled:#{code}")
   end
 
+  def online?
+    Redis.current.sismember 'sockets_online', self.code
+  end
+  alias :connected? :online?
 
+  def laptop?
+    self.computer_model.to_s.match(/Book/)
+  end
+
+  def desktop?
+    !laptop?
+  end
 end

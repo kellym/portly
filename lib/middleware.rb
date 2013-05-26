@@ -15,7 +15,7 @@ module Middleware
           environment.cache = Sprockets::Cache::FileStore.new('/tmp')
           run environment
         end
-     }
+      }
     end
   end
 end

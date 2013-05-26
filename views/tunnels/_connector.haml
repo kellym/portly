@@ -1,0 +1,25 @@
+.row.connector{'data-id' => c.id}
+  .large-5.columns.small-8.collapse-for-small
+    %span.connected-state{:class => "state-#{c.connected? ? 'online' : 'offline'}" + ((token.online? && c.enabled?) ? '' : ' state-disabled') }
+    %span.domain
+      - domain = c.cname.present? ? c.cname : c.full_subdomain
+      - url = "#{c.cname.present? ? 'http' : 'https'}://#{domain}"
+      - if c.connected?
+        %a.link{href: url, target: '_blank'}= domain
+      - else
+        %span{'data-url'=> url}= domain
+      .show-for-small
+        %a.update-tunnel.margin-right-20.margin-left-30{:href => "#/tunnels/#{c.id}/manage", data: { access_id: token.id, id: c.id, cname: c.cname, subdomain: c.subdomain, connection_string: c.connection_string }} Edit
+  .large-3.columns.hide-for-small
+    .stopwatch.hide
+      %span.p-clock.huge.mute.handle-hide
+      %span.time{'data-start' => c.connected_at.to_i }
+  .large-4.columns.text-right.small-4
+    .row
+      .large-6.small-12.columns
+        %a.connected-tunnel.button.connect.margin-bottom-0{'data-connector' => c.connected? ? 'true' : 'false', 'data-connector_id' => c.id, 'data-access_id' => c.token_id, :style => c.enabled? ? '' : 'display: none' }
+          .hide{:class => c.connected? ? 'p-pause' : 'p-play'}
+          %span= c.connected? ? 'Disconnect' : 'Connect'
+      .large-6.small-6.columns.hide-for-small
+        %a.update-tunnel.margin-right-20.margin-left-30{:href => "#/tunnels/#{c.id}/manage", data: { access_id: token.id, id: c.id, cname: c.cname, subdomain: c.subdomain, connection_string: c.connection_string }}
+          %span.p-gear

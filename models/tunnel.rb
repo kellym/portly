@@ -20,7 +20,8 @@ class Tunnel
                                  'auth', (connector.auth_type == 'basic'),
                                  'connector_id', @connector_id,
                                  'host', "#{connector.user_host}:#{connector.user_port}",
-                                 'token', @token
+                                 'token', @token,
+                                 'connected_at', DateTime.now
       end
       EventSource.publish(connector.user_id, 'connect', @connector_id)
 
@@ -41,6 +42,11 @@ class Tunnel
     tunnel = Tunnel.new(connector: connector)
     return unless tunnel.online?
 
+    # if the port changed, the app can reconnect
+    #if connector.user_port_changed?
+    #  return
+    #end
+
     if connector.auth_type_changed?
       tunnel.address_keys.each do |key|
         Redis.current.hset key, 'auth', (connector.auth_type == 'basic')
@@ -48,6 +54,7 @@ class Tunnel
     end
 
     if connector.user_host_changed? || connector.user_port_changed?
+      puts 'host or port changed'
       tunnel.address_keys.each do |key|
         Redis.current.hset key, 'host', "#{connector.user_host}:#{connector.user_port}"
       end
@@ -75,6 +82,7 @@ class Tunnel
   def online?
     Redis.current.sismember('connectors_online', connector.id)
   end
+  alias :connected? :online?
 
   def to_json
     { connection_string: connection_string,
@@ -113,9 +121,9 @@ class Tunnel
     Redis.current.srem('ports_in_use', port) if port
     Redis.current.srem('connectors_online',"#{@connector_id}")
     Redis.current.srem "watching:#{@token}", @connector_id
-    if @publish
-      Redis.current.publish("socket:#{@token}","kill:#{@connector_id}")
-    end
+    #if @publish
+    #  Redis.current.publish("socket:#{@token}","kill:#{@connector_id}")
+    #end
     if Redis.current.hget(active_key, @token).to_i <= 1
       Redis.current.hdel(active_key, @token)
     else
@@ -127,7 +135,7 @@ class Tunnel
   #
   # Returns a Boolean of whether it is valid or not.
   def valid?
-    required_values? && authorized? && within_account_limit? && address_available?
+    required_values? && authorized? && socket_online? && within_account_limit? && address_available?
   end
 
   # Internal: Finds the connector which this tunnel will use to connect to.
@@ -136,6 +144,18 @@ class Tunnel
   # Returns a Connector or nil.
   def connector
     @connector ||= Connector.where(id: @connector_id, user_id: @user_id).first
+  end
+
+  # Internal: Determines if the socket is online before we try to connect.
+  #
+  # Returns a Boolean of if the socket is online or not.
+  def socket_online?
+    if Redis.current.sismember 'sockets_online', @token
+      true
+    else
+      @errors << :socket_offline
+      false
+    end
   end
 
   # Internal: Determines if all the required values were provided.
