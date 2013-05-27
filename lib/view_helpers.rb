@@ -69,9 +69,9 @@ module ViewHelpers
 
   def javascript_include_tag(file)
     if ENV['RACK_ENV'] == 'production'
-      %w[<script type="text/javascript" src="/assets/#{file}.#{ENV['ASSETS_VERSION']}.js"></script>]
+      %[<script type="text/javascript" src="/assets/#{file}.#{ENV['ASSETS_VERSION']}.js"></script>]
     else
-      %w[<script type="text/javascript" src="/assets/#{file}.js"></script>]
+      %[<script type="text/javascript" src="/assets/#{file}.js"></script>]
     end
   end
 
