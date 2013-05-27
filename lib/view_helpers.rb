@@ -77,9 +77,9 @@ module ViewHelpers
 
   def stylesheet_include_tag(file)
     if ENV['RACK_ENV'] == 'production'
-      %w[<link href="/assets/#{file}.#{ENV['ASSETS_VERSION']}.css" rel="stylesheet" />]
+      %[<link href="/assets/#{file}.#{ENV['ASSETS_VERSION']}.css" rel="stylesheet" />]
     else
-      %w[<link href="/assets/#{file}.css" rel="stylesheet" />]
+      %[<link href="/assets/#{file}.css" rel="stylesheet" />]
     end
   end
 end
