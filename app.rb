@@ -29,7 +29,7 @@ ROOT_PATH = File.dirname(__FILE__)
 @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
 Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
-Dir[File.dirname(__FILE__) + '/config/*.rb'].each {|file| require file }
+require_relative 'config/settings'
 
 ActiveRecord::Base.establish_connection(
   :adapter  => 'postgresql',

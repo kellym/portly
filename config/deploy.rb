@@ -12,8 +12,9 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 
 set :domain, 'getportly.com'
 set :deploy_to, '/var/www/portly'
-set :repository, 'git://github.com/kellym/portly'
+set :repository, 'git@github.com:kellym/portly.git'
 set :branch, 'master'
+set :rbenv_path, '/usr/local/rbenv/versions/2.0.0-p195/bin/:/usr/local/rbenv/'
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -45,7 +46,10 @@ task :setup => :environment do
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
 
   queue! %[touch "#{deploy_to}/shared/config/database.yml"]
-  queue  %[-----> Be sure to edit 'shared/config/database.yml'.]
+end
+
+task :'db:migrate' => :environment do
+  queue! %[rake db:migrate]
 end
 
 desc "Deploys the current version to the server."
@@ -56,7 +60,7 @@ task :deploy => :environment do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
-    invoke :'rake:db_migrate'
+    invoke :'db:migrate'
     #invoke :'rails:assets_precompile'
 
     to :launch do

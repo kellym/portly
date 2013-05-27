@@ -160,6 +160,7 @@ DEPENDENCIES
   omniauth-github
   pg
   post_office
+  rack
   rack-rest_api_versioning
   redis
   sass
