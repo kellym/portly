@@ -1,3 +1,6 @@
+require_relative 'shared_controller'
+Dir[File.dirname(__FILE__) + '/*.rb'].each {|file| require file }
+
 SOCKETS = Hash.new {|h, k| h[k] = [] }
 
 class ApplicationController < SharedController

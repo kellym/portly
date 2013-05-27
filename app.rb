@@ -50,5 +50,4 @@ end
 
 Dir[File.dirname(__FILE__) + '/models/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/mailers/*.rb'].each {|file| require file }
-require_relative 'controllers/shared_controller'
-Dir[File.dirname(__FILE__) + '/controllers/*.rb'].each {|file| require file }
+require_relative 'controllers/application_controller'
