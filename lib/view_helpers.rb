@@ -66,4 +66,20 @@ module ViewHelpers
     @nav_depth -= 1
     link_to(*args) + subnav
   end
+
+  def javascript_include_tag(file)
+    if ENV['RACK_ENV'] == 'production'
+      %w[<script type="text/javascript" src="/assets/#{file}.#{ENV['ASSETS_VERSION']}.js"></script>]
+    else
+      %w[<script type="text/javascript" src="/assets/#{file}.js"></script>]
+    end
+  end
+
+  def stylesheet_include_tag(file)
+    if ENV['RACK_ENV'] == 'production'
+      %w[<link href="/assets/#{file}.#{ENV['ASSETS_VERSION']}.css" rel="stylesheet" />]
+    else
+      %w[<link href="/assets/#{file}.css" rel="stylesheet" />]
+    end
+  end
 end

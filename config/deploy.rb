@@ -54,12 +54,11 @@ task :'db:migrate' => :environment do
 end
 
 task :'assets:compile' => :environment do
-  queue! %[#{bundle_prefix} rake assets:compile VERSION=#{current_release}]
+  queue! %[#{bundle_prefix} rake assets:compile VERSION=$version]
 end
 
 task :get_release => :environment do
-  puts current_release
-  puts release_path
+  queue! %[sed -i "s/ASSETS_VERSION=.*/ASSETS_VERSION=$version/g" #{deploy_to}/shared/config/env.sh ]
 end
 
 desc "Deploys the current version to the server."

@@ -3,13 +3,13 @@
 %html{:class => @html_class}
   %head
     %title= @title || App.config.site.title
-    %link(rel="stylesheet" href="/assets/application.css")
+    = stylesheet_include_tag 'application'
     %meta(name="viewport" content="width=device-width, initial-scale=1.0")
     %script(type="text/javascript" src="//use.typekit.net/xrn5yvu.js")
     %script(type="text/javascript") try{Typekit.load();}catch(e){}
-    %script(type="text/javascript" src="/assets/application.js")
+    = javascript_include_tag 'application'
     - if signed_in?
-      %script(type="text/javascript" src="/assets/vendor/eventsource.js")
+      = javascript_include_tag 'eventsource'
   %body
     = yield
     :coffeescript

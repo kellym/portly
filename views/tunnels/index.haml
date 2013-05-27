@@ -47,6 +47,6 @@
 
 
 - content_for :javascripts do
-  %script(type="text/javascript" src="/assets/tunnels.js")
+  = javascript_include_tag 'tunnels'
   :coffeescript
     new Portly.Tunnels.Views.Index()
