@@ -21,11 +21,11 @@ gem 'sshkey'
 gem 'warden'
 gem 'kgio'
 gem 'coffee-script'
-# gem 'faye'
+gem 'mina'
 gem 'thin'
 gem 'mail'
 gem 'omniauth'
-gem 'omniauth-github'# , :git => 'git://github.com/intridea/omniauth-github.git'
+gem 'omniauth-github'
 gem 'msgpack'
 
 group :development do
