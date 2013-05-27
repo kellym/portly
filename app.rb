@@ -31,14 +31,8 @@ Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 require_relative 'config/settings'
 
-ActiveRecord::Base.establish_connection(
-  :adapter  => 'postgresql',
-  :host     => 'localhost',
-  :username => 'piper',
-  :password => 'piper',
-  :database => 'portly',
-  :pool => 5
-)
+database_setup = YAML.load(File.read('config/database.yml'))
+ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]
 
 Mail.defaults do
   puts 'Configuring email'
