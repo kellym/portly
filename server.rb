@@ -10,9 +10,8 @@ require 'hashie'
 
 $stdout.sync = true
 
-require_relative 'lib/config.rb'
-Dir[File.dirname(__FILE__) + '/config/*.rb'].each {|file| require file }
-
+require_relative 'lib/config'
+require_relative 'config/settings'
 redis_host, redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
 Redis.current = Redis.new(:host => redis_host, :port => redis_port.to_i)
 

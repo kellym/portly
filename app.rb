@@ -39,6 +39,7 @@ ActiveRecord::Base.establish_connection(
   :database => 'portly',
   :pool => 5
 )
+
 Mail.defaults do
   puts 'Configuring email'
   delivery_method :smtp, {
