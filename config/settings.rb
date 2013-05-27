@@ -31,7 +31,8 @@ App.config = {
       #password: ENV['GMAIL_SMTP_PASSWORD'],
       #authentication: :plain,
       #enable_starttls_auto: true
-    }
+    },
+    assets_path: './public/assets/'
 
   },
   development: {

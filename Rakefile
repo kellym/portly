@@ -1,4 +1,6 @@
 require './app'
+require 'uglifier'
+require 'yui/compressor'
 
 #require 'bundler/setup'
 #require 'logger'
@@ -49,3 +51,45 @@ namespace :db do
   end
 end
 
+
+namespace :assets do
+
+  sprockets = Sprockets::Environment.new
+  sprockets.append_path 'assets/javascripts'
+  sprockets.append_path 'assets/stylesheets'
+  sprockets.js_compressor  = Uglifier.new(mangle: true)
+  sprockets.css_compressor = YUI::CssCompressor.new
+
+  desc 'compile assets'
+  task :compile => [:compile_js, :compile_css] do
+  end
+
+  desc 'compile javascript assets'
+  task :compile_js do
+    version = ENV['VERSION']
+    Dir[File.dirname(__FILE__) + '/assets/javascripts/*.coffee'].each do |file|
+      asset     = sprockets[file]
+      outpath   = App.config.assets_path
+      outfile   = Pathname.new(outpath).join("#{file.split('/').last.split('.').first}.#{version}.js")
+      FileUtils.mkdir_p outfile.dirname
+      asset.write_to(outfile)
+      asset.write_to("#{outfile}.gz")
+    end
+    puts "Successfully compiled javascript assets."
+  end
+
+  desc 'compile javascript assets'
+  task :compile_css do
+    version = ENV['VERSION']
+    Dir[File.dirname(__FILE__) + '/assets/stylesheets/*.sass'].each do |file|
+      asset     = sprockets[file]
+      outpath   = App.config.assets_path
+      outfile   = Pathname.new(outpath).join("#{file.split('/').last.split('.').first}.#{version}.css")
+      FileUtils.mkdir_p outfile.dirname
+      asset.write_to(outfile)
+      asset.write_to("#{outfile}.gz")
+    end
+    puts "Successfully compiled CSS assets."
+  end
+  # todo: add :clean_all, :clean_css, :clean_js tasks, invoke before writing new file(s)
+end

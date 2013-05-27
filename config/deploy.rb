@@ -14,7 +14,8 @@ set :domain, 'getportly.com'
 set :deploy_to, '/var/www/portly'
 set :repository, 'git@github.com:kellym/portly.git'
 set :branch, 'master'
-set :rbenv_path, '/usr/local/rbenv/versions/2.0.0-p195/bin/:/usr/local/rbenv/'
+set :rbenv_path, '/usr/local/rbenv/versions/2.0.0-p195/bin/:/usr/local/rbenv'
+set :bundle_prefix, 'source /var/www/portly/shared/config/env.sh && bundle exec'
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -49,7 +50,16 @@ task :setup => :environment do
 end
 
 task :'db:migrate' => :environment do
-  queue! %[bundle exec rake db:migrate]
+  queue! %[#{bundle_prefix} rake db:migrate]
+end
+
+task :'assets:compile' => :environment do
+  queue! %[#{bundle_prefix} rake assets:compile VERSION=#{current_release}]
+end
+
+task :get_release => :environment do
+  puts current_release
+  puts release_path
 end
 
 desc "Deploys the current version to the server."
@@ -61,10 +71,11 @@ task :deploy => :environment do
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'db:migrate'
+    invoke :'assets:compile'
     #invoke :'rails:assets_precompile'
-
     to :launch do
-      queue 'touch tmp/restart.txt'
+      invoke :get_release
+      # set up launch agent
     end
   end
 end
