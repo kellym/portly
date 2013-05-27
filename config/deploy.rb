@@ -49,7 +49,7 @@ task :setup => :environment do
 end
 
 task :'db:migrate' => :environment do
-  queue! %[rake db:migrate]
+  queue! %[bundle exec rake db:migrate]
 end
 
 desc "Deploys the current version to the server."
