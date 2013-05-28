@@ -18,7 +18,7 @@ App.config = {
     authorized_keys_path: '/home/portlyuser/.ssh/authorized_keys2',
     event_server: {
       host: '0.0.0.0',
-      port: 8900
+      port: 443
     },
     stripe_publishable_key: 'pk_test_eYBXSPksy20ywx0y50AtHXKE',
     cname_domain: 'tunnel.portly.co',
@@ -51,6 +51,10 @@ App.config = {
       localhost: 'localhost',
       host: 'getportly.com',
       user: 'portlyuser'
+    },
+    mail: {
+      address: 'localhost',
+      port: 25
     }
   },
   test: {}
