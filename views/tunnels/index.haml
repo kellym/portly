@@ -14,36 +14,37 @@
               %small.online-state= token.online? ? 'ONLINE' : 'OFFLINE'
             - first = false
     .large-1.columns.padding-left-0.padding-right-0
-#tunnels
-  .row
-    .large-12.columns.sections
-      - first = true
-      - token = @tunnels.first
-      %section.section{'data-section' => token.id, style: first ? '' : 'display: none'}
-        .large-12.connectors
-          - token.connectors.each do |c|
-            = render :'tunnels/_connector', locals: { c: c, token: token}, :layout => nil
-          - if token.connectors.size == 0
-            .row.new_connector.connector
-              .large-12.columns
-                %h4.text-center.padding-left-25.negative-margin-left-15.margin-bottom-0 Add a Connection to this Computer
-                %p.text-center.margin-bottom-50
-                  You can add one here, or via the app you have installed on your computer.
-                  <br />
-                  = link_to "Okay, add a tunnel", '#', class: 'add-tunnel button large margin-top-20', 'data-reveal-id' => "add-tunnel-#{token.id}"
-                  <br />
-                  = link_to 'I need to download the app again', '/download'
-                  <br />
-                  %small
-                    or <br />
-                    = link_to 'Remove this computer from my account', "#", 'data-reveal-id' => "remove-token-#{token.id}"
-        %footer
-          %a.button.add-tunnel{:href => '#', 'data-reveal-id' => "add-tunnel-#{token.id}"}
-            Add Tunnel
-        -# content_for :javascripts do
-  = render :'tunnels/_update', locals: { token: token }
-  = render :'tunnels/_new', locals: { token: token }
-  = render :'tokens/_delete', locals: { token: token }
+- if @tunnels.size > 0
+  #tunnels
+    .row
+      .large-12.columns.sections
+        - first = true
+        - token = @tunnels.first
+        %section.section{'data-section' => token.id, style: first ? '' : 'display: none'}
+          .large-12.connectors
+            - token.connectors.each do |c|
+              = render :'tunnels/_connector', locals: { c: c, token: token}, :layout => nil
+            - if token.connectors.size == 0
+              .row.new_connector.connector
+                .large-12.columns
+                  %h4.text-center.padding-left-25.negative-margin-left-15.margin-bottom-0 Add a Connection to this Computer
+                  %p.text-center.margin-bottom-50
+                    You can add one here, or via the app you have installed on your computer.
+                    <br />
+                    = link_to "Okay, add a tunnel", '#', class: 'add-tunnel button large margin-top-20', 'data-reveal-id' => "add-tunnel-#{token.id}"
+                    <br />
+                    = link_to 'I need to download the app again', '/download'
+                    <br />
+                    %small
+                      or <br />
+                      = link_to 'Remove this computer from my account', "#", 'data-reveal-id' => "remove-token-#{token.id}"
+          %footer
+            %a.button.add-tunnel{:href => '#', 'data-reveal-id' => "add-tunnel-#{token.id}"}
+              Add Tunnel
+          -# content_for :javascripts do
+    = render :'tunnels/_update', locals: { token: token }
+    = render :'tunnels/_new', locals: { token: token }
+    = render :'tokens/_delete', locals: { token: token }
 
 
 - content_for :javascripts do
