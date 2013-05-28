@@ -22,7 +22,7 @@ use Warden::Manager do |config|
     :action     => 'basic_auth'
   config.failure_app = ApplicationController
 end
-
+use Rack::CommonLogger
 use OmniAuth::Builder do
   provider :github, App.config.github_key, App.config.github_secret
 end

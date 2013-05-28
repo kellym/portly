@@ -62,7 +62,7 @@ task :get_release => :environment do
 end
 
 task :'thin:restart' => :environment do
-  queue! %[#{bundle_prefix} thin restart -C /etc/thin/portly.yml]
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} thin restart --debug -C /etc/thin/portly.yml]
 end
 
 desc "Deploys the current version to the server."
