@@ -3,7 +3,7 @@ class Mailer
   def initialize(render_view)
     @render = render_view
     @mail = Mail.new
-    mail.from = 'support@getportly.com'
+    mail.from = 'Portly <support@getportly.com>'
     mail.content_type = 'text/html; charset=UTF-8'
   end
 
