@@ -53,8 +53,10 @@ App.config = {
       user: 'portlyuser'
     },
     mail: {
-      address: 'localhost',
-      port: 25
+      address: 'smtp.mandrillapp.com',
+      port: 587,
+      user_name: 'kellymartinv@gmail.com',
+      password: 'F9Pz77iRVP6q1jUYFF90fg'
     }
   },
   test: {}
