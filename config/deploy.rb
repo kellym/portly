@@ -61,6 +61,10 @@ task :get_release => :environment do
   queue! %[sed -i "s/ASSETS_VERSION=.*/ASSETS_VERSION=$version/g" #{deploy_to}/shared/config/env.sh ]
 end
 
+task :'thin:restart' => :environment do
+  queue! %[#{bundle_prefix} thin restart -C /etc/thin/portly.yml]
+end
+
 desc "Deploys the current version to the server."
 task :deploy => :environment do
   deploy do
@@ -74,6 +78,7 @@ task :deploy => :environment do
     #invoke :'rails:assets_precompile'
     to :launch do
       invoke :get_release
+      invoke :'thin:restart'
       # set up launch agent
     end
   end
