@@ -63,12 +63,12 @@ class ApplicationController < SharedController
   end
 
   post '/signup' do
-    @user = User.new(request[:user])
-    if @user.save
+    @user = UserCreationService.new.create(request[:user])
+    if @user.persisted?
       env['warden'].set_user @user
       redirect '/', 302
     else
-      flash[:error] = @user.errors.join '.'
+      flash[:error] = @user.errors.full_messages.join '.'
       render :signup
     end
   end
