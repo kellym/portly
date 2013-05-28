@@ -32,11 +32,11 @@ gem 'mail'
 gem 'omniauth'
 gem 'omniauth-github'
 gem 'msgpack'
+gem 'foreman'
+gem 'tux'
 
 group :development do
-  gem 'foreman'
   gem 'shotgun'
-  gem 'tux'
   gem 'bourbon'
   gem 'post_office'
 end

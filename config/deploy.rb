@@ -65,6 +65,10 @@ task :'thin:restart' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} thin restart --debug -C /etc/thin/portly.yml]
 end
 
+task :console => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} foreman run tux]
+end
+
 desc "Deploys the current version to the server."
 task :deploy => :environment do
   deploy do
