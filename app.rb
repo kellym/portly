@@ -23,6 +23,7 @@ require 'omniauth'
 require 'omniauth-github'
 require 'msgpack'
 require 'mail'
+require 'airbrake'
 
 ROOT_PATH = File.dirname(__FILE__)
 

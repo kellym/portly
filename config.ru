@@ -27,6 +27,12 @@ use OmniAuth::Builder do
   provider :github, App.config.github_key, App.config.github_secret
 end
 
+Airbrake.configure do |config|
+  config.api_key = 'e3008a5af646469d059e3cd9f5d85ac7'
+end
+
+use Airbrake::Rack
+
 run ApplicationController
 
 Thread.new do
