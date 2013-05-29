@@ -66,11 +66,15 @@ task :'thin:restart' => :environment do
 end
 
 task :'socket:start' => :environment do
-  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby server_control.rb start]
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb start && #{bundle_prefix} ruby server_control.rb start]
+end
+
+task :'socket:stop' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb stop && #{bundle_prefix} ruby server_control.rb stop]
 end
 
 task :'socket:restart' => :environment do
-  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby server_control.rb restart]
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb restart && #{bundle_prefix} ruby server_control.rb restart]
 end
 
 task :tux => :environment do
@@ -79,6 +83,7 @@ end
 
 desc "Deploys the current version to the server."
 task :deploy => :environment do
+  invoke :'socket:stop'
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
@@ -91,6 +96,7 @@ task :deploy => :environment do
     to :launch do
       invoke :get_release
       invoke :'thin:restart'
+      invoke :'socket:start'
       # set up launch agent
     end
   end
