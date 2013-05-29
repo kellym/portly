@@ -7,7 +7,7 @@
           %li
             - k = first ? 'active ' : ''
             - k << (token.online? ? 'online' : 'offline')
-            %a{'data-section' => token.id, :href => "/tunnels/#{token.id}", :class => k, data: { pjax: true, container: '#tunnels'} }
+            %a{'data-section' => token.id, :title => token.ip_address.to_s, :href => "/tunnels/#{token.id}", :class => k, data: { pjax: true, container: '#tunnels'} }
               .large-icon{:class => token.desktop? ? 'p-desktop' : 'p-laptop' }
               = token.computer_name
               <br />

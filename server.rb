@@ -38,12 +38,18 @@ class EventServer < EM::Connection
     when /^EHLO:(.*)/
       # initially set the socket as online so we can issue commands to it
       token = $1
+      @online = Time.now
+      ip_address = get_peername[2,6].unpack("nC4")
+      ip_address.shift
+      @ip_address = ip_address.join '.'
       SOCKETS[token] = self
       puts "-- setting socket online at #{token}"
-      redis.sadd 'sockets_online', token do
-        puts "-- publishing that socket is set as online at #{token}"
-        redis.publish 'socket_monitor', "#{token}:socket:on"
-      end
+      redis.sadd 'sockets_online', token
+      puts "-- publishing that socket is set as online at #{token}"
+      redis.publish "track_ip:on", "#{token}|#{@ip_address}|#{@online}"
+      redis.publish 'socket_monitor', "#{token}:socket:on"
+      puts "online. #{@ip_address} "
+
     when /^STATE:([0-9]+):(.*)/
       connector = $1
       state = $2
@@ -73,6 +79,7 @@ class EventServer < EM::Connection
     SOCKETS.delete(token)
     puts "disconnected from #{token}"
     redis.srem 'sockets_online', token do
+      redis.publish "track_ip:off", "#{token}|#{@ip_address}|#{Time.now}|#{@online}"
       redis.publish 'socket_monitor', "#{token}:socket:off"
       puts '-- socket removed'
     end
@@ -97,6 +104,20 @@ Thread.new do
     end
   end
 end
+
+#require 'active_record'
+#Thread.new do
+#  database_setup = YAML.load(File.read('config/database.yml'))
+#  ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]
+#  Redis.current.subscribe('track_ip') do |on|
+#    on.message do |chan, msg|
+#      token, ip_address, time = msg.split '|'
+#      r = ActiveRecord::Base.connection.execute("SELECT id FROM tokens WHERE code='#{token.gsub(/[^a-zA-Z0-9]/,'')}'")
+#      token_id = r.getvalue(0,0)
+#      ActiveRecord::Base.connection.execute("INSERT INTO token_records (token_id, ip_address, access_time) VALUES('#{token_id}', '#{ip_address}', '#{time}')")
+#    end
+#  end
+#end
 
 puts "Running..."
 

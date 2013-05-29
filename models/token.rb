@@ -11,6 +11,7 @@ class Token < ActiveRecord::Base
   belongs_to :user
   belongs_to :authorized_key
   has_many :connectors
+  has_many :records, class_name: 'TokenRecord'
 
   validates_presence_of :user_id
   before_create :generate_token
@@ -46,6 +47,11 @@ class Token < ActiveRecord::Base
     Redis.current.sismember 'sockets_online', self.code
   end
   alias :connected? :online?
+
+  # Public: Returns the IP address of the currently online socket.
+  def ip_address
+    @ip_address ||= online? ? self.records.order(:online_at).last.ip_address : nil
+  end
 
   def laptop?
     self.computer_model.to_s.match(/Book/)

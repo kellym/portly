@@ -5,48 +5,15 @@
   .row
     .large-10.columns.large-offset-1.margin-bottom-100
       .pricing-box
-        %ul.pricing-table
-          %li.price.gray1 3
-          %li.bullet-item 1 User
-          %li.bullet-item 1 Computer
-          %li.bullet-item
-            %strong.block 1
-            Open Connection
-          %li.cta-button
-            %a.button{:href => '/signup'} TRY
-        %ul.pricing-table
-          %li.price.gray2 5
-          %li.bullet-item 1 User
-          %li.bullet-item 2 Computers
-          %li.bullet-item
-            %strong.block 3
-            Open Connections
-          %li.cta-button
-            %a.button{:href => '/signup'} TRY
-        %ul.pricing-table
-          %li.price.gray3 15
-          %li.bullet-item 5 Users
-          %li.bullet-item 10 Computers
-          %li.bullet-item
-            %strong.block 15
-            Open Connections
-          %li.cta-button
-            %a.button{:href => '/signup'} TRY
-        %ul.pricing-table
-          %li.price.gray4 30
-          %li.bullet-item 15 Users
-          %li.bullet-item 20 Computers
-          %li.bullet-item
-            %strong.block 30
-            Open Connections
-          %li.cta-button
-            %a.button{:href => '/signup'} TRY
-        %ul.pricing-table
-          %li.price.gray5 45
-          %li.bullet-item 30 Users
-          %li.bullet-item 60 Computers
-          %li.bullet-item
-            %strong.block 60
-            Open Connections
-          %li.cta-button
-            %a.button{:href => '/signup'} TRY
+        - @plans.each do |plan|
+          %ul.pricing-table
+            %li.price.gray1= plan.monthly.to_i
+            %li.bullet-item #{plan.computer_limit.to_i} #{"computer".pluralize plan.computer_limit}
+            %li.bullet-item
+              %strong.block= plan.tunnel_limit
+              Open #{"Connection".pluralize plan.tunnel_limit}
+            %li.bullet-item
+              %strong.block #{plan.bandwidth} GB
+              Monthly Bandwidth
+            %li.cta-button
+              %a.button{:href => '/signup'} TRY

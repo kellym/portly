@@ -83,6 +83,7 @@ class ApplicationController < SharedController
   end
 
   get '/pricing' do
+    @plans = Plan.all
     render :pricing, :layout => :'layouts/marketing'
   end
 
