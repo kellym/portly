@@ -8,7 +8,8 @@ use Rack::Session::Dalli,
   :memcache_server => 'localhost:11211',
   :expire_after => ::App.config.memcache.expires,
   :namespace => ::App.config.memcache.namespace,
-  :key => '_sess'
+  :key => '_sess',
+  :secure => ::App.config.memcache.secure
 use Warden::Manager do |config|
   config.default_scope = :user
   config.scope_defaults :user,

@@ -9,7 +9,8 @@ App.config = {
     },
     memcache: {
       namespace: 'com.fully.portly',
-      expires: nil
+      expires: nil,
+      secure: true
     },
     site: {
       title: 'Portly'
@@ -36,6 +37,11 @@ App.config = {
     server_key_path: '/Users/kelly/w/portly/config/server/'
   },
   development: {
+    memcache: {
+      namespace: 'com.fully.portly',
+      expires: nil,
+      secure: false
+    },
     forwarding_server: {
       localhost: 'localhost',
       host: 'localhost',
@@ -54,7 +60,7 @@ App.config = {
     },
     event_server: {
       host: '198.58.107.26',
-      port: 8304
+      port: 443
     },
     mail: {
       address: 'smtp.mandrillapp.com',
