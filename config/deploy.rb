@@ -69,6 +69,10 @@ task :'socket:start' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby server_control.rb start]
 end
 
+task :'socket:restart' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby server_control.rb restart]
+end
+
 task :tux => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} tux]
 end

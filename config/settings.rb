@@ -17,7 +17,7 @@ App.config = {
     suffix: '.portly.co',
     authorized_keys_path: '/home/portlyuser/.ssh/authorized_keys2',
     event_server: {
-      host: '127.0.0.1',
+      host: '0.0.0.0',
       port: 8900
     },
     stripe_publishable_key: 'pk_test_eYBXSPksy20ywx0y50AtHXKE',
@@ -51,6 +51,10 @@ App.config = {
       localhost: 'localhost',
       host: 'getportly.com',
       user: 'portlyuser'
+    },
+    event_server: {
+      host: '198.58.107.26',
+      port: 8304
     },
     mail: {
       address: 'smtp.mandrillapp.com',
