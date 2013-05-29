@@ -50,7 +50,13 @@ class Token < ActiveRecord::Base
 
   # Public: Returns the IP address of the currently online socket.
   def ip_address
-    @ip_address ||= online? ? self.records.order(:online_at).last.ip_address : nil
+    return @ip_address if @ip_address
+    if online?
+      record = self.records.order(:online_at).last
+      @ip_address = record ? record.ip_address : nil
+    else
+      nil
+    end
   end
 
   def laptop?
