@@ -24,7 +24,7 @@ class EventServer < EM::Connection
   end
 
   def post_init
-    @key_path = "./config/server"
+    @key_path = App.config.server_key_path
     puts "-- someone connected to the echo server at #{Time.now}, setting up #{@key_path}/server.key"
     start_tls :private_key_file => "#{@key_path}/server.key", :cert_chain_file => "#{@key_path}/server.crt", :verify_peer => false
     puts "-- started tls"

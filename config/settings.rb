@@ -32,8 +32,8 @@ App.config = {
       #authentication: :plain,
       #enable_starttls_auto: true
     },
-    assets_path: './public/assets/'
-
+    assets_path: './public/assets/',
+    server_key_path: '/Users/kelly/w/portly/config/server/'
   },
   development: {
     forwarding_server: {
@@ -62,7 +62,8 @@ App.config = {
       user_name: 'kellymartinv@gmail.com',
       password: 'F9Pz77iRVP6q1jUYFF90fg'
     },
-    authorized_keys_path: '/home/portly_user/.ssh/authorized_keys'
+    authorized_keys_path: '/home/portly_user/.ssh/authorized_keys',
+    server_key_path: '/var/www/portly/current/config/server/'
   },
   test: {}
 }
