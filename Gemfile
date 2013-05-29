@@ -34,6 +34,7 @@ gem 'omniauth-github'
 gem 'msgpack'
 gem 'foreman'
 gem 'tux'
+gem 'daemons'
 
 group :development do
   gem 'shotgun'

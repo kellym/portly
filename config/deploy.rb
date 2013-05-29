@@ -65,6 +65,10 @@ task :'thin:restart' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} thin restart --debug -C /etc/thin/portly.yml]
 end
 
+task :'socket:start' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby server_control.rb start]
+end
+
 task :tux => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} tux]
 end
