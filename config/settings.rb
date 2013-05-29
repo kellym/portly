@@ -53,7 +53,7 @@ App.config = {
       user: 'portlyuser'
     },
     event_server: {
-      host: '0.0.0.0',
+      host: '198.58.107.26',
       port: 8304
     },
     mail: {
