@@ -10,8 +10,8 @@
       @delegateEvents()
 
     start: (ev) ->
-      console.log 'hello'
-      el = $(ev.currentTarget)
+      ev.preventDefault() if ev
+      el = @$el
       stopwatch = el.find('span[data-start]')
       time = Number(stopwatch.data('start'))*1000
       if time > 0

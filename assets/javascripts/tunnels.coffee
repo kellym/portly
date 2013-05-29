@@ -37,6 +37,8 @@
       )
       @sections = $('.sections')
 
+      @stopwatches = []
+
       @$('.stopwatch').each (i, el) =>
         @startWatch $(el)
 
@@ -209,18 +211,21 @@
 
     startWatch: (el, time) ->
       stopwatch = el.find('span[data-start]')
+      @stopwatches.push stopwatch
       time ||= Number(stopwatch.data('start'))*1000
       if time > 0
         incrementTime = 500 # Timer speed in milliseconds
-        startTime = time
+        stopwatch.data('startTime', time)
         updateTimer = =>
-          stopwatch.html(@formatTime( Math.round(((+new Date()) - startTime) /10) ))
-
+          $.each(@stopwatches, (i, el) =>
+            el.html(@formatTime( Math.round(((+new Date()) - el.data('startTime')) /10) ))
+          )
         updateTimer()
-        timer = @makeTimer(updateTimer, incrementTime, true)
-        el.bind('stop', ->
+        timer = @makeTimer(el, updateTimer, incrementTime, true)
+        el.bind('stop', =>
             currentTime = 0
-            timer.stop()
+            @stopwatches.splice( $.inArray(el, @stopwatches), 1)
+            #timer.stop()
             el.hide()
         )
         el.hide().removeClass('hide').fadeIn('slow')
@@ -237,7 +242,7 @@
       #hundredths = pad(time - (sec * 100) - (min * 6000), 2)
       ((if hr > 0 then @pad(hr, 2) else "00")) + ":" + ((if min > 0 then @pad(min, 2) else "00")) + ":" + @pad(sec, 2) # + ":" + hundredths
 
-    makeTimer : (func, time, autostart, @init=false) =>
+    makeTimer : (el, func, time, autostart, @init=false) =>
       @set = (func, time, autostart) ->
         @init = true
         if typeof func is "object"
