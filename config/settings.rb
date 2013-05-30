@@ -56,7 +56,7 @@ App.config = {
     forwarding_server: {
       localhost: 'localhost',
       host: 'getportly.com',
-      user: 'portlyuser'
+      user: 'portly_user'
     },
     event_server: {
       host: '72.14.178.208',
