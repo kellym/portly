@@ -1,7 +1,7 @@
 class MediaType
 
   def initialize(http_accept)
-    @media_type ||= http_accept.split(',',2).first.split('/',2).last.to_sym
+    @media_type ||= http_accept ? http_accept.split(',',2).first.split('/',2).last.to_sym : :html
   end
 
   def ==(type)
