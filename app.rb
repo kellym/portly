@@ -24,8 +24,15 @@ require 'omniauth-github'
 require 'msgpack'
 require 'mail'
 require 'airbrake'
+require 'logger'
 
 ROOT_PATH = File.dirname(__FILE__)
+if ENV['RACK_ENV'] == 'development'
+  LOG = Logger.new STDOUT
+else
+  LOG = Logger.new(ROOT_PATH + '/log/' + (ENV['RACK_ENV'] || 'development') + '.log', 'daily')
+end
+LOG.level = Logger::DEBUG
 
 @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
 Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
@@ -36,7 +43,7 @@ database_setup = YAML.load(File.read('config/database.yml'))
 ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]
 
 Mail.defaults do
-  puts 'Configuring email'
+  LOG.debug 'Configuring email'
   delivery_method :smtp, {
     address:   App.config.mail.address,
     port:      App.config.mail.port,

@@ -39,13 +39,13 @@ run ApplicationController
 Thread.new do
   $stdout.sync = true
   @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
-  puts "connecting to redis again on #{@redis_port}"
+  LOG.debug "connecting to redis again on #{@redis_port}"
   redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
   redis.subscribe('socket_monitor') do |on|
     # When a message is published to 'em'
     on.message do |chan, msg|
       socket, action, *args = msg.split(':')
-      puts "sending message on #{socket}: #{action}"
+      LOG.debug "sending message on #{socket}: #{action}"
       # Send out the message on each open socket
       if action == 'socket' && args.first == 'off'
         # kill all the connectors this way, since sometimes they can stagnate
@@ -62,7 +62,7 @@ end
 Thread.new do
   $stdout.sync = true
   @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
-  puts "connecting to redis again on #{@redis_port}"
+  LOG.debug "connecting to redis again on #{@redis_port}"
   redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
   redis.subscribe('email_monitor') do |on|
     # When a message is published to 'em'
@@ -76,34 +76,5 @@ Thread.new do
   end
 
 end
-#  thin = Rack::Handler.get('thin')
-
-#  thin.run(ApplicationController, :Port => 9393) do |server|
-    # You can set options on the server here, for example to set up SSL:
-    #server.ssl_options = {
-    #  :private_key_file => 'path/to/ssl.key',
-    #  :cert_chain_file  => 'path/to/ssl.crt'
-    #}
-    #server.ssl = true
-#  end
-
-#}
-#if ENV['RACK_ENV'] == 'development'
 
 run ApplicationController
-
-#else
-#  EM.run {
-#    thin = Rack::Handler.get('thin')
-#
-#    thin.run(ApplicationController, :Port => 9393) do |server|
-#      # You can set options on the server here, for example to set up SSL:
-#      #server.ssl_options = {
-#      #  :private_key_file => 'path/to/ssl.key',
-#      #  :cert_chain_file  => 'path/to/ssl.crt'
-#      #}
-#      #server.ssl = true
-#    end
-#
-#  }
-#end

@@ -7,6 +7,7 @@ require 'eventmachine'
 require 'redis'
 require 'em-hiredis'
 require 'hashie'
+require 'logger'
 
 $stdout.sync = true
 
@@ -17,6 +18,14 @@ Redis.current = Redis.new(:host => redis_host, :port => redis_port.to_i)
 
 SOCKETS = {}
 
+ROOT_PATH = File.dirname(__FILE__)
+if ENV['RACK_ENV'] == 'development'
+  LOG = Logger.new STDOUT
+else
+  LOG = Logger.new(ROOT_PATH + '/log/' + (ENV['RACK_ENV'] || 'development') + '.log', 'daily')
+end
+LOG.level = Logger::DEBUG
+
 class EventServer < EM::Connection
 
   def redis
@@ -25,15 +34,14 @@ class EventServer < EM::Connection
 
   def post_init
     @key_path = App.config.server_key_path
-    puts "-- someone connected to the echo server at #{Time.now}, setting up #{@key_path}/server.key"
+    LOG.debug "-- someone connected to the echo server at #{Time.now}, setting up #{@key_path}/server.key"
     start_tls :private_key_file => "#{@key_path}/server.key", :cert_chain_file => "#{@key_path}/server.crt", :verify_peer => false
-    puts "-- started tls"
+    LOG.debug "-- started tls"
     send_data "HELLO\n"
   end
 
   def receive_data data
     data.chomp!
-    #puts ">>> you sent: #{data}\n"
     case data
     when /^EHLO:(.*)/
       # initially set the socket as online so we can issue commands to it
@@ -43,12 +51,11 @@ class EventServer < EM::Connection
       ip_address.shift
       @ip_address = ip_address.join '.'
       SOCKETS[token] = self
-      puts "-- setting socket online at #{token}"
+      LOG.debug "-- setting socket online at #{token}"
       redis.sadd 'sockets_online', token
-      puts "-- publishing that socket is set as online at #{token}"
+      LOG.debug "-- publishing that socket is set as online at #{token}"
       redis.publish "track_ip:on", "#{token}|#{@ip_address}|#{@online}"
       redis.publish 'socket_monitor', "#{token}:socket:on"
-      puts "online. #{@ip_address} "
 
     when /^STATE:([0-9]+):(.*)/
       connector = $1
@@ -56,12 +63,12 @@ class EventServer < EM::Connection
       token = SOCKETS.key(self)
       if state == 'on'
         redis.sadd "connectors_enabled:#{token}", connector do
-          puts "-- publishing that connector #{connector} is set as #{state} at #{token}"
+          LOG.debug "-- publishing that connector #{connector} is set as #{state} at #{token}"
           redis.publish 'socket_monitor', "#{token}:state:#{connector}:on"
         end
       else
         redis.srem "connectors_enabled:#{token}", connector do
-          puts "-- publishing that connector #{connector} is set as #{state} at #{token}"
+          LOG.debug "-- publishing that connector #{connector} is set as #{state} at #{token}"
           redis.publish 'socket_monitor', "#{token}:state:#{connector}:off"
         end
       end
@@ -77,31 +84,39 @@ class EventServer < EM::Connection
   def unbind
     token = SOCKETS.key(self)
     SOCKETS.delete(token)
-    puts "disconnected from #{token}"
+    LOG.debug "disconnected from #{token}"
     redis.srem 'sockets_online', token do
       redis.publish "track_ip:off", "#{token}|#{@ip_address}|#{Time.now}|#{@online}"
       redis.publish 'socket_monitor', "#{token}:socket:off"
-      puts '-- socket removed'
+      LOG.debug '-- socket removed'
     end
   end
 end
 
 Thread.new do
-  EventMachine::run do
-    EventMachine::start_server App.config.event_server.host, App.config.event_server.port, EventServer
-    puts "running echo server on #{App.config.event_server.port}"
+  begin
+    EventMachine::run do
+      EventMachine::start_server App.config.event_server.host, App.config.event_server.port, EventServer
+      LOG.debug "running echo server on #{App.config.event_server.port}"
+    end
+  rescue => error
+    LOG.error error.to_s
   end
 end
 
 Thread.new do
-  Redis.current.psubscribe('socket:*') do |on|
-    # When a message is published to 'em'
-    on.pmessage do |sub, chan, msg|
-      socket = chan.split(':',2).last
-      puts "sending message on #{socket}: #{msg}"
-      # Send out the message on each open socket
-      SOCKETS[socket].send_data "#{msg}\n\n" if SOCKETS.has_key? socket
+  begin
+    Redis.current.psubscribe('socket:*') do |on|
+      # When a message is published to 'em'
+      on.pmessage do |sub, chan, msg|
+        socket = chan.split(':',2).last
+        LOG.debug "sending message on #{socket}: #{msg}"
+        # Send out the message on each open socket
+        SOCKETS[socket].send_data "#{msg}\n\n" if SOCKETS.has_key? socket
+      end
     end
+  rescue => error
+    LOG.error error.to_s
   end
 end
 
@@ -119,6 +134,6 @@ end
 #  end
 #end
 
-puts "Running..."
+LOG.debug "Running..."
 
 sleep
