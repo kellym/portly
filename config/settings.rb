@@ -60,7 +60,7 @@ App.config = {
     },
     event_server: {
       host: '72.14.178.208',
-      port: 443
+      port: 8900
     },
     mail: {
       address: 'smtp.mandrillapp.com',
