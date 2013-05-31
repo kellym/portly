@@ -26,7 +26,7 @@ else
 end
 LOG.level = Logger::DEBUG
 
-TIMEOUT = 15
+TIMEOUT = 10
 
 class EventServer < EM::Connection
 
