@@ -26,6 +26,8 @@ else
 end
 LOG.level = Logger::DEBUG
 
+TIMEOUT = 15
+
 class EventServer < EM::Connection
 
   def redis
@@ -38,9 +40,17 @@ class EventServer < EM::Connection
     start_tls :private_key_file => "#{@key_path}/server.key", :cert_chain_file => "#{@key_path}/server.crt", :verify_peer => false
     LOG.debug "-- started tls"
     send_data "HELLO\n"
+    @seconds_waited = 0
+    @timer = EventMachine::PeriodicTimer.new(5) do
+      @seconds_waited += 5
+      if @seconds_waited > TIMEOUT
+        self.close_connection
+      end
+    end
   end
 
   def receive_data data
+    @seconds_waited = 0
     data.chomp!
     case data
     when /^EHLO:(.*)/
@@ -85,6 +95,7 @@ class EventServer < EM::Connection
     token = SOCKETS.key(self)
     SOCKETS.delete(token)
     LOG.debug "disconnected from #{token}"
+    @timer.cancel if @timer
     redis.srem 'sockets_online', token do
       redis.publish "track_ip:off", "#{token}|#{@ip_address}|#{Time.now}|#{@online}"
       redis.publish 'socket_monitor', "#{token}:socket:off"
