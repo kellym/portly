@@ -69,7 +69,8 @@ App.config = {
       password: 'F9Pz77iRVP6q1jUYFF90fg'
     },
     authorized_keys_path: '/home/portly_user/.ssh/authorized_keys2',
-    server_key_path: '/var/www/portly/current/config/server/'
+    server_key_path: '/var/www/portly/current/config/server/',
+    log_path: '/var/www/portly/shared/log/'
   },
   test: {}
 }

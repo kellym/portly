@@ -37,44 +37,55 @@ use Airbrake::Rack
 run ApplicationController
 
 Thread.new do
-  $stdout.sync = true
-  @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
-  LOG.debug "connecting to redis again on #{@redis_port}"
-  redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
-  redis.subscribe('socket_monitor') do |on|
-    # When a message is published to 'em'
-    on.message do |chan, msg|
-      socket, action, *args = msg.split(':')
-      LOG.debug "sending message on #{socket}: #{action}"
-      # Send out the message on each open socket
-      if action == 'socket' && args.first == 'off'
-        # kill all the connectors this way, since sometimes they can stagnate
-        token = Token.where(:code => socket).first
-        token.disconnect
-      else
-        token = Token.select('tokens.id, tokens.user_id').where(:code => socket).first
+  begin
+    $stdout.sync = true
+    @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
+    LOG.debug "connecting to redis again on #{@redis_port}"
+    redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
+    redis.subscribe('socket_monitor') do |on|
+      # When a message is published to 'em'
+      on.message do |chan, msg|
+        socket, action, *args = msg.split(':')
+        LOG.debug "sending message on #{socket}: #{action}"
+        # Send out the message on each open socket
+        if action == 'socket' && args.first == 'off'
+          # kill all the connectors this way, since sometimes they can stagnate
+          token = Token.where(:code => socket).first
+          token.disconnect
+        else
+          token = Token.select('tokens.id, tokens.user_id').where(:code => socket).first
+        end
+        EventSource.publish(token.user_id, "#{action}", { id: token.id, args: args })
       end
-      EventSource.publish(token.user_id, "#{action}", { id: token.id, args: args })
     end
+  rescue => error
+    LOG.error error.to_s
+    sleep 1
+    retry
   end
 end
 
 Thread.new do
-  $stdout.sync = true
-  @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
-  LOG.debug "connecting to redis again on #{@redis_port}"
-  redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
-  redis.subscribe('email_monitor') do |on|
-    # When a message is published to 'em'
-    on.message do |chan, msg|
-      args = MessagePack.unpack(msg)
-      klass = args.shift
-      action = args.shift
-      puts "Sending email: #{klass}##{action} #{args.inspect}"
-      klass.constantize.create(action.to_sym, *args).deliver
+  begin
+    $stdout.sync = true
+    @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
+    LOG.debug "connecting to redis again on #{@redis_port}"
+    redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
+    redis.subscribe('email_monitor') do |on|
+      # When a message is published to 'em'
+      on.message do |chan, msg|
+        args = MessagePack.unpack(msg)
+        klass = args.shift
+        action = args.shift
+        puts "Sending email: #{klass}##{action} #{args.inspect}"
+        klass.constantize.create(action.to_sym, *args).deliver
+      end
     end
+  rescue => error
+    LOG.error error.to_s
+    sleep 1
+    retry
   end
-
 end
 
 run ApplicationController

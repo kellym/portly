@@ -101,6 +101,8 @@ Thread.new do
     end
   rescue => error
     LOG.error error.to_s
+    sleep 1
+    retry
   end
 end
 
@@ -117,6 +119,8 @@ Thread.new do
     end
   rescue => error
     LOG.error error.to_s
+    sleep 1
+    retry
   end
 end
 
