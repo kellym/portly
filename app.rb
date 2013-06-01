@@ -43,7 +43,6 @@ database_setup = YAML.load(File.read('config/database.yml'))
 ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]
 
 Mail.defaults do
-  LOG.debug 'Configuring email'
   delivery_method :smtp, {
     address:   App.config.mail.address,
     port:      App.config.mail.port,
