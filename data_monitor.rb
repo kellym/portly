@@ -26,8 +26,11 @@ File::Tail::Logfile.open(filename) do |log|
   log.tail do |line|
     connector_id, bytes, timestamp = line.split '|'
     # timestamp = Time.parse(timestamp) rescue Time.now
-    Redis.current.incrby "bytes:#{connector_id}", bytes.to_i
-    Redis.current.publish "bytes_increased:#{connector_id}", Redis.current.get("bytes:#{connector_id}")
+    bytes = bytes.to_i
+    if bytes > 0
+      Redis.current.incrby "bytes:#{connector_id}", bytes
+      Redis.current.publish "bytes_increased:#{connector_id}", Redis.current.get("bytes:#{connector_id}")
+    end
   end
 
 end
