@@ -92,6 +92,7 @@ end
 desc "Deploys the current version to the server."
 task :deploy => :environment do
   invoke :'socket:stop'
+  invoke :'data_monitor:stop'
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.

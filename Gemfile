@@ -36,6 +36,7 @@ gem 'foreman'
 gem 'tux'
 gem 'daemons'
 gem 'file-tail'
+gem 'logrotate'
 
 group :development do
   gem 'shotgun'
