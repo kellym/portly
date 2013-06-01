@@ -65,8 +65,16 @@ task :'thin:restart' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} thin restart --debug -C /etc/thin/portly.yml]
 end
 
+task :'data_monitor:start' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby data_monitor_control.rb start]
+end
+
+task :'data_monitor:stop' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby data_monitor_control.rb stop]
+end
+
 task :'socket:start' => :environment do
-  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb start && #{bundle_prefix} ruby server_control.rb start]
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb start && #{bundle_prefix} ruby tracking_control.rb start && #{bundle_prefix} ruby server_control.rb start]
 end
 
 task :'socket:stop' => :environment do
@@ -97,6 +105,7 @@ task :deploy => :environment do
       invoke :get_release
       invoke :'thin:restart'
       invoke :'socket:start'
+      invoke :'data_monitor:start'
       # set up launch agent
     end
   end
