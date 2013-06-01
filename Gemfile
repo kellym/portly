@@ -35,6 +35,7 @@ gem 'msgpack'
 gem 'foreman'
 gem 'tux'
 gem 'daemons'
+gem 'file-tail'
 
 group :development do
   gem 'shotgun'
