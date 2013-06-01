@@ -16,9 +16,9 @@ class Token < ActiveRecord::Base
   validates_presence_of :user_id
   before_create :generate_token
   before_create :generate_authorized_key
-  before_destroy :remove_tunnels
 
-  scope :active, where('tokens.computer_name IS NOT NULL')
+  default_scope where(:deleted_at => nil)
+  scope :active, where('tokens.computer_name IS NOT NULL AND tokens.deleted_at IS NULL')
 
   # Internal: Generates an authentication token for the user to
   # access their data via the app.
@@ -65,5 +65,10 @@ class Token < ActiveRecord::Base
 
   def desktop?
     !laptop?
+  end
+
+  def destroy
+    #remove_tunnels
+    self.update_attribute(:deleted_at, Time.now)
   end
 end
