@@ -1,0 +1,3 @@
+class DownloadsController < SharedController
+
+end
