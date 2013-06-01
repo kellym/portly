@@ -17,7 +17,8 @@ class Connector < ActiveRecord::Base
   attr_accessor :publish
 
   after_save :update_tunnels
-  before_destroy :close_tunnels
+
+  default_scope where(:deleted_at => nil)
 
   def domain
     self.cname.present? ? self.cname : self.full_subdomain
@@ -95,6 +96,11 @@ class Connector < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def destroy
+    close_tunnels
+    self.update_attribute(:deleted_at, Time.now)
   end
 
 end
