@@ -21,7 +21,7 @@ File.chmod(0777, file_before)
 
 #logfile = File.open(file_after, 'w')
 
-File::Tail::Logfile.open(filename) do |log|
+File::Tail::Logfile.open(file_before) do |log|
 
   log.tail do |line|
     connector_id, bytes, timestamp = line.split '|'
