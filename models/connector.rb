@@ -103,4 +103,8 @@ class Connector < ActiveRecord::Base
     self.update_attribute(:deleted_at, Time.now)
   end
 
+  def kb_traffic_today
+    Redis.current.get("bytes:#{self.id}").to_f / 1024.0
+  end
+
 end
