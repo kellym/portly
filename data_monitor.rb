@@ -15,6 +15,8 @@ trap('TERM') do
     :count => 30,
     :gzip => true
   })
+  File.open(filename, 'a') {}
+  File.chmod(0777, filename)
 end
 
 File.open(filename, 'a') {}
