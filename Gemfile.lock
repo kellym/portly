@@ -64,7 +64,6 @@ GEM
       multi_json (>= 1.5)
     kgio (2.8.0)
     libv8 (3.11.8.17)
-    logrotate (1.2.1)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -179,7 +178,6 @@ DEPENDENCIES
   haml
   hashie
   kgio
-  logrotate
   mail
   mina
   msgpack
