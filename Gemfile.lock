@@ -29,6 +29,9 @@ GEM
       sass (>= 3.2.0)
       thor
     builder (3.0.4)
+    clockwork (0.5.2)
+      activesupport
+      tzinfo (~> 0.3.35)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -167,6 +170,7 @@ DEPENDENCIES
   airbrake
   bcrypt-ruby
   bourbon
+  clockwork
   coffee-script
   daemons
   dalli

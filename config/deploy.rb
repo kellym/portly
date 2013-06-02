@@ -65,6 +65,14 @@ task :'thin:restart' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} thin restart --debug -C /etc/thin/portly.yml]
 end
 
+task :'cron:start' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby cron_control.rb start]
+end
+
+task :'cron:stop' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby cron_control.rb stop]
+end
+
 task :'data_monitor:start' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby data_monitor_control.rb start]
 end
