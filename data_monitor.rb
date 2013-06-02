@@ -16,10 +16,13 @@ trap('TERM') do
     :gzip => true
   })
   File.open(filename, 'a') {}
+  File.chmod(0777, filename)
   exec "kill -USR1 `cat /var/run/nginx.pid`"
 end
 
 File.open(filename, 'a') {}
+File.chmod(0777, filename)
+
 File::Tail::Logfile.open(filename) do |log|
 
   log.tail do |line|
