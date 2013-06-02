@@ -104,7 +104,7 @@ class Connector < ActiveRecord::Base
   end
 
   def kb_traffic_today
-    Redis.current.get("bytes:#{self.id}").to_f / 1024.0
+    Redis.current.get("bytes:#{self.id}").to_i
   end
 
 end

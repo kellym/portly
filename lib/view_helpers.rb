@@ -82,4 +82,21 @@ module ViewHelpers
       %[<link href="/assets/#{file}.css" rel="stylesheet" />]
     end
   end
+
+  def human_number(number)
+    return 0 if number.nil?
+    number = Integer(number)
+    result = number.to_s
+
+    if number > 1023 && number < 1048576
+      number = number / 1024
+      result = "#{number.to_s}KB"
+    elsif number >= 1048576
+      number = number / 1048576
+      result = "#{number.to_s}MB"
+    end
+
+    result
+  end
+
 end

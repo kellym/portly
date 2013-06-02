@@ -14,7 +14,7 @@
     .stopwatch.hide
       %span.p-clock.handle-hide
       %span.time{'data-start' => c.connected_at.to_i }
-    %div #{c.kb_traffic_today} kb
+    %div #{human_number c.kb_traffic_today}
   .large-4.columns.text-right.small-4
     .row
       .large-6.small-12.columns
