@@ -18,6 +18,7 @@ trap('TERM') do
 end
 
 File.open(filename, 'a') {}
+File.chmod(0777, filename)
 
 File::Tail::Logfile.open(filename) do |log|
 
