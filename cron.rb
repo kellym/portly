@@ -2,7 +2,7 @@
 
 require 'clockwork'
 require 'redis'
-require 'activerecord'
+require 'active_record'
 
 @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
 Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
