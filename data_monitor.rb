@@ -3,25 +3,23 @@
 $stdout.sync = true
 #require 'active_record'
 require 'file-tail'
-require 'logrotate'
 require 'redis'
 
 @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
 Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
-filename = '/var/www/portly/shared/log/bytes.log'
+file_before = '/var/www/portly/shared/log/bytes.log'
+#file_after = '/var/www/portly/shared/log/bytes_read.log'
 
 trap('TERM') do
-  LogRotate.rotate_file(filename, {
-    :count => 30,
-    :gzip => true
-  })
-  File.open(filename, 'a') {}
-  File.chmod(0777, filename)
-  exec "kill -USR1 `cat /var/run/nginx.pid`"
+  File.open(file_before, 'w') {}
+  logfile.close
+  exit
 end
 
-File.open(filename, 'a') {}
-File.chmod(0777, filename)
+File.open(file_before, 'a') {}
+File.chmod(0777, file_before)
+
+#logfile = File.open(file_after, 'w')
 
 File::Tail::Logfile.open(filename) do |log|
 
@@ -33,6 +31,7 @@ File::Tail::Logfile.open(filename) do |log|
       Redis.current.incrby "bytes:#{connector_id}", bytes
       Redis.current.publish "bytes_increased:#{connector_id}", Redis.current.get("bytes:#{connector_id}")
     end
+#    logfile.puts line
   end
 
 end
