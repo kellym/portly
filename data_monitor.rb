@@ -17,6 +17,8 @@ trap('TERM') do
   })
 end
 
+File.open(filename, 'a') {}
+
 File::Tail::Logfile.open(filename) do |log|
 
   log.tail do |line|
