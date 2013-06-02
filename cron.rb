@@ -16,9 +16,9 @@ Thread.new do
 
     every(1.day, 'rotate_bytes', at: '00:00') do
       Redis.current.keys('bytes:*').each do |key|
-        bytes = Redis.current.get(key)
+        bytes = Redis.current.hgetall(key)
         connector_id = key.split(':').last
-        ActiveRecord::Base.connection.execute("INSERT INTO connector_bytes (connector_id, bytes, created_at) VALUES('#{connector_id}', '#{bytes}', '#{Date.yesterday}')")
+        ActiveRecord::Base.connection.execute("INSERT INTO connector_bytes (connector_id, bytes_total, bytes_in, bytes_out, created_at) VALUES('#{connector_id}', '#{bytes['in'].to_i + bytes['out'].to_i}', '#{bytes['in']}', '#{bytes['out']}', '#{Date.yesterday}')")
         Redis.current.set key, 0
       end
     end

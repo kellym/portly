@@ -103,8 +103,19 @@ class Connector < ActiveRecord::Base
     self.update_attribute(:deleted_at, Time.now)
   end
 
-  def kb_traffic_today
-    Redis.current.get("bytes:#{self.id}").to_i
+  def incoming_traffic_today
+    bytes_today['in'].to_i
   end
 
+  def outgoing_traffic_today
+    bytes_today['out'].to_i
+  end
+
+  def traffic_today
+    bytes_today['in'].to_i + bytes_today['out'].to_i
+  end
+
+  def bytes_today
+    @bytes ||= Redis.current.hgetall("bytes:#{self.id}")
+  end
 end
