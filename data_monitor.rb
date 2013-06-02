@@ -37,7 +37,6 @@ File::Tail::Logfile.open(file_before) do |log|
     if bytes_in > 0 || bytes_out > 0
       Redis.current.publish "bytes_increased", connector_id
     end
-    end
 #    logfile.puts line
   end
 
