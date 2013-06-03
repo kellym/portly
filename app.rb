@@ -25,6 +25,8 @@ require 'msgpack'
 require 'mail'
 require 'airbrake'
 require 'logger'
+require 'dragonfly'
+require 'rack/cache'
 
 ROOT_PATH = File.dirname(__FILE__)
 if ENV['RACK_ENV'] == 'development'
@@ -50,6 +52,13 @@ Mail.defaults do
     password:  App.config.mail.password
   }
 end
+
+
+# Dragonfly
+DRAGONFLY = Dragonfly[:images].configure_with(:imagemagick) do |c|
+  c.url_format = '/media/:job'
+end
+DRAGONFLY.define_macro(ActiveRecord::Base, :image_accessor)
 
 Dir[File.dirname(__FILE__) + '/models/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/mailers/*.rb'].each {|file| require file }

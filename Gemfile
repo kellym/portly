@@ -37,6 +37,8 @@ gem 'tux'
 gem 'daemons'
 gem 'file-tail'
 gem 'clockwork'
+gem 'dragonfly'
+gem 'rack-cache', :require => 'rack/cache'
 
 group :development do
   gem 'shotgun'

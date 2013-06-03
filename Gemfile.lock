@@ -39,6 +39,9 @@ GEM
     daemons (1.1.9)
     dalli (2.6.2)
     dotenv (0.7.0)
+    dragonfly (0.9.15)
+      multi_json (~> 1.0)
+      rack
     em-hiredis (0.2.1)
       hiredis (~> 0.4.0)
     em-websocket (0.5.0)
@@ -98,6 +101,8 @@ GEM
     post_office (0.3.3)
     rack (1.5.2)
     rack-accept (0.4.5)
+      rack (>= 0.4)
+    rack-cache (1.2)
       rack (>= 0.4)
     rack-protection (1.5.0)
       rack
@@ -174,6 +179,7 @@ DEPENDENCIES
   coffee-script
   daemons
   dalli
+  dragonfly
   em-hiredis
   em-websocket
   eventmachine
@@ -190,6 +196,7 @@ DEPENDENCIES
   pg
   post_office
   rack
+  rack-cache
   rack-rest_api_versioning
   redis
   sass

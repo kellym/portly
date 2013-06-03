@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
 
   attr_reader :password
   attr_accessor :password_confirmation
+  image_accessor :cover_image
+
   validates_confirmation_of :password
   validates_length_of :password, within: 6..50, :allow_blank => :persisted?
   validates :subdomain, presence: true, uniqueness: true

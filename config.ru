@@ -28,11 +28,20 @@ use OmniAuth::Builder do
   provider :github, App.config.github_key, App.config.github_secret
 end
 
+
+# Airbrake
 Airbrake.configure do |config|
   config.api_key = 'e3008a5af646469d059e3cd9f5d85ac7'
 end
-
 use Airbrake::Rack
+
+# Dragonfly
+use Rack::Cache,
+  :verbose     => true,
+  :metastore   => URI.encode("file:#{App.config.tmp_path}/cache/meta"),
+  :entitystore => URI.encode("file:#{App.config.tmp_path}/cache/body")
+
+use Dragonfly::Middleware, :images
 
 run ApplicationController
 

@@ -48,6 +48,7 @@ App.config = {
       user: 'portlyuser'
     },
     authorized_keys_path: '/Users/portlyuser/.ssh/authorized_keys',
+    tmp_path: '/Users/kelly/w/portly/tmp/'
   },
   staging: {
 
@@ -70,7 +71,8 @@ App.config = {
     },
     authorized_keys_path: '/home/portly_user/.ssh/authorized_keys2',
     server_key_path: '/var/www/portly/current/config/server/',
-    log_path: '/var/www/portly/shared/log/'
+    log_path: '/var/www/portly/shared/log/',
+    tmp_path: '/var/www/portly/shared/tmp/'
   },
   test: {}
 }
