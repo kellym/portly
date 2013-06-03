@@ -9,7 +9,6 @@ class ApplicationController < SharedController
   render_defaults << { :engine => :haml, :layout => :'layouts/application' }
 
   include Middleware
-  include ViewHelpers
 
   def current_user
     env['warden'].user

@@ -1,5 +1,7 @@
 class SharedController < Scorched::Controller
 
+  include ViewHelpers
+
   def media_type
     @media_type ||= MediaType.new(env['HTTP_ACCEPT'])
   end
