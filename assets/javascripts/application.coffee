@@ -30,13 +30,13 @@ $ ->
   $('form[data-action], form.ajax-form').submit((e) ->
     e.preventDefault()
     el = $(e.currentTarget)
-    $.ajax(
+    el.ajaxSubmit(
       url: el.data('action')
       type: el.attr('method')
       data: el.serialize()
       dataType: 'json'
-      success: (data) ->
-        el.closest('reveal-modal').foundation('reveal', 'close')
-        window.location.reload()
+      success: (data) =>
+        el.parent().foundation('reveal', 'close')
+        window.location.reload() if el.data('reload')
     )
   )

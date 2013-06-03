@@ -1,6 +1,6 @@
 .update-modal.reveal-modal{ id: "update-tunnel-modal-#{token.id}" }
   %h2 Make some updates
-  %form.ajax-form{'data-action-base' => "/api/connectors", :method => 'put'}
+  %form.ajax-form{'data-action-base' => "/api/connectors", :'data-reload' => true, :method => 'put'}
     %input.access_id{:type => 'hidden', :name => 'access_id', :value => token.id}
     %label Connection String
     %input.input.connection-string{:type => 'text', :name => 'connection_string', :placeholder => 'localhost:8080'}
