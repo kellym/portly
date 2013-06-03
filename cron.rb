@@ -19,7 +19,7 @@ Thread.new do
         bytes = Redis.current.hgetall(key)
         connector_id = key.split(':').last
         ActiveRecord::Base.connection.execute("INSERT INTO connector_bytes (connector_id, bytes_total, bytes_in, bytes_out, created_at) VALUES('#{connector_id}', '#{bytes['in'].to_i + bytes['out'].to_i}', '#{bytes['in']}', '#{bytes['out']}', '#{Date.yesterday}')")
-        Redis.current.set key, 0
+        Redis.current.del key
       end
     end
 

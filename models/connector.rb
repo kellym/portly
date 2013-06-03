@@ -11,10 +11,13 @@ class Connector < ActiveRecord::Base
   # property :cname, String, unique: true
   # property :auth_type, String
 
+  attr_accessor :publish
+  image_accessor :cover_image
+
   belongs_to :user
   belongs_to :token
   has_many :auths, :class_name => 'ConnectorAuth'
-  attr_accessor :publish
+  has_many :bytes, :class_name => 'ConnectorBytes'
 
   after_save :update_tunnels
 
@@ -116,6 +119,6 @@ class Connector < ActiveRecord::Base
   end
 
   def bytes_today
-    @bytes ||= Redis.current.hgetall("bytes:#{self.id}")
+    @bytes ||= Redis.current.hgetall("bytes:#{self.id}") rescue {'in' => 0, 'out' => 0}
   end
 end
