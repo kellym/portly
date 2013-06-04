@@ -14,26 +14,27 @@ Thread.new do
   end
   LOG.level = Logger::DEBUG
 
-  @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
-  Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
+  begin
+    @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
+    Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
 
-  database_setup = YAML.load(File.read('config/database.yml'))
-  ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]
+    database_setup = YAML.load(File.read(ROOT_PATH + '/config/database.yml'))
+    ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]
 
-  module Clockwork
+    module Clockwork
 
-    every(1.day, 'rotate_bytes', at: '05:00') do # midnight CST
-      Redis.current.keys('bytes:*').each do |key|
-        bytes = Redis.current.hgetall(key)
-        connector_id = key.split(':').last
-        ActiveRecord::Base.connection.execute("INSERT INTO connector_bytes (connector_id, bytes_total, bytes_in, bytes_out, created_at) VALUES('#{connector_id}', '#{bytes['in'].to_i + bytes['out'].to_i}', '#{bytes['in']}', '#{bytes['out']}', '#{Date.yesterday}')")
-        Redis.current.del key
+      every(1.day, 'rotate_bytes', at: '05:00') do # midnight CST
+        Redis.current.keys('bytes:*').each do |key|
+          bytes = Redis.current.hgetall(key)
+          connector_id = key.split(':').last
+          ActiveRecord::Base.connection.execute("INSERT INTO connector_bytes (connector_id, bytes_total, bytes_in, bytes_out, created_at) VALUES('#{connector_id}', '#{bytes['in'].to_i + bytes['out'].to_i}', '#{bytes['in']}', '#{bytes['out']}', '#{Date.yesterday}')")
+          Redis.current.del key
+        end
       end
+
+
     end
 
-
-  end
-  begin
     Clockwork::run
   rescue => e
     LOG.debug "CRON-ERROR"
