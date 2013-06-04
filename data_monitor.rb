@@ -28,7 +28,7 @@ File::Tail::Logfile.open(file_before) do |log|
     # timestamp = Time.parse(timestamp) rescue Time.now
     bytes_in = bytes_in.to_i
     bytes_out = bytes_out.to_i
-    Redis.current.hincr 'content_type:#{connector_id}', content_type
+    Redis.current.hincrby 'content_type:#{connector_id}', content_type, 1
     if bytes_in > 0
       Redis.current.hincrby "bytes:#{connector_id}", 'in', bytes_in
     end
