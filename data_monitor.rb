@@ -24,7 +24,7 @@ File.chmod(0777, file_before)
 File::Tail::Logfile.open(file_before) do |log|
 
   log.tail do |line|
-    connector_id, bytes_in, bytes_out, timestamp, content_type = line.split '|'
+    connector_id, bytes_in, bytes_out, timestamp, content_type = line.chomp.split '|'
     # timestamp = Time.parse(timestamp) rescue Time.now
     bytes_in = bytes_in.to_i
     bytes_out = bytes_out.to_i
