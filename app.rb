@@ -46,10 +46,10 @@ ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]
 
 Mail.defaults do
   delivery_method :smtp, {
-    address:   App.config.mail.address,
-    port:      App.config.mail.port,
-    user_name: App.config.mail.user_name,
-    password:  App.config.mail.password
+    address:   ::App.config.mail.address,
+    port:      ::App.config.mail.port,
+    user_name: ::App.config.mail.user_name,
+    password:  ::App.config.mail.password
   }
 end
 

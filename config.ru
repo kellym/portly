@@ -25,7 +25,7 @@ use Warden::Manager do |config|
 end
 use Rack::CommonLogger
 use OmniAuth::Builder do
-  provider :github, App.config.github_key, App.config.github_secret
+  provider :github, ::App.config.github_key, ::App.config.github_secret
 end
 
 
@@ -38,8 +38,8 @@ use Airbrake::Rack
 # Dragonfly
 use Rack::Cache,
   :verbose     => true,
-  :metastore   => URI.encode("file:#{App.config.tmp_path}/cache/meta"),
-  :entitystore => URI.encode("file:#{App.config.tmp_path}/cache/body")
+  :metastore   => URI.encode("file:#{::App.config.tmp_path}/cache/meta"),
+  :entitystore => URI.encode("file:#{::App.config.tmp_path}/cache/body")
 
 use Dragonfly::Middleware, :images
 
