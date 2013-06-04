@@ -14,7 +14,7 @@ Thread.new do
 
   module Clockwork
 
-    every(1.day, 'rotate_bytes', at: '00:00') do
+    every(1.day, 'rotate_bytes', at: '05:00') do # midnight CST
       Redis.current.keys('bytes:*').each do |key|
         bytes = Redis.current.hgetall(key)
         connector_id = key.split(':').last
