@@ -24,10 +24,11 @@ File.chmod(0777, file_before)
 File::Tail::Logfile.open(file_before) do |log|
 
   log.tail do |line|
-    connector_id, bytes_in, bytes_out, timestamp = line.split '|'
+    connector_id, bytes_in, bytes_out, timestamp, content_type = line.split '|'
     # timestamp = Time.parse(timestamp) rescue Time.now
     bytes_in = bytes_in.to_i
     bytes_out = bytes_out.to_i
+    Redis.current.hincr 'content_type:#{connector_id}', content_type
     if bytes_in > 0
       Redis.current.hincrby "bytes:#{connector_id}", 'in', bytes_in
     end
