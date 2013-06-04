@@ -6,6 +6,14 @@ require 'active_record'
 
 Thread.new do
 
+  ROOT_PATH = File.dirname(__FILE__)
+  if ENV['RACK_ENV'] == 'development'
+    LOG = Logger.new STDOUT
+  else
+    LOG = Logger.new(ROOT_PATH + '/log/' + (ENV['RACK_ENV'] || 'development') + '.log', 'daily')
+  end
+  LOG.level = Logger::DEBUG
+
   @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
   Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
 
@@ -25,7 +33,12 @@ Thread.new do
 
 
   end
-  Clockwork::run
+  begin
+    Clockwork::run
+  rescue => e
+    LOG.debug "CRON-ERROR"
+    LOG.debug e.message
+  end
 
 end
 

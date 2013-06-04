@@ -23,22 +23,27 @@ File.chmod(0777, file_before)
 
 File::Tail::Logfile.open(file_before) do |log|
 
-  log.tail do |line|
-    connector_id, bytes_in, bytes_out, timestamp, content_type = line.chomp.split '|'
-    # timestamp = Time.parse(timestamp) rescue Time.now
-    bytes_in = bytes_in.to_i
-    bytes_out = bytes_out.to_i
-    Redis.current.hincrby "content_type:#{connector_id}", content_type, 1
-    if bytes_in > 0
-      Redis.current.hincrby "bytes:#{connector_id}", 'in', bytes_in
+  begin
+    log.tail do |line|
+      connector_id, bytes_in, bytes_out, timestamp, content_type = line.chomp.split '|'
+      # timestamp = Time.parse(timestamp) rescue Time.now
+      bytes_in = bytes_in.to_i
+      bytes_out = bytes_out.to_i
+      Redis.current.hincrby "content_type:#{connector_id}", content_type, 1
+      if bytes_in > 0
+        Redis.current.hincrby "bytes:#{connector_id}", 'in', bytes_in
+      end
+      if bytes_out > 0
+        Redis.current.hincrby "bytes:#{connector_id}", 'out', bytes_out
+      end
+      if bytes_in > 0 || bytes_out > 0
+        Redis.current.publish "bytes_increased", connector_id
+      end
+      #   logfile.puts line
     end
-    if bytes_out > 0
-      Redis.current.hincrby "bytes:#{connector_id}", 'out', bytes_out
-    end
-    if bytes_in > 0 || bytes_out > 0
-      Redis.current.publish "bytes_increased", connector_id
-    end
-#    logfile.puts line
+  rescue => e
+    LOG.debug "DATA-MONITOR-ERROR"
+    LOG.debug e.message
   end
 
 end
