@@ -41,11 +41,17 @@ class EventSource
   end
 
   # Public: Send an action to any open sockets for a particular user.
-  def self.publish(user_id, action, id)
+  def self.publish_to_user(user_id, action, id)
     if SOCKETS.include?(user_id)
       puts 'sending:'
       puts action
       SOCKETS[user_id].each { |s| s.send(action, id) }
     end
   end
+
+  # Public: Publishes to Redis so we can work from any instance.
+  def self.publish(user_id, action, data)
+    Redis.current.publish('socket_publisher', { :user_id => user_id, :action => action, :data => data }.to_msgpack)
+  end
+
 end
