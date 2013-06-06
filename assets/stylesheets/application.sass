@@ -14,7 +14,7 @@ a
   color: $blue
 
 header#main, header.gray
-  background: $white //$gray
+  background: $green
   width: 100%
 
 header.pricing-header
@@ -63,18 +63,18 @@ h1.logo
   a
     @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
       margin: 0 auto
-    background: url('/images/logo.png') no-repeat
-    background-size: 270px 80px
-    width: 270px
+    background: url('/images/logo-white.png') no-repeat
+    background-size: 141px 37px
+    width: 141px
+    padding: 37px 0 0
     height: 0
-    padding: 80px 0 0
     overflow: hidden
     display: block
   &.small a
-    background: url('/images/logo-sm.png') no-repeat
-    background-size: 200px 60px
-    width: 200px
-    padding: 60px 0 0
+    background: url('/images/logo-white.png') no-repeat
+    background-size: 141px 37px
+    width: 141px
+    padding: 37px 0 0
 
 .inline-input
   padding: 0 0.5em
@@ -213,7 +213,6 @@ h2, h3, h4, h5, h6
 .interior, .interior body
   background: $brown
 .interior #main
-  background: $white
   box-shadow: none
 .hide
   display: none !important
@@ -261,9 +260,9 @@ div.switch.small
     display: table-row
   a
     font-family: 'brevia'
-    font-size: 0.8em
+    font-size: 0.7em
     text-transform: uppercase !important
-    color: $black
+    color: $white
     &:hover
       color: $gray1
     &.button
@@ -294,10 +293,11 @@ div.switch.small
     padding: 5px 15px
     text-transform: none
     &.active
-      background: $gray
-      color: $black
+      background: $green1
+      color: $white
     &:hover
-      background: lighten($gray, 4%)
+      color: $white
+      background: lighten($green, 4%)
 
   li
     margin-left: 10px
