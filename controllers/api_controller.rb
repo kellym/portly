@@ -138,7 +138,6 @@ class ApiController < SharedController
   delete '/tunnels/*' do |connector_id|
     authorize! connector_id
     if Tunnel.destroy(connector_id: connector_id.to_i, user_id: current_user.id, token: current_token.code)
-      #EventSource.publish('')
       publish_action "kill:#{connector_id}"
       halt 200
     else

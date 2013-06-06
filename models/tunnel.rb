@@ -117,8 +117,10 @@ class Tunnel
       port ||= Redis.current.hget key, 'port'
       Redis.current.del key
     end
-    EventSource.publish(connector.user_id, 'disconnect', @connector_id)
-    Redis.current.srem('ports_in_use', port) if port
+    if port
+      EventSource.publish(connector.user_id, 'disconnect', @connector_id)
+      Redis.current.srem('ports_in_use', port)
+    end
     Redis.current.srem('connectors_online',"#{@connector_id}")
     Redis.current.srem "watching:#{@token}", @connector_id
     #if @publish
