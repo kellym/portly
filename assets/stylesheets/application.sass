@@ -7,7 +7,7 @@
 @import partials/helpers
 
 html, body
-  background: $brown
+  background: $white
   color: $black
 
 a
@@ -211,7 +211,7 @@ h2, h3, h4, h5, h6
   font-family: "source-sans-pro", sans-serif
   font-weight: 600
 .interior, .interior body
-  background: $brown
+  background: $white
 .interior #main
   box-shadow: none
 .hide
@@ -309,8 +309,9 @@ div.switch.small
   position: relative
   z-index: 2
   height: 60px
-  background: $yellow
+  background: $white
   box-shadow: 0 5px 10px rgba(0,0,0,0.1)
+  border-bottom: 3px solid $gray8
   .nav-bar
     margin-bottom: 0
     overflow: hidden
@@ -328,13 +329,14 @@ div.switch.small
       margin: 0
       line-height: 12px
       height: 60px
-      color: $white
-      border-right: 1px solid #E8C891
-      color: $white
+      border-right: 1px solid $gray8
+      color: $black
       &:hover
-        background: $light_yellow
+        background: $gray6
+        color: $white
     a.active
       position: relative
+      border-bottom: 3px solid $gray3
       &:after
         line-height: 0
         border: solid transparent
@@ -344,18 +346,18 @@ div.switch.small
         overflow: hidden
         position: absolute
         pointer-events: none
-        border-top-color: $yellow
-        border-width: 12px
+        border-top-color: $gray3
+        border-width: 6px
         left: 50%
-        margin-left: -12px
+        margin-left: -6px
         top: 58px
-      &:hover:after
-        border-top-color: $light_yellow
+      //&:hover:after
+        border-top-color: $gray6
 
 .subnav li a.offline
-  color: darken($yellow, 25)
+  color: $gray7
 .subnav .nav-overflowmenu li a.offline small
-  color: $light_yellow
+  color: $gray7
 
 .nav-overflowmenu-container
   position: relative
@@ -633,7 +635,7 @@ select
     h2
       font-size: 1.4em
 footer
-  @include linear-gradient(to bottom, $brown2, $brown 5%, $fallback: $brown)
+  //@include linear-gradient(to bottom, $brown2, $brown 5%, $fallback: $brown)
   margin-bottom: 50px
   .header
     color: $yellow
