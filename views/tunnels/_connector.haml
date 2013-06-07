@@ -14,7 +14,7 @@
     .stopwatch.hide
       %span.p-clock.handle-hide
       %span.time{'data-start' => c.connected_at.to_i }
-      %div #{human_number c.incoming_traffic_today} in / #{human_number c.outgoing_traffic_today} out
+      %span #{human_number c.incoming_traffic_today} in / #{human_number c.outgoing_traffic_today} out
   .large-4.columns.text-right.small-4
     .row
       .large-6.small-12.columns
