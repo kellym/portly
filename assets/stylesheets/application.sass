@@ -200,14 +200,21 @@ button
 
 .summary
   background: $gray9
-  height: 200px
+  height: 220px
   width: 100%
   margin-bottom: 10px
   margin-top: -10px
   padding: 10px
-  canvas
-    height: 200px
+  canvas, .canvas-frame
+    background: lighten($gray9, 2%)
+    height: 170px
+    width: 576px
+  .canvas-frame
+    margin-top: 20px
+    padding: 10px 12px 0
     width: 600px
+    height: 180px
+
 
 .state-online
   background: url(/images/state_online.png) center center no-repeat
