@@ -15,6 +15,8 @@
     :coffeescript
       new Portly.DOM.Index()
       $(document).foundation('reveal forms')
+      $('.tooltipped').tipsy()
+      $('.tooltipped-top').tipsy({ gravity : 's', offset: 10})
     = content_for :javascripts
     :javascript
       $(function(){/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {   window.scrollTo(0, 1); }, 1000); });

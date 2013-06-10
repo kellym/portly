@@ -17,7 +17,7 @@ class Connector < ActiveRecord::Base
   belongs_to :user
   belongs_to :token
   has_many :auths, :class_name => 'ConnectorAuth'
-  has_many :bytes, :class_name => 'ConnectorBytes'
+  has_many :bytes, :class_name => 'ConnectorByte'
 
   after_save :update_tunnels
 
@@ -120,5 +120,15 @@ class Connector < ActiveRecord::Base
 
   def bytes_today
     @bytes ||= Redis.current.hgetall("bytes:#{self.id}") rescue {'in' => 0, 'out' => 0}
+  end
+
+  def data_this_month
+    return @data_this_month if @data_this_month
+    month_bytes_in = month_bytes_out = Hash[(Date.today-30.days..Date.today).zip([])]
+    self.bytes.where('created_at > ?', Date.today-30.days).each do |b|
+      month_bytes_in[b.created_at]  = b.bytes_in
+      month_bytes_out[b.created_at] = b.bytes_out
+    end
+    @data_this_month = [month_bytes_in, month_bytes_out]
   end
 end

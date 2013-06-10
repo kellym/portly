@@ -92,7 +92,7 @@ class ApplicationController < SharedController
 
   get '/tunnels' do
     authenticate_user!
-    @tunnels = current_user.tokens.active.sort_by { |t| t.online? ? 0 : 1 }
+    @computers = current_user.tokens.active.sort_by { |t| t.online? ? 0 : 1 }
     render :'tunnels/index'
   end
 
@@ -100,7 +100,7 @@ class ApplicationController < SharedController
     authenticate_user!
     @token = Token.where(id: token_id, user_id: current_user.id)
     halt 404 unless @token
-    @tunnels = current_user.tokens.active.sort_by { |t| (t.id == token_id.to_i) ? 0 : (t.online? ? 1 : 2) }
+    @computers = current_user.tokens.active.sort_by { |t| (t.id == token_id.to_i) ? 0 : (t.online? ? 1 : 2) }
     @pjax = env['HTTP_X_PJAX']
     #puts env.inspect
     render :'tunnels/index', layout: (@pjax ? false : :'layouts/application')

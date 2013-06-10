@@ -3,7 +3,7 @@
     .large-11.columns.padding-left-0.padding-right-0.tunnel-nav
       %ul.nav-bar
         - first = true
-        - @tunnels.each do |token|
+        - @computers.each do |token|
           %li
             - k = first ? 'active ' : ''
             - k << (token.online? ? 'online' : 'offline')
@@ -14,12 +14,16 @@
               %small.online-state= token.online? ? 'ONLINE' : 'OFFLINE'
             - first = false
     .large-1.columns.padding-left-0.padding-right-0
-- if @tunnels.size > 0
+- if @computers.size > 0
   #tunnels
     .row
-      .large-12.columns.sections
+      .large-12
+        .summary
+          %canvas{width: '600px', height: '180px'}
+    .row
+      .large-12.columns
         - first = true
-        - token = @tunnels.first
+        - token = @computers.first
         %section.section{'data-section' => token.id, style: first ? '' : 'display: none'}
           .large-12.connectors
             - token.connectors.each do |c|
@@ -50,4 +54,5 @@
 - content_for :javascripts do
   = javascript_include_tag 'tunnels'
   :coffeescript
-    new Portly.Tunnels.Views.Index()
+    nil = 0
+    new Portly.Tunnels.Views.Index(#{@computers.first.data_this_month[0].values}, #{@computers.first.data_this_month[1].values})

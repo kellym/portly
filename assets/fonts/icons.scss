@@ -27,10 +27,10 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="p-"] {
 */
-.p-gear, .p-pause, .p-play, .p-minus, .p-plus, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-layers-alt, .p-exit {
+.p-gear, .p-pause, .p-play, .p-minus, .p-plus, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-exit, .p-switch, .p-arrow-right, .p-box-add, .p-upload, .p-clock-2, .p-users, .p-resize, .p-resize-2, .p-key, .p-power-cord, .p-arrow-up, .p-arrow-down {
   position: relative;
   top: 2px;
-	font-family: 'pictos';
+	font-family: 'pictos' !important;
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -87,9 +87,42 @@ you can use the generic selector below, but it's slower:
 .p-unlock-fill:before {
 	content: "\e00e";
 }
-.p-layers-alt:before {
-	content: "\e00b";
-}
 .p-exit:before {
 	content: "\e00c";
+}
+.p-switch:before {
+	content: "\e00f";
+}
+.p-arrow-right:before {
+	content: "\e010";
+}
+.p-box-add:before {
+	content: "\e011";
+}
+.p-upload:before {
+	content: "\e012";
+}
+.p-clock-2:before {
+	content: "\e013";
+}
+.p-users:before {
+	content: "\e014";
+}
+.p-resize:before {
+	content: "\e015";
+}
+.p-resize-2:before {
+	content: "\e016";
+}
+.p-key:before {
+	content: "\e00b";
+}
+.p-power-cord:before {
+	content: "\e018";
+}
+.p-arrow-up:before {
+	content: "\e01a";
+}
+.p-arrow-down:before {
+	content: "\e01b";
 }

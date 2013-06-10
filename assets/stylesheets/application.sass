@@ -5,6 +5,7 @@
 @import foundation
 @import partials/settings
 @import partials/helpers
+@import partials/tipsy
 
 html, body
   background: $white
@@ -111,6 +112,51 @@ h1.logo
   font-size: 0.9em
   line-height: 1.6em
 
+.flat-link
+  margin: 15px 15px 0 0
+  @include box-sizing(border-box)
+  width: 80px
+  height: 80px
+  display: block
+  float: right
+  text-align: center
+  line-height: 80px
+  background: $pink3
+  font-size: 1.4em
+  color: $white
+  &:hover
+    color: $white
+    background: lighten($pink3, 5%)
+.spacer
+  margin: 0 15px 0 0
+  width: 0
+  height: 80px
+  float: right
+  overflow: hidden
+.flat-box
+  margin: 15px 0 0 15px
+  @include box-sizing(border-box)
+  width: 80px
+  height: 80px
+  display: block
+  float: right
+  text-align: center
+  line-height: 80px
+  background: $green3
+  font-size: 1.4em
+  color: $white
+  font-family: 'courier-prime', courier
+  &.wide
+    width: 120px
+  &.wider
+    width: 160px
+  &.light
+    background: $green2
+  &.two-line
+    font-size: 1.2em
+    padding: 10px 0
+    line-height: 30px
+
 section.section
   box-shadow: none
   h3
@@ -151,6 +197,18 @@ button
 
 .sections
   margin-top: -10px
+
+.summary
+  background: $gray9
+  height: 200px
+  width: 100%
+  margin-bottom: 10px
+  margin-top: -10px
+  padding: 10px
+  canvas
+    height: 200px
+    width: 600px
+
 .state-online
   background: url(/images/state_online.png) center center no-repeat
 .state-offline
@@ -160,7 +218,6 @@ button
 span.state-online, span.state-offline, span.state-disabled
   background-size: 22px 22px !important
   padding: 22px 18px 22px 30px
-  margin-left: 42px
 
 small.state-online, small.state-offline
   background-position: left center
@@ -548,16 +605,11 @@ select
   color: #555
 
 .stopwatch
-  font-size: 1.2em
-  line-height: 105px
   .time
-    font-weight: bold
-    font-family: 'brevia', sans-serif
-  @media only screen and (max-width : 850px), screen and (max-device-width : 850px)
-    .p-clock
-      display: none
+    //color: $black2
+    font-family: 'courier-prime', courier
+    line-height: 0.9
 .button
-  @include radius(5px)
   border: none
   background: $pink
   //box-shadow: 1px 1px 0 0 #c43f28
@@ -580,15 +632,25 @@ select
       left: 2px
       box-shadow: 1px 1px 0 0 #c43f28
   &.connect, &.disconnect
-    width: 150px
-
+    line-height: 1
 .section
   margin-bottom: 100px
-  background: $gray9
   box-shadow: 0 2px 5px $black
   .connector
     background: $gray9
     line-height: 110px
+    padding-bottom: 15px
+    .header
+      //border-top: 5px solid $black3
+      background: $bluegray
+      color: $white
+      line-height: 40px
+      font-size: 0.8em
+      a
+        padding-bottom: 2px
+        line-height: 38px
+        color: $white
+        border-bottom: 1px dotted $white
     &:nth-child(even)
       background: $gray10
     @media only screen and ( max-width : 767px )

@@ -1,3 +1,5 @@
+#= require vendor/chart
+
 @namespace 'Portly', -> @namespace 'Tunnels', -> @namespace 'Views', ->
   class @Index extends Backbone.View
 
@@ -24,7 +26,7 @@
       'opened .update-modal'    : 'updateReveal'
       'pjax:end'                : 'pjaxEnd'
 
-    initialize: =>
+    initialize: (data)=>
       @$('.inline-input input').autoGrow(2)
       @menu = @$('.subnav').overflowmenu(
         open: ->
@@ -37,6 +39,31 @@
       )
       @sections = $('.sections')
 
+      @chart = new Chart($('.summary canvas')[0].getContext('2d'))
+      labels = []
+      for i in [0..data[0].length-1] by 1
+        labels[i] = ''
+      @chart.StackedBar( {
+        labels : labels,
+        datasets : [
+          {
+            fillColor : "rgba(131,200,152,0.8)",
+            strokeColor : "rgba(131,200,152,1)",
+            data : data[0]
+          },
+          {
+            fillColor : "rgba(198,221,171,0.8)",
+            strokeColor : "rgba(198,221,171,1)",
+            data : data[1]
+          }
+        ]}, {
+          scaleShowLabels: false,
+          scaleShowGridLines: false,
+          barValueSpacing: 1,
+          scaleGridLineColor: 'rgba(0,0,0,0)',
+          scaleFontSize: 8
+        }
+      )
       @stopwatches = []
 
       @$('.stopwatch').each (i, el) =>
@@ -73,13 +100,15 @@
       data = $.parseJSON(event.data)
       row = $(".connector[data-id=\"" + data["id"] + "\"]")
       span = row.find('.domain span')
-      span.replaceWith($("<a href='#{span.data('url')}' target='_blank'>#{span.text()}</a>"))
+      span.replaceWith($("<a class='link' href='#{span.data('url')}' target='_blank'>#{span.text()}</a>"))
       row.find(".connected-state").addClass("state-online").removeClass "state-offline"
       connect = row.find(".connect")
+      connect.attr('title', 'Disconnect')
+      #connect.attr('original-title', 'Disconnect')
+      $tipsy[connect.data('tipsy-id')].reset()
       connect.removeClass('disabled')
-      connect.find('span').text('Disconnect')
+      connect.find('span').addClass('p-pause').removeClass('p-play')
       connect.data('connector', true)
-      connect.find('div').removeClass('p-play').addClass('p-pause')
       @startWatch(row.find(".stopwatch"), +new Date())
       console.log "connect"
       console.log event.data
@@ -91,10 +120,12 @@
       link.replaceWith($("<span data-url='#{link.prop('href')}'>#{link.text()}</span>"))
       row.find(".connected-state").addClass("state-offline").removeClass "state-online"
       connect = row.find(".connect")
+      connect.attr('title', 'Connect')
+      #connect.attr('original-title', 'Connect')
+      $tipsy[connect.data('tipsy-id')].reset()
       connect.removeClass('disabled')
       connect.data('connector', false)
-      connect.find('span').text('Connect')
-      connect.find('div').removeClass('p-pause').addClass('p-play')
+      connect.find('span').removeClass('p-pause').addClass('p-play')
       row.find(".stopwatch").trigger "stop"
       console.log "disconnect"
       console.log event.data
@@ -240,7 +271,7 @@
       min = parseInt(time / 6000) - (hr * 60)
       sec = parseInt(time / 100) - (min * 60) - (hr * 3600)
       #hundredths = pad(time - (sec * 100) - (min * 6000), 2)
-      ((if hr > 0 then @pad(hr, 2) else "00")) + ":" + ((if min > 0 then @pad(min, 2) else "00")) + ":" + @pad(sec, 2) # + ":" + hundredths
+      ((if hr > 0 then "#{@pad(hr, 2)}:" else "")) + ((if min > 0 then @pad(min, 2) else "00")) + ":" + @pad(sec, 2) # + ":" + hundredths
 
     makeTimer : (el, func, time, autostart, @init=false) =>
       @set = (func, time, autostart) ->

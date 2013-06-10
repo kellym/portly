@@ -7,12 +7,12 @@
 #= require vendor/autogrow
 #= require vendor/menu
 #= require vendor/pjax
+#= require vendor/tipsy
 #= require foundation/index
 #= require application/core
 #= require application/dom
 #= require application/stopwatch
 #= require forms
-
 $ ->
   signin_box = $("#signin")
   $(".signin-button").dblclick((e) ->
