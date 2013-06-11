@@ -55,15 +55,15 @@
           {
             fillColor : "rgba(131,200,152,0.8)",
             strokeColor : "rgba(131,200,152,1)",
-            data : data[0]
+            data : data[1]
           },
           {
             fillColor : "rgba(198,221,171,0.8)",
             strokeColor : "rgba(198,221,171,1)",
-            data : data[1],
+            data : data[0],
             mouseover: (e, pt, data, i, j) =>
               e['currentTarget'] = $('.summary')
-              @tipsy.data('title', "#{@humanNumber(data.datasets[0].data[i] || 0)} in / #{@humanNumber(data.datasets[1].data[i] || 0)} out")
+              @tipsy.data('title', "#{@humanNumber(data.datasets[1].data[i] || 0)} in / #{@humanNumber(data.datasets[0].data[i] || 0)} out")
               t = @tipsy.enter(e)
               t.reset()
               t.setPosition(pt.x1 + 4, (pt.y2 || 150) - 3)

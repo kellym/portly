@@ -74,7 +74,8 @@ class Token < ActiveRecord::Base
 
   def data_this_month
     return @data_this_month if @data_this_month
-    month_bytes_in = month_bytes_out = Hash[(Date.today-30.days..Date.today).zip([])]
+    month_bytes_in  = Hash[(Date.today-30.days..Date.today).zip([])]
+    month_bytes_out = Hash[(Date.today-30.days..Date.today).zip([])]
     ConnectorByte.where(:connector_id => self.connectors.pluck(:id)).where('created_at > ?', Date.today-30.days).each do |b|
       month_bytes_in[b.created_at]  = b.bytes_in
       month_bytes_out[b.created_at] = b.bytes_out
