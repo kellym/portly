@@ -12,6 +12,7 @@ window.Chart = function(context){
 
 	var chart = this;
 
+  this.dataset = [];
 
 	//Easing functions adapted from Robert Penner's easing equations
 	//http://www.robertpenner.com/easing/
@@ -150,7 +151,7 @@ window.Chart = function(context){
 	//Variables global to the chart
 	var width = context.canvas.width;
 	var height = context.canvas.height;
-
+  var position;
 
 	//High pixel density displays - multiply the size of the canvas height/width by the device pixel ratio, then scale.
 	if (window.devicePixelRatio) {
@@ -1049,7 +1050,7 @@ window.Chart = function(context){
 	}
 
   var StackedBar = function(data,config,ctx){
-    var maxSize, scaleHop, calculatedScale, labelHeight, scaleHeight, valueBounds, labelTemplateString, valueHop,widestXLabel, xAxisLength,yAxisPosX,xAxisPosY,barWidth, rotateLabels = 0;
+    var maxSize, scaleHop, calculatedScale, labelHeight, scaleHeight, valueBounds, labelTemplateString, valueHop,widestXLabel, xAxisLength,yAxisPosX,xAxisPosY,barWidth, rotateLabels = 0, datasetPoints = [], hoveredPoint;
 
     calculateDrawingSizes();
 
@@ -1077,19 +1078,81 @@ window.Chart = function(context){
     calculateXAxisSize();
     animationLoop(config,drawScale,drawBars,ctx);
 
+    function activeDataPointHandler(event) {
+      var mouse_on_point = false;
+
+      for (var k in data.datasets) {
+        var dataset = data.datasets[k];
+        if (dataset.mouseover) {
+          for (var i in datasetPoints[k]) {
+            var point = datasetPoints[k][i];
+            //var bounds = (config.pointDotStrokeWidth / 2) + point.radius;
+            if (
+              event.offsetX >= point.x1 && event.offsetX <= point.x2
+            ) {
+              mouse_on_point = true;
+              if (hoveredPoint != point) {
+                if (hoveredPoint) {
+                  // We jumped from one point to the next, so fire the mouseout first for that dataset
+                  dataset.mouseout(event, point);
+                }
+                hoveredPoint = point;
+                dataset.mouseover(event, point);
+              }
+              break;
+            }
+          }
+        }
+      }
+
+      if (!mouse_on_point && hoveredPoint) {
+        if (dataset.mouseout) {
+          dataset.mouseout(event, point);
+        }
+        hoveredPoint = null;
+      }
+
+      if (mouse_on_point) {
+        context.canvas.style.cursor = 'pointer';
+      } else {
+        context.canvas.style.cursor = 'default';
+      }
+    }
+
+    if (window.Touch) {
+      context.canvas.ontouchstart = function(e) {
+        e.offsetX = e.targetTouches[0].clientX - position.x;
+        e.offsetY = e.targetTouches[0].clientY - position.y;
+        activeDataPointHandler(e);
+      }
+      context.canvas.ontouchmove = function(e) {
+        e.offsetX = e.targetTouches[0].clientX - position.x;
+        e.offsetY = e.targetTouches[0].clientY - position.y;
+        activeDataPointHandler(e);
+      }
+    } else {
+      context.canvas.onmousemove = function(e) {
+        activeDataPointHandler(e);
+      }
+    }
+
     function drawBars(animPc){
+      var _top;
       ctx.lineWidth = config.barStrokeWidth;
       var yStart = new Array(data.datasets.length);
       for (var i=0; i<data.datasets.length; i++){
-          ctx.fillStyle = data.datasets[i].fillColor;
-          ctx.strokeStyle = data.datasets[i].strokeColor;
+        ctx.fillStyle = data.datasets[i].fillColor;
+        ctx.strokeStyle = data.datasets[i].strokeColor;
+        datasetPoints[i] = []
         if (i == 0) { //on the first pass, act as normal
           for (var j=0; j<data.datasets[i].data.length; j++){
             var barOffset = yAxisPosX + config.barValueSpacing + valueHop*j + barWidth*i + config.barDatasetSpacing*i + config.barStrokeWidth*i;
             ctx.beginPath();
             ctx.moveTo(barOffset, xAxisPosY);
-            ctx.lineTo(barOffset, xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2));
-            ctx.lineTo(barOffset + barWidth, xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2));
+            _top = xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2);
+            datasetPoints[i][j] = { x1: barOffset, x2: barOffset + barWidth, y1: xAxisPosY, y2: _top };
+            ctx.lineTo(barOffset, _top);
+            ctx.lineTo(barOffset + barWidth, _top);
             ctx.lineTo(barOffset + barWidth, xAxisPosY);
             yStart[j] = calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2)
             if(config.barShowStroke){

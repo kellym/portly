@@ -15,16 +15,22 @@
             - first = false
     .large-1.columns.padding-left-0.padding-right-0
 - if @computers.size > 0
+  - first = true
+  - token = @computers.first
   #tunnels
     .row
       .large-12
         .summary
-          .canvas-frame
+          .canvas-frame.left
             %canvas{width: '576px', height: '170px'}
+          .flat-box.data-in.wide.left
+            %span.p-arrow-down
+            = human_number token.bytes_this_month[:in]
+          .flat-box.data-out.wide.left
+            %span.p-arrow-up
+            = human_number token.bytes_this_month[:out]
     .row
       .large-12.columns
-        - first = true
-        - token = @computers.first
         %section.section{'data-section' => token.id, style: first ? '' : 'display: none'}
           .large-12.connectors
             - token.connectors.each do |c|

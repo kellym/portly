@@ -117,4 +117,22 @@ class User < ActiveRecord::Base
   def full_domain
     @full_domain ||= "#{subdomain}#{App.config.suffix}"
   end
+
+  def total_bytes_this_month
+    @total_bytes_this_month ||= bytes_this_month.sum(:bytes_total)
+  end
+
+  def bytes_this_month
+    @bytes_this_month ||= ConnectorByte.joins(:connector => :user)
+      .where(users: { id: self.id })
+      .where('connector_bytes.created_at > ?', billing_period_start)
+  end
+
+  def billing_period_start
+    return @billing_period_start if @billing_period_start
+    today = Date.today
+    day = self.created_at.day
+    @billing_period_start = Date.new(today.year, day > today.day ? today.month - 1 : today.month, self.created_at.day)
+  end
+
 end

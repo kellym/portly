@@ -82,4 +82,12 @@ class Token < ActiveRecord::Base
     @data_this_month = [month_bytes_in, month_bytes_out]
   end
 
+  def bytes_this_month
+    return @bytes_this_month if @bytes_this_month
+    bytes = ConnectorByte.joins(:connector => :user)
+      .where(users: { id: self.user_id })
+      .where('connector_bytes.created_at > ?', self.user.billing_period_start).all
+    @bytes_this_month = { in: bytes.sum { |r| r.bytes_in }, out: bytes.sum { |r| r.bytes_out } }
+  end
+
 end

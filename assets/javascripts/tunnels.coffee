@@ -38,7 +38,13 @@
         label: ''
       )
       @sections = $('.sections')
-
+      @tipsy = $('.summary').tipsy( {trigger: 'manual', gravity: 's', fade: false, title: ->
+        $('.summary').data('title')
+      })
+      $('.summary').on('mouseout', (ev) ->
+        $(@).tipsy('hide')
+      )
+      @tipsy.tipsy('show')
       @chart = new Chart($('.summary canvas')[0].getContext('2d'))
       labels = []
       for i in [0..data[0].length-1] by 1
@@ -49,7 +55,17 @@
           {
             fillColor : "rgba(131,200,152,0.8)",
             strokeColor : "rgba(131,200,152,1)",
-            data : data[0]
+            data : data[0],
+            mouseover: (e, pt) =>
+              e['currentTarget'] = $('.summary')
+              @tipsy.data('title', pt.x1)
+              t = @tipsy.enter(e)
+              t.reset()
+              t.setPosition(pt.x1 - 20, pt.y1 - 35)
+
+            mouseout: (e, pt) =>
+              e['currentTarget'] = $('.summary')
+              @tipsy.leave(e)
           },
           {
             fillColor : "rgba(198,221,171,0.8)",

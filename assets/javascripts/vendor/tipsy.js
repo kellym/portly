@@ -79,13 +79,19 @@ $tipsy = {};
           }
         },
 
-        setPosition: function() {
+        setPosition: function(left, top) {
           var $tip = this.tip();
           var pos = $.extend({}, this.$element.offset(), {
               width: this.$element[0].offsetWidth,
               height: this.$element[0].offsetHeight
           });
 
+          if (left) {
+            left = left + this.$element.offset().left;
+          }
+          if (top) {
+            top = top + this.$element.offset().top;
+          }
           var actualWidth = $tip[0].offsetWidth,
               actualHeight = $tip[0].offsetHeight,
               gravity = maybeCall(this.options.gravity, this.$element[0]);
@@ -93,10 +99,10 @@ $tipsy = {};
           var tp;
           switch (gravity.charAt(0)) {
               case 'n':
-                  tp = {top: pos.top + pos.height + this.options.offset, left: pos.left + pos.width / 2 - actualWidth / 2};
+                  tp = {top: (top || (pos.top + pos.height)) + this.options.offset, left: (left || pos.left) + pos.width / 2 - actualWidth / 2};
                   break;
               case 's':
-                  tp = {top: pos.top - actualHeight - this.options.offset, left: pos.left + pos.width / 2 - actualWidth / 2};
+                  tp = {top: (top || (pos.top - actualHeight)) - this.options.offset, left: (left || (pos.left + pos.width / 2 - actualWidth / 2))};
                   break;
               case 'e':
                   tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth - this.options.offset};
@@ -108,9 +114,9 @@ $tipsy = {};
 
           if (gravity.length == 2) {
               if (gravity.charAt(1) == 'w') {
-                  tp.left = pos.left + pos.width / 2 - 15;
+                  tp.left = (left || pos.left) + pos.width / 2 - 15;
               } else {
-                  tp.left = pos.left + pos.width / 2 - actualWidth + 15;
+                  tp.left = (left || pos.left) + pos.width / 2 - actualWidth + 15;
               }
           }
 
@@ -175,7 +181,7 @@ $tipsy = {};
             return tipsy;
         }
 
-        function enter(ev) {
+        this.enter = function(ev) {
             var tipsy = get(ev.currentTarget);
             tipsy.hoverState = 'in';
             if (options.delayIn == 0) {
@@ -184,9 +190,10 @@ $tipsy = {};
                 tipsy.fixTitle();
                 setTimeout(function() { if (tipsy.hoverState == 'in') tipsy.show(); }, options.delayIn);
             }
+            return tipsy;
         };
 
-        function leave(ev) {
+        this.leave = function(ev) {
             var tipsy = get(ev.currentTarget);
             tipsy.hoverState = 'out';
             if (options.delayOut == 0) {
@@ -194,6 +201,7 @@ $tipsy = {};
             } else {
                 setTimeout(function() { if (tipsy.hoverState == 'out') tipsy.hide(); }, options.delayOut);
             }
+            return tipsy;
         };
 
         if (!options.live) this.each(function() { get(this); });
@@ -202,7 +210,7 @@ $tipsy = {};
             var binder   = options.live ? 'live' : 'on',
                 eventIn  = options.trigger == 'hover' ? 'mouseenter' : 'focus',
                 eventOut = options.trigger == 'hover' ? 'mouseleave' : 'blur';
-            this[binder](eventIn, enter)[binder](eventOut, leave);
+            this[binder](eventIn, this.enter)[binder](eventOut, this.leave);
         }
 
         return this;
