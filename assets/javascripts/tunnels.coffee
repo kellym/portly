@@ -61,7 +61,7 @@
               @tipsy.data('title', pt.x1)
               t = @tipsy.enter(e)
               t.reset()
-              t.setPosition(pt.x1 - 20, pt.y1 - 35)
+              t.setPosition(pt.x1 - 20, (pt.y2 || 150) - 35)
 
             mouseout: (e, pt) =>
               e['currentTarget'] = $('.summary')
