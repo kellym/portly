@@ -1084,23 +1084,22 @@ window.Chart = function(context){
       for (var k in data.datasets) {
         var dataset = data.datasets[k];
         if (dataset.mouseover) {
-          for (var i in datasetPoints[k]) {
-            var point = datasetPoints[k][i];
-            //var bounds = (config.pointDotStrokeWidth / 2) + point.radius;
-            if (
-              event.offsetX >= point.x1 && event.offsetX <= point.x2
-            ) {
-              mouse_on_point = true;
-              if (hoveredPoint != point) {
-                if (hoveredPoint) {
-                  // We jumped from one point to the next, so fire the mouseout first for that dataset
-                  dataset.mouseout(event, point);
-                }
-                hoveredPoint = point;
-                dataset.mouseover(event, point);
+          i = datasetPoints[k].length - 1;
+          var point = datasetPoints[k][i];
+          //var bounds = (config.pointDotStrokeWidth / 2) + point.radius;
+          if (
+            event.offsetX >= point.x1 && event.offsetX <= point.x2
+          ) {
+            mouse_on_point = true;
+            if (hoveredPoint != point) {
+              if (hoveredPoint) {
+                // We jumped from one point to the next, so fire the mouseout first for that dataset
+                dataset.mouseout(event, point);
               }
-              break;
+              hoveredPoint = point;
+              dataset.mouseover(event, point);
             }
+            break;
           }
         }
       }
