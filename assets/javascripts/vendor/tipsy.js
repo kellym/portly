@@ -87,10 +87,10 @@ $tipsy = {};
           });
 
           if (left) {
-            left = left + this.$element.offset().left;
+            left = left + this.$element.offset().left - ($tip[0].offsetWidth / 2);
           }
           if (top) {
-            top = top + this.$element.offset().top;
+            top = top + this.$element.offset().top - $tip[0].offsetHeight;
           }
           var actualWidth = $tip[0].offsetWidth,
               actualHeight = $tip[0].offsetHeight,

@@ -63,10 +63,10 @@
             data : data[1],
             mouseover: (e, pt, data, i, j) =>
               e['currentTarget'] = $('.summary')
-              @tipsy.data('title', "#{data.datasets[0][j] || '0 MB'} in / #{data.datasets[1][j] || '0 MB'} out")
+              @tipsy.data('title', "#{data.datasets[0].data[j] || '0 MB'} in / #{data.datasets[1].data[j] || '0 MB'} out")
               t = @tipsy.enter(e)
               t.reset()
-              t.setPosition(pt.x1 - 20, (pt.y2 || 150) - 35)
+              t.setPosition(pt.x1 + 4, (pt.y2 || 150))
 
             mouseout: (e, pt) =>
               e['currentTarget'] = $('.summary')
