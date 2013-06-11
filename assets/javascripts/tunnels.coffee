@@ -55,10 +55,15 @@
           {
             fillColor : "rgba(131,200,152,0.8)",
             strokeColor : "rgba(131,200,152,1)",
-            data : data[0],
-            mouseover: (e, pt) =>
+            data : data[0]
+          },
+          {
+            fillColor : "rgba(198,221,171,0.8)",
+            strokeColor : "rgba(198,221,171,1)",
+            data : data[1],
+            mouseover: (e, pt, data, i, j) =>
               e['currentTarget'] = $('.summary')
-              @tipsy.data('title', pt.x1)
+              @tipsy.data('title', "#{data.datasets[0][j] || '0 MB'} in / #{data.datasets[1][j] || '0 MB'} out")
               t = @tipsy.enter(e)
               t.reset()
               t.setPosition(pt.x1 - 20, (pt.y2 || 150) - 35)
@@ -66,11 +71,6 @@
             mouseout: (e, pt) =>
               e['currentTarget'] = $('.summary')
               @tipsy.leave(e)
-          },
-          {
-            fillColor : "rgba(198,221,171,0.8)",
-            strokeColor : "rgba(198,221,171,1)",
-            data : data[1]
           }
         ]}, {
           scaleShowLabels: false,

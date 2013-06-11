@@ -1081,28 +1081,28 @@ window.Chart = function(context){
     function activeDataPointHandler(event) {
       var mouse_on_point = false;
 
-      for (var k in data.datasets) {
+      k = data.datasets.length - 1;
         var dataset = data.datasets[k];
         if (dataset.mouseover) {
-          i = datasetPoints[k].length - 1;
-          var point = datasetPoints[k][i];
-          //var bounds = (config.pointDotStrokeWidth / 2) + point.radius;
-          if (
-            event.offsetX >= point.x1 && event.offsetX <= point.x2
-          ) {
-            mouse_on_point = true;
-            if (hoveredPoint != point) {
-              if (hoveredPoint) {
-                // We jumped from one point to the next, so fire the mouseout first for that dataset
-                dataset.mouseout(event, point);
+          for (var i in datasetPoints[k]) {
+            var point = datasetPoints[k][i];
+            //var bounds = (config.pointDotStrokeWidth / 2) + point.radius;
+            if (
+              event.offsetX >= point.x1 && event.offsetX <= point.x2
+            ) {
+              mouse_on_point = true;
+              if (hoveredPoint != point) {
+                if (hoveredPoint) {
+                  // We jumped from one point to the next, so fire the mouseout first for that dataset
+                  dataset.mouseout(event, point);
+                }
+                hoveredPoint = point;
+                dataset.mouseover(event, point, data, i, k);
               }
-              hoveredPoint = point;
-              dataset.mouseover(event, point);
+              break;
             }
-            break;
           }
         }
-      }
 
       if (!mouse_on_point && hoveredPoint) {
         if (dataset.mouseout) {
@@ -1149,7 +1149,7 @@ window.Chart = function(context){
             ctx.beginPath();
             ctx.moveTo(barOffset, xAxisPosY);
             _top = xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2);
-            datasetPoints[i][j] = { x1: barOffset, x2: barOffset + barWidth, y1: xAxisPosY, y2: _top };
+            datasetPoints[i][j] = { i: i, j: j, x1: barOffset, x2: barOffset + barWidth, y1: xAxisPosY, y2: _top };
             ctx.lineTo(barOffset, _top);
             ctx.lineTo(barOffset + barWidth, _top);
             ctx.lineTo(barOffset + barWidth, xAxisPosY);
@@ -1164,9 +1164,11 @@ window.Chart = function(context){
           for (var j=0; j<data.datasets[i].data.length; j++){
             var barOffset = yAxisPosX + config.barValueSpacing + valueHop*j;
             ctx.beginPath();
+            _top = xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2) - yStart[j];
             ctx.moveTo(barOffset, xAxisPosY - (animPc*yStart[j]) + 1);
-            ctx.lineTo(barOffset, xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2) - yStart[j]);
-            ctx.lineTo(barOffset + barWidth, xAxisPosY - animPc*calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2) - yStart[j]);
+            datasetPoints[i][j] = { i: i, j: j, x1: barOffset, x2: barOffset + barWidth, y1: xAxisPosY, y2: _top };
+            ctx.lineTo(barOffset, _top);
+            ctx.lineTo(barOffset + barWidth, _top);
             ctx.lineTo(barOffset + barWidth, xAxisPosY - (animPc*yStart[j]) + 1);
             yStart[j] = calculateOffset(data.datasets[i].data[j],calculatedScale,scaleHop)+(config.barStrokeWidth/2)+yStart[j];
             if(config.barShowStroke){
