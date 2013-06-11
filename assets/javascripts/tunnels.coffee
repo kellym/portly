@@ -66,7 +66,7 @@
               @tipsy.data('title', "#{data.datasets[0].data[j] || '0 MB'} in / #{data.datasets[1].data[j] || '0 MB'} out")
               t = @tipsy.enter(e)
               t.reset()
-              t.setPosition(pt.x1 + 4, (pt.y2 || 150))
+              t.setPosition(pt.x1 + 4, (pt.y2 || 150) - 3)
 
             mouseout: (e, pt) =>
               e['currentTarget'] = $('.summary')
