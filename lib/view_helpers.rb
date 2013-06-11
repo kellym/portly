@@ -88,12 +88,12 @@ module ViewHelpers
     number = Integer(number)
     result = number.to_s
 
-    if number > 1023 && number < 1048576
+    if number < 1048576
       number = number / 1024
-      result = "#{number.to_s}KB"
+      result = "#{number.to_s} KB"
     elsif number >= 1048576
       number = number / 1048576
-      result = "#{number.to_s}MB"
+      result = "#{number.to_s} MB"
     end
 
     result

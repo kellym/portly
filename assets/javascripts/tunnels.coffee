@@ -63,7 +63,7 @@
             data : data[1],
             mouseover: (e, pt, data, i, j) =>
               e['currentTarget'] = $('.summary')
-              @tipsy.data('title', "#{data.datasets[0].data[j] || '0 MB'} in / #{data.datasets[1].data[j] || '0 MB'} out")
+              @tipsy.data('title', "#{@humanNumber(data.datasets[0].data[i] || 0)} in / #{@humanNumber(data.datasets[1].data[i] || 0)} out")
               t = @tipsy.enter(e)
               t.reset()
               t.setPosition(pt.x1 + 4, (pt.y2 || 150) - 3)
@@ -89,6 +89,13 @@
 
       for event,method of @events
         @es.addEventListener(event.substring(3), @[method]) if /^es\:/.test(event)
+
+    humanNumber: (number) ->
+      if number < 1048576
+        number = parseInt(number / 1024) + ' KB'
+      else if number >= 1048576
+        number = parseInt(number / 1048576) + ' MB'
+      number
 
     focusInlineInput: (ev) ->
       ev.preventDefault()
