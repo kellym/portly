@@ -1,6 +1,6 @@
 - ordinal = current_user.schedule.good_until.day.ordinalize
 
-.banner{:class => current_user.active? ? 'green' : 'red' }
+.banner{:class => current_user.active? ? 'white' : 'yellow' }
   .row
     .large-12.columns
       - if current_user.trial?
@@ -31,6 +31,10 @@
           .panel.callout.radius
             - if current_user.trial?
               You signed up on #{current_user.created_at.strftime("%B %e")}, so it's all good.
+            - elsif current_user.account.transactions.present?
+              You were recently billed on #{current_user.account.transactions.last.created_at}
+            - else
+              You haven't had to pay yet.
       %h4.margin-top-30 Payment Information
       .row.form
         .large-12.columns
@@ -40,7 +44,8 @@
 
               - else
                 .panel.radius
-                  We've got nothing. You probably want to set something up soon.
+                  You haven't provided and payment information yet.  To make sure you have
+                  uninterrupted service, save this information now.
                   .text-center.margin-top-10
                     %a.trigger{:href => '/account/billing'} Set up payment information
             .hide= render :'account/_card', :layout => nil
