@@ -38,6 +38,7 @@
         label: ''
       )
       @sections = $('.sections')
+      @months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       @tipsy = $('.summary').tipsy( {trigger: 'manual', gravity: 's', fade: false, title: ->
         $('.summary').data('title')
       })
@@ -47,8 +48,17 @@
       @tipsy.tipsy('show')
       @chart = new Chart($('.summary canvas')[0].getContext('2d'))
       labels = []
+      j = 0
+      date = new Date()
+      date.setDate(date.getDate() - 1)
       for i in [0..data[0].length-1] by 1
-        labels[i] = ''
+        fiver = (data[0].length - j - 1) % 5 == 0
+        if fiver
+          labels[i] = "#{@months[date.getMonth()-1]} #{date.getDate()}"
+          date.setDate(date.getDate() + 5)
+        else
+          labels[i] = ''
+        j += 1
       @chart.StackedBar( {
         labels : labels,
         datasets : [
@@ -66,7 +76,7 @@
               @tipsy.data('title', "#{@humanNumber(data.datasets[1].data[i] || 0)} in / #{@humanNumber(data.datasets[0].data[i] || 0)} out")
               t = @tipsy.enter(e)
               t.reset()
-              t.setPosition(pt.x1 + 4, (pt.y2 || 150) - 3)
+              t.setPosition(pt.x1 + 4, (pt.y2 || 130) - 3)
 
             mouseout: (e, pt) =>
               e['currentTarget'] = $('.summary')

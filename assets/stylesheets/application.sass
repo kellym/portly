@@ -12,7 +12,9 @@ html, body
   color: $black
 
 a
-  color: $blue
+  color: $pink
+  &:hover
+    color: $pink3
 
 header#main, header.gray
   background: $green
@@ -113,7 +115,7 @@ h1.logo
   line-height: 1.6em
 
 .flat-link
-  margin: 15px 15px 0 0
+  margin: 10px 10px 0 0
   @include box-sizing(border-box)
   width: 80px
   height: 80px
@@ -128,13 +130,13 @@ h1.logo
     color: $white
     background: lighten($pink3, 5%)
 .spacer
-  margin: 0 15px 0 0
+  margin: 0 10px 0 0
   width: 0
   height: 80px
   float: right
   overflow: hidden
 .flat-box
-  margin: 15px 0 0 15px
+  margin: 10px 0 0 10px
   @include box-sizing(border-box)
   width: 80px
   height: 80px
@@ -184,10 +186,6 @@ section.section
       &:hover
         background: lighten($yellow, 10)
 
-button
-  background: $blue
-  &:hover
-    background: $blue1
 .large-icon
   font-size: 2em
   top: -4px
@@ -200,22 +198,37 @@ button
 
 .summary
   background: $gray9
-  height: 220px
+  height: 210px
   width: 100%
   margin-bottom: 10px
   margin-top: -10px
   padding: 10px
+  .traffic-history
+    color: $white
+    float: left
+    margin-top: 10px
+    margin-left: 10px
+    font-size: 0.8em
+    padding: 10px
+    text-align: center
+    background: $gray6
+    width: 290px
   canvas, .canvas-frame
     background: lighten($gray9, 2%)
-    height: 170px
-    width: 576px
+    height: 160px
+    width: 562px
   .canvas-frame
     float: left
     margin: 10px 0
     padding: 10px 12px 0
-    width: 600px
-    height: 180px
-
+    width: 587px
+    height: 170px
+.stacked-boxes
+  .flat-box
+    width: 290px
+    margin-top: 0
+    line-height: 68px
+    height: 68px
 
 .state-online
   background: url(/images/state_online.png) center center no-repeat
@@ -230,7 +243,7 @@ span.state-online, span.state-offline, span.state-disabled
 small.state-online, small.state-offline
   background-position: left center
   background-size: 11px 11px !important
-  padding: 11px 14px 11px 15px
+  padding: 11px 14px 11px 10px
   margin-left: 5px
   top: -2px
   position: relative
@@ -647,7 +660,7 @@ select
   .connector
     background: $gray9
     line-height: 110px
-    padding-bottom: 15px
+    padding-bottom: 10px
     .header
       //border-top: 5px solid $black3
       background: $bluegray
@@ -695,15 +708,25 @@ select
             .button
               width: 80%
 
+.reveal-modal h2
+  font-size: 1.4em
+  font-family: 'brevia', sans-serif
+  text-transform: uppercase
+  margin-bottom: 20px
+
 .reveal-modal.add-modal, .reveal-modal.update-modal
   width: 50%
   margin-left: -25%
-  @include radius(5px)
+  box-shadow: 2px 2px 5px rgba(0,0,0,.2)
   @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
     width: 90%
     margin-left: -45%
     h2
       font-size: 1.4em
+
+.reveal-modal-bg
+  background: rgba(0,0,0,0.25)
+
 footer
   //@include linear-gradient(to bottom, $brown2, $brown 5%, $fallback: $brown)
   background: $white
@@ -712,3 +735,17 @@ footer
     color: $yellow
   .side-nav a
     color: $black
+
+button
+  box-shadow: none
+  background: $pink
+  border: 1px solid $pink2
+  &:hover
+    background: lighten($pink, 5%)
+    border: 1px solid $pink3
+  &.disabled, &[disabled]
+    background: $gray5
+    border: 1px solid $gray5
+    &:hover
+      background: $gray6
+      border: 1px solid $gray6

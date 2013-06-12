@@ -1,5 +1,5 @@
 .update-modal.reveal-modal{ id: "update-tunnel-modal-#{token.id}" }
-  %h2 Make some updates
+  %h2 Edit Tunnel
   %form.ajax-form{'data-action-base' => "/api/connectors", :'data-reload' => true, :method => 'put'}
     %input.access_id{:type => 'hidden', :name => 'access_id', :value => token.id}
     %label Connection String
@@ -19,7 +19,7 @@
       %label CNAME Record
       %input.input.margin-bottom-0.cname{:type => 'text', :name => 'cname', :placeholder => ''}
       %small.mute Point your CNAME record to #{App.config.cname_domain}
-    .margin-top-10
-      %button{:type => 'submit'} Save
+    .margin-top-20
+      %button.margin-bottom-0{:type => 'submit'} Save
       %a.margin-left-10.close-reveal{:href => '#'} Cancel
 

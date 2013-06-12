@@ -27,7 +27,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="p-"] {
 */
-.p-gear, .p-pause, .p-play, .p-minus, .p-plus, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-exit, .p-switch, .p-arrow-right, .p-box-add, .p-upload, .p-clock-2, .p-users, .p-resize, .p-resize-2, .p-key, .p-power-cord, .p-arrow-up, .p-arrow-down {
+.p-gear, .p-pause, .p-play, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-exit, .p-switch, .p-arrow-right, .p-box-add, .p-upload, .p-clock-2, .p-users, .p-key, .p-power-cord, .p-arrow-up, .p-arrow-down, .p-pencil, .p-arrow-left, .p-arrow-left-2, .p-arrow-right-2, .p-arrow-down-2, .p-arrow-up-2, .p-plus, .p-minus {
   position: relative;
   top: 2px;
 	font-family: 'pictos' !important;
@@ -38,6 +38,9 @@ you can use the generic selector below, but it's slower:
 	text-transform: none;
 	line-height: 1;
 	-webkit-font-smoothing: antialiased;
+}
+.small .p-arrow-left-2 {
+  top: 0px;
 }
 
 .huge {
@@ -58,10 +61,10 @@ you can use the generic selector below, but it's slower:
 	content: "\e004";
 }
 .p-minus:before {
-	content: "\e005";
+	content: "\e006";
 }
 .p-plus:before {
-	content: "\e006";
+	content: "\e005";
 }
 .p-laptop:before {
 	content: "\e002";
@@ -125,4 +128,22 @@ you can use the generic selector below, but it's slower:
 }
 .p-arrow-down:before {
 	content: "\e01b";
+}
+.p-pencil:before {
+	content: "\e019";
+}
+.p-arrow-left:before {
+	content: "\e015";
+}
+.p-arrow-left-2:before {
+	content: "\e016";
+}
+.p-arrow-right-2:before {
+	content: "\e017";
+}
+.p-arrow-down-2:before {
+	content: "\e01c";
+}
+.p-arrow-up-2:before {
+	content: "\e01d";
 }

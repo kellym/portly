@@ -21,14 +21,26 @@
     .row
       .large-12
         .summary
-          .canvas-frame.left
-            %canvas{width: '576px', height: '170px'}
-          .flat-box.data-in.wide.left
-            %span.p-arrow-down
-            = human_number token.bytes_this_month[:in]
-          .flat-box.data-out.wide.left
-            %span.p-arrow-up
-            = human_number token.bytes_this_month[:out]
+          .row
+            .large-7.columns
+              .canvas-frame.left
+                %canvas{width: '562px', height: '160px'}
+            .large-3.columns
+              .traffic-history
+                %span.p-arrow-left-2.margin-right-10
+                30-day traffic history
+              .stacked-boxes
+                .flat-box.data-in.left.light.tooltipped{:title => 'incoming data this billing period'}
+                  %span.p-arrow-down
+                  = human_number token.bytes_this_month[:in]
+                .flat-box.data-out.left.tooltipped{:title => 'outgoing data this billing period'}
+                  %span.p-arrow-up
+                  = human_number token.bytes_this_month[:out]
+            .large-2.columns
+              %a.flat-link.margin-right-0.tooltipped{:href => '#/new', 'data-reveal-id' => "add-tunnel-#{token.id}", :title => 'Add a tunnel'}
+                %span.p-plus
+              %a.flat-link.margin-right-0.tooltipped{:href => '#/new', 'data-reveal-id' => "add-tunnel-#{token.id}", :title => 'Add a tunnel'}
+                %span.p-gear
     .row
       .large-12.columns
         %section.section{'data-section' => token.id, style: first ? '' : 'display: none'}
@@ -49,9 +61,6 @@
                     %small
                       or <br />
                       = link_to 'Remove this computer from my account', "#", 'data-reveal-id' => "remove-token-#{token.id}"
-          %footer
-            %a.button.add-tunnel{:href => '#', 'data-reveal-id' => "add-tunnel-#{token.id}"}
-              Add Tunnel
           -# content_for :javascripts do
     = render :'tunnels/_update', locals: { token: token }
     = render :'tunnels/_new', locals: { token: token }
