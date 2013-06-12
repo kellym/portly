@@ -212,7 +212,7 @@ section.section
     padding: 10px
     text-align: center
     background: $gray6
-    width: 290px
+    width: 250px
   canvas, .canvas-frame
     background: lighten($gray9, 2%)
     height: 160px
@@ -223,9 +223,26 @@ section.section
     padding: 10px 12px 0
     width: 587px
     height: 170px
+  .percent-used
+    float: left
+    margin-top: 10px
+    margin-left: 32px
+    width: 30px
+    height: 170px
+    background: $gray7
+    position: relative
+    border-bottom: 2px solid $gray5
+    div
+      position: absolute
+      bottom: 0
+      left: 0
+      width: 100%
+      background: $gray5
+      overflow: hidden
+
 .stacked-boxes
   .flat-box
-    width: 290px
+    width: 250px
     margin-top: 0
     line-height: 68px
     height: 68px

@@ -30,13 +30,15 @@
                 %span.p-arrow-left-2.margin-right-10
                 30-day traffic history
               .stacked-boxes
-                .flat-box.data-in.left.light.tooltipped{:title => 'incoming data this billing period'}
+                .flat-box.data-in.left.light.tooltipped{:title => 'Incoming data this billing period'}
                   %span.p-arrow-down
                   = human_number token.bytes_this_month[:in]
-                .flat-box.data-out.left.tooltipped{:title => 'outgoing data this billing period'}
+                .flat-box.data-out.left.tooltipped{:title => 'Outgoing data this billing period'}
                   %span.p-arrow-up
                   = human_number token.bytes_this_month[:out]
-            .large-2.columns
+            .large-2.columns.padding-left-0
+              .percent-used{:'data-title' => "Data used this month:<br />#{human_number current_user.total_monthly_bandwidth_used} (#{current_user.monthly_bandwidth_percent_used}%)"}
+                %div{style: 'height: #{current_user.monthly_bandwidth_percent_used}%'}
               %a.flat-link.margin-right-0.tooltipped{:href => '#/new', 'data-reveal-id' => "add-tunnel-#{token.id}", :title => 'Add a tunnel'}
                 %span.p-plus
               %a.flat-link.margin-right-0.tooltipped{:href => '#/new', 'data-reveal-id' => "add-tunnel-#{token.id}", :title => 'Settings for this computer'}

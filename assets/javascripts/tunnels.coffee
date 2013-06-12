@@ -45,6 +45,9 @@
       $('.summary').on('mouseout', (ev) ->
         $(@).tipsy('hide')
       )
+      @percent_used = $('.percent-used')
+      offset = -166 + parseInt @percent_used.find('div').height()
+      @percent_used.tipsy({ gravity : 's', html: true, title: 'data-title', offset: offset })
       @tipsy.tipsy('show')
       @chart = new Chart($('.summary canvas')[0].getContext('2d'))
       labels = []

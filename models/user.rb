@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   belongs_to :account
   has_one :admin_account, class_name: 'Account', :foreign_key => :admin_id
   has_one :schedule
+  has_one :plan, :through => :account
   has_many :orders
 
   before_save :downcase_email
@@ -121,11 +122,16 @@ class User < ActiveRecord::Base
   def total_bytes_this_month
     @total_bytes_this_month ||= bytes_this_month.sum(:bytes_total)
   end
+  alias :total_monthly_bandwidth_used :total_bytes_this_month
 
   def bytes_this_month
     @bytes_this_month ||= ConnectorByte.joins(:connector => :user)
       .where(users: { id: self.id })
       .where('connector_bytes.created_at > ?', billing_period_start)
+  end
+
+  def monthly_bandwidth_percent_used
+    ((total_bytes_this_month.to_f / (plan.bandwidth * 1073741824))*100).to_i
   end
 
   def billing_period_start
