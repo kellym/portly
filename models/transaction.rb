@@ -10,4 +10,6 @@ class Transaction < ActiveRecord::Base
   # property :updated_at, DateTime
   # property :refunded_at, DateTime
 
+  belongs_to :account
+
 end

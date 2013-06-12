@@ -3,6 +3,7 @@ class Account < ActiveRecord::Base
   belongs_to :plan
   belongs_to :admin, class_name: 'User'
   has_many :users
+  has_many :transactions
 
   before_create :generate_account_code
 
