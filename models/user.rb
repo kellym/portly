@@ -9,6 +9,8 @@ end
 class User < ActiveRecord::Base
   extend Forwardable
 
+  GIGABYTE = 1073741824
+
   attr_reader :password
   attr_accessor :password_confirmation
   image_accessor :cover_image
@@ -131,7 +133,11 @@ class User < ActiveRecord::Base
   end
 
   def monthly_bandwidth_percent_used
-    ((total_bytes_this_month.to_f / (plan.bandwidth * 1073741824))*100).to_i
+    ((total_bytes_this_month.to_f / (plan.bandwidth * GIGABYTE))*100).to_i
+  end
+
+  def exceeded_monthly_bandwidth?
+    total_bytes_this_month > (plan.bandwidth * GIGABYTE)
   end
 
   def billing_period_start

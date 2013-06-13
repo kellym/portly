@@ -31,6 +31,13 @@ begin
       end
     end
 
+    every(10.minutes, 'deactivate_accounts_that_exceed_bandwidth') do
+      User.includes(:plan).find_each do |user|
+        if user.exceeded_monthly_bandwidth?
+          user.update_attributes(:active => false)
+        end
+      end
+    end
 
   end
 
