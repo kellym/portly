@@ -141,7 +141,7 @@
       connect = row.find(".connect")
       connect.attr('title', 'Disconnect')
       #connect.attr('original-title', 'Disconnect')
-      $tipsy[connect.data('tipsy-id')].reset()
+      $tipsy[connect.data('tipsy-id')].reset() if $tipsy[connect.data('tipsy-id')]
       connect.removeClass('disabled')
       connect.find('span').addClass('p-pause').removeClass('p-play')
       connect.data('connector', true)
@@ -158,7 +158,7 @@
       connect = row.find(".connect")
       connect.attr('title', 'Connect')
       #connect.attr('original-title', 'Connect')
-      $tipsy[connect.data('tipsy-id')].reset()
+      $tipsy[connect.data('tipsy-id')].reset() if $tipsy[connect.data('tipsy-id')]
       connect.removeClass('disabled')
       connect.data('connector', false)
       connect.find('span').removeClass('p-pause').addClass('p-play')
