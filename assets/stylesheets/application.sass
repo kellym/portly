@@ -6,6 +6,7 @@
 @import partials/settings
 @import partials/helpers
 @import partials/tipsy
+@import partials/wysihtml5
 
 html, body
   background: $white
@@ -774,3 +775,24 @@ button
     &:hover
       background: $gray6
       border: 1px solid $gray6
+
+
+ul.wysihtml5-toolbar
+  font-size: 0.8em
+  &> li
+    margin-bottom: 10px
+  .button
+    @include box-sizing(border-box)
+    box-shadow: none
+    margin-bottom: 0
+    height: 40px
+  .button, .button-group
+    border: 2px solid $gray6
+  .button-group .button
+    border: none
+    height: 36px
+  .dropdown
+    top: 40px
+    border: 2px solid $black
+    li
+      list-style: none

@@ -308,6 +308,25 @@ class ApiController < SharedController
     end
   end
 
+  # Public: Creates a new page for this account
+  post '/pages' do
+    request[:page]['cover_image'] = request[:page]['cover_image'][:tempfile] if request[:page]['cover_image']
+    page = Page.new(request[:page])
+    if request[:page][:token_id]
+      page.token_id = Token.where(:user_id => current_user.id, :id => request[:page][:token_id]).first.id
+    elsif request[:page][:connector_id]
+      authorize! request[:page][:connector_id]
+      page.connector_id = request[:page][:connector_id]
+    else
+      page.user_id = current_user.id
+    end
+    if page.save
+      'Success'
+    else
+      halt 400
+    end
+  end
+
   post '/unauthenticated' do
     halt 401
   end

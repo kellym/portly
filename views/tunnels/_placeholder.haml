@@ -1,0 +1,14 @@
+.placeholder-modal.reveal-modal{:id => "placeholder-tunnel-#{token.id}" }
+  %h2 Edit Placeholder Page
+  %p
+    When your tunnels are offline, you can set up a custom page to let your
+    clients know they made it to the right place. Just enter your message and
+    provide a brand image for us to display.
+  %form{'data-action' => "/api/pages", :method => 'post'}
+    %input{:type => 'hidden', :name => 'access_id', :value => token.id}
+    %input{:type => 'hidden', :name => 'page[token_id]', :value => token.id}
+    %textarea.wysihtml5.width-100{style: 'height: 200px', name: 'page[content]'}
+    %input.fake-file{:type => 'file', :name => 'page[cover_image]'}
+    .margin-top-20
+      %button.margin-bottom-0{:type => 'submit'} Save Page
+      %a.margin-left-10.close-reveal{:href => '#'} Cancel

@@ -13,6 +13,9 @@
 #= require application/dom
 #= require application/stopwatch
 #= require forms
+#= require vendor/wysihtml5
+#= require vendor/wysihtml5-foundation
+
 $ ->
   signin_box = $("#signin")
   $(".signin-button").dblclick((e) ->
@@ -40,3 +43,4 @@ $ ->
         window.location.reload() if el.data('reload')
     )
   )
+  $('.wysihtml5').wysihtml5()

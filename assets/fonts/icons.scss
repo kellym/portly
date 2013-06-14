@@ -27,7 +27,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="p-"] {
 */
-.p-gear, .p-pause, .p-play, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-exit, .p-switch, .p-arrow-right, .p-box-add, .p-upload, .p-clock-2, .p-users, .p-key, .p-power-cord, .p-arrow-up, .p-arrow-down, .p-pencil, .p-arrow-left, .p-arrow-left-2, .p-arrow-right-2, .p-arrow-down-2, .p-arrow-up-2, .p-plus, .p-minus {
+.p-gear, .p-pause, .p-play, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-exit, .p-switch, .p-arrow-right, .p-box-add, .p-upload, .p-clock-2, .p-users, .p-key, .p-power-cord, .p-arrow-up, .p-arrow-down, .p-pencil, .p-arrow-left, .p-arrow-left-2, .p-arrow-right-2, .p-arrow-down-2, .p-arrow-up-2, .p-plus, .p-minus, .p-image {
   position: relative;
   top: 2px;
 	font-family: 'pictos' !important;
@@ -146,4 +146,7 @@ you can use the generic selector below, but it's slower:
 }
 .p-arrow-up-2:before {
 	content: "\e01d";
+}
+.p-image:before {
+	content: "\e01e";
 }

@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_many :connectors
   has_many :tokens
   belongs_to :account
+  belongs_to :page
   has_one :admin_account, class_name: 'Account', :foreign_key => :admin_id
   has_one :schedule
   has_one :plan, :through => :account

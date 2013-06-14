@@ -12,10 +12,10 @@ class Connector < ActiveRecord::Base
   # property :auth_type, String
 
   attr_accessor :publish
-  image_accessor :cover_image
 
   belongs_to :user
   belongs_to :token
+  belongs_to :page
   has_many :auths, :class_name => 'ConnectorAuth'
   has_many :bytes, :class_name => 'ConnectorByte'
 
@@ -130,5 +130,10 @@ class Connector < ActiveRecord::Base
       month_bytes_out[b.created_at] = b.bytes_out
     end
     @data_this_month = [month_bytes_in, month_bytes_out]
+  end
+
+  # Public: Get the Page that is closest tied to this connector
+  def closest_page
+    page || token.page || user.page
   end
 end

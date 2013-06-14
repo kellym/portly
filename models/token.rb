@@ -10,6 +10,7 @@ class Token < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :authorized_key
+  belongs_to :page
   has_many :connectors
   has_many :records, class_name: 'TokenRecord'
 

@@ -45,8 +45,8 @@
                     #{current_user.monthly_bandwidth_percent_used}%
               %a.flat-link.margin-right-0.tooltipped{:href => '#/new', 'data-reveal-id' => "add-tunnel-#{token.id}", :title => 'Add a tunnel'}
                 %span.p-plus
-              %a.flat-link.margin-right-0.tooltipped{:href => '#/new', 'data-reveal-id' => "add-tunnel-#{token.id}", :title => 'Settings for this computer'}
-                %span.p-gear
+              %a.flat-link.margin-right-0.tooltipped{:href => '#/placeholder', 'data-reveal-id' => "placeholder-tunnel-#{token.id}", :title => 'Edit placeholder page for this computer'}
+                %span.p-image
     .row
       .large-12.columns
         %section.section{'data-section' => token.id, style: first ? '' : 'display: none'}
@@ -71,6 +71,7 @@
     = render :'tunnels/_update', locals: { token: token }
     = render :'tunnels/_new', locals: { token: token }
     = render :'tokens/_delete', locals: { token: token }
+    = render :'tunnels/_placeholder', locals: { token: token }
 
 
 - content_for :javascripts do
