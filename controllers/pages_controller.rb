@@ -6,7 +6,7 @@ class PagesController < SharedController
     if connector
       connector.closest_page.content
     else
-      'Not found'
+      request.env.inspect
     end
   end
 
