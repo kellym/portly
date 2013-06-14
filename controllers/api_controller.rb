@@ -321,7 +321,25 @@ class ApiController < SharedController
       page.user_id = current_user.id
     end
     if page.save
-      'Success'
+      '{}'
+    else
+      halt 400
+    end
+  end
+
+  # Public: Updates the current page for this account
+  put '/pages' do
+    request[:page]['cover_image'] = request[:page]['cover_image'][:tempfile] if request[:page]['cover_image'].present?
+    if request[:page]['token_id']
+      page = Token.where(:user_id => current_user.id, :id => request[:page]['token_id']).first.page
+    elsif request[:page]['connector_id']
+      authorize! request[:page]['connector_id']
+      page = Connector.includes(:page).find(request[:page]['connector_id']).page
+    else
+      page = current_user.page
+    end
+    if page.update_attributes(request[:page])
+      '{}'
     else
       halt 400
     end
