@@ -310,7 +310,7 @@ class ApiController < SharedController
 
   # Public: Creates a new page for this account
   post '/pages' do
-    request[:page]['cover_image'] = request[:page]['cover_image'][:tempfile] if request[:page]['cover_image']
+    request[:page]['cover_image'] = request[:page]['cover_image'][:tempfile] if request[:page]['cover_image'].present?
     page = Page.new(request[:page])
     if request[:page][:token_id]
       page.token_id = Token.where(:user_id => current_user.id, :id => request[:page][:token_id]).first.id
