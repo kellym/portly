@@ -1,5 +1,8 @@
 class SharedController < Scorched::Controller
 
+  config[:show_http_error_pages] = false
+  render_defaults << { :engine => :haml, :layout => :'layouts/application' }
+
   include ViewHelpers
 
   def media_type

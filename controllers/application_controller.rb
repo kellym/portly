@@ -5,8 +5,6 @@ SOCKETS = Hash.new {|h, k| h[k] = [] }
 
 class ApplicationController < SharedController
 
-  config[:show_http_error_pages] = false
-  render_defaults << { :engine => :haml, :layout => :'layouts/application' }
 
   include Middleware
 
