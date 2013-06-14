@@ -54,6 +54,7 @@ App.config = {
 
   },
   production: {
+    host: 'getportly.com',
     forwarding_server: {
       localhost: 'localhost',
       host: 'getportly.com',

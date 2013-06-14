@@ -1,12 +1,9 @@
-- @html_class ||= ''
 !!!html
-%html{:class => @html_class}
+%html
   %head
     %title= @title || App.config.site.title
-    = stylesheet_include_tag 'application'
+    = stylesheet_include_tag 'page'
     %meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    %script(type="text/javascript" src="//use.typekit.net/xrn5yvu.js")
-    %script(type="text/javascript") try{Typekit.load();}catch(e){}
   %body
     .row
       .large-8.large-centered.columns
