@@ -4,9 +4,9 @@ class PagesController < SharedController
     server_name = request.env['HTTP_HOST']
     connector = Connector.where('subdomain = ? OR cname = ?', server_name, server_name).first
     if connector
-      connector.closest_page.content
+      render connector.closest_page.content, layout: 'layouts/page'
     else
-      request.env.inspect
+      halt 404
     end
   end
 
