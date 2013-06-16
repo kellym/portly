@@ -1,10 +1,105 @@
-.content-area
-  .row.homepage
-    .large-offset-4.large-7.columns
-      %h2.source Keep yourself protected while <br />showing off your work with clients.
+.row.intro
+  .large-5.columns
+    %header.homepage
+      %h1.logo-big
+        %a{:href => '/'} Portly
+      %p.text-center
+        Share changes to your local web server. <br />
+        Real-time.  No mess.
+    .trial.text-center.margin-bottom-60
+      %a.button.large{:href => '/signup'} TRY IT OUT
+      %p Free for 30 days
+  .large-7.columns
+.row.gradient
+  .large-12.columns.text-center
+    %h2 Dynamic IPs are a problem of the past.
+    %p
+      Install Portly in seconds and you can immediately share direct access to your local web server. <br />
+      No need to hassle changing your firewall, rerouting IP addresses, or worrying about unwelcome intruders.
+.row.narrow.margin-bottom-20
+  .large-12.columns
+    .p-rocket.bigger.left.margin-top-10
+    .margin-left-120
+      %h3 Fast
       %p
-        Portly creates a secure tunnel from your computer to a public address so show-and-tell is effortless.
-      .trial
-        %a.button.large.margin-right-15{:href => '/signup'} TRY IT OUT
-        or
-        %a.margin-left-10{:href => '/about'} Learn More
+        Installs in seconds, and setting up a tunnel is a few clicks away.
+        You can start and stop tunnels from your status bar, from the web, or
+        on your phone.
+.row.narrow.margin-bottom-20
+  .large-12.columns
+    .p-image.bigger.left.margin-top-10
+    .margin-left-120
+      %h3 Customizable
+      %p
+        When your sites are offline, you can set up your own placeholder page to
+        let people know. Direct them elsewhere, or use it as your own About page.
+.row.narrow.margin-bottom-20
+  .large-12.columns
+    .p-shield.bigger.left.margin-top-10
+    .margin-left-120
+      %h3 Secure
+      %p
+        Data travels over a secure SSH tunnel between our server and your computer.
+        All communication comes over an encrypted line, and your sites are
+        accessible over HTTPS or HTTP.  Your IP address is never exposed to the
+        world. In addition, you can set up basic HTTP auth to lock down your sites.
+.row.narrow.margin-bottom-20
+  .large-12.columns
+    .p-stack.bigger.left.margin-top-10
+    .margin-left-120
+      %h3 Versatile
+      %p
+        There's a lot of flexibility in using Portly.  Integrate Pow for easily
+        automating subdomains.  Use Portly to test mobile sites, Facebook
+        integration, and just about anything else where you'll need a public
+        endpoint.
+.row.gradient
+  .large-12.columns.text-center
+    %h2 Speed up development time, host your own blog, and more.
+    %p
+      The more you use Portly, the more uses you'll find for it.  Build prototypes
+      and show them off instantly. <br />Control MythTV and other tools while you are
+      away from home. Route non-Mac computers through your Mac running Portly.
+.row.narrow
+  .large-3.columns
+    .p-facebook.big.text-center.box.margin-top-10
+    %h5.text-center Facebook Testing
+  .large-3.columns
+    .p-mobile.big.text-center.box.margin-top-10
+    %h5.text-center Mobile Testing
+  .large-3.columns
+    .p-folder-open.big.text-center.box.margin-top-10
+    %h5.text-center Access Local Files
+  .large-3.columns
+    .p-windows.big.text-center.box.margin-top-10
+    %h5.text-center Network Computers
+.row.margin-top-50
+  .large-3.columns.large-offset-2
+    %h5.margin-top-30 Start Using Portly
+    %p
+      %ol
+        %li
+          %a{:href => '/signup'} Sign up
+        %li
+          %a{:href => '/download'} Download the app
+        %li
+          Create a tunnel and go
+  .large-5.left.columns
+    .panel
+      %h5 Already signed up, <br/> or using a business account?
+      %p
+        %a{:href => '/download'} Download
+        the app now and use your account information or
+        an API key to start using Portly.
+  .large-1.columns
+
+
+
+  -#.large-offset-4.large-7.columns
+    %h2.source Keep yourself protected while <br />showing off your work with clients.
+    %p
+      Portly creates a secure tunnel from your computer to a public address so show-and-tell is effortless.
+    .trial
+      %a.button.large.margin-right-15{:href => '/signup'} TRY IT OUT
+      or
+      %a.margin-left-10{:href => '/about'} Learn More

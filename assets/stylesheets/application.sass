@@ -17,9 +17,15 @@ a
   &:hover
     color: $pink3
 
-header#main, header.gray
+header#main
+  a
+    color: $black
+
+header#main.green, header.gray
   background: $green
   width: 100%
+  a
+    color: $white
 
 header.pricing-header
   margin: 40px 0
@@ -63,6 +69,51 @@ header.pricing-header
         top: -7px
         left: -2px
 
+.homepage
+  font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
+  .row
+    &.intro
+      max-width: 72em !important
+    &.gradient
+      max-width: 100% !important
+      @include linear-gradient(to bottom, $blue4 0%, $white 50px, $fallback: $white)
+      h2
+        font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
+        margin-top: 40px
+      p
+        color: $blue2
+    &.narrow
+      max-width: 50em
+      h3
+        margin-bottom: 5px
+      p
+        font-size: 0.8em
+  .bigger
+    font-size: 5em !important
+  .big
+    font-size: 3em !important
+  .box
+    background: $pink
+    @include radius(5px)
+    color: $white
+    padding: 20px
+    width: 80px
+    line-height: 40px
+    height: 80px
+    margin: 0 auto 10px
+  .panel
+    @include radius(7px)
+    @include linear-gradient(to bottom, $white 0%, $gray9 100%, $fallback: $white)
+    border: 1px solid $gray7
+    box-shadow: 0 2px 2px 0 $gray9
+    font-family: 'myriad-pro', myriad, 'helvetica neue', sans-serif
+    p
+      color: $blue2
+
+
+ol
+  list-style-position: inside
+
 h1.logo
   a
     @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
@@ -79,6 +130,32 @@ h1.logo
     background-size: 141px 37px
     width: 141px
     padding: 37px 0 0
+
+header.homepage
+  h1.logo-big
+    margin-top: 60px
+    a
+      background: url('/images/logo-big.png') no-repeat
+      background-size: 194px 211px
+      width: 194px
+      padding: 211px 0 0
+      height: 0
+      overflow: hidden
+      display: block
+      margin: 0 auto
+  p
+    font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
+    font-size: 1.3em
+div[id^='lptopspacer']
+  height: 0
+  position: absolute
+  top: 0
+  left: 0
+
+.homepage body
+  background: url('/images/demo.jpg') no-repeat
+  background-size: 1300px 489px
+  background-position: center 110px
 
 .inline-input
   padding: 0 0.5em
@@ -269,27 +346,19 @@ small.state-online, small.state-offline
   top: -2px
   position: relative
 
-.content-area
-  background: $yellow
-  @include linear-gradient(to bottom, #EEC868 0%, $yellow 6%, $fallback: $yellow)
-  .homepage
-    height: 440px
-    background: transparent url('/images/cop.jpg') no-repeat 30px 30px
-    background-size: 303px 383px
-    h2
-      margin-top: 100px
-  .trial
-    .button
-      margin-right: 7px
-      margin-left: 0px
-      margin-bottom: 2px
-      a
-        margin-left: 5px
+.trial
+  .button
+    margin-bottom: 10px
+  p
+    color: $gray4
+    font-size: 0.9em
 h2
   color: $black
   font-size: 2em
   line-height: 1.3
 
+.signin-button
+  @include radius(5px)
 #signin
   margin-top: 7px
   padding: 10px
@@ -302,7 +371,7 @@ h2
     right: 9px
     left: auto
   &.open
-    top: 100px
+    top: 70px
     right: 14px
     left: auto
 
@@ -339,6 +408,9 @@ div.switch.small
       color: black
       visibility: visible
 
+h5
+  color: $black
+
 #main .large-8
   position: relative
 
@@ -346,6 +418,9 @@ div.switch.small
   @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
     display: table
     margin-bottom: 20px
+.homepage #main ul.front-page-nav
+  margin-top: 30px
+  margin-bottom: 20px
 #main ul.front-page-nav, #main ul.interior-nav
   position: relative
   margin-top: 52px
@@ -361,15 +436,13 @@ div.switch.small
     font-family: 'brevia'
     font-size: 0.7em
     text-transform: uppercase !important
-    color: $white
     &:hover
       color: $gray1
-    &.button
+    &.signin-button
       color: $white
       width: 150px
       line-height: 0.5em
       margin-left: 20px
-      padding-top: 17px
       box-shadow: none
       &:active
         box-shadow: none
@@ -670,8 +743,9 @@ select
     background: lighten($pink, 5%)
   &.large
     font-family: 'brevia'
-    font-size: 1.5em
-    @include radius(7px)
+    font-size: 1.4em
+    padding: 0.8em 1.6em
+    @include radius(5px)
     box-shadow: 3px 3px 0 0 #c43f28
     &:active
       position: relative
@@ -754,11 +828,13 @@ select
   background: rgba(0,0,0,0.25)
 
 footer
-  //@include linear-gradient(to bottom, $brown2, $brown 5%, $fallback: $brown)
-  background: $white
-  margin-bottom: 50px
+  @include linear-gradient(to bottom, $blue4, lighten($blue4, 10%) 100%, $fallback: $blue2)
+  margin-top: 50px
+  padding: 30px 0
+  .row
+    max-width: 52em
   .header
-    color: $yellow
+    color: $pink
   .side-nav a
     color: $black
 

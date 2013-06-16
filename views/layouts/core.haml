@@ -10,8 +10,8 @@
     = javascript_include_tag 'application'
     - if signed_in?
       = javascript_include_tag 'eventsource'
-  %body
-    = yield
+  %body{id: @body_class}
+    .container= yield
     :coffeescript
       new Portly.DOM.Index()
       $(document).foundation('reveal forms')

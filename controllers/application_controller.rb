@@ -75,6 +75,7 @@ class ApplicationController < SharedController
     if signed_in?
       redirect '/tunnels'
     else
+      @html_class = 'homepage'
       render :homepage, :layout => :'layouts/marketing'
     end
   end

@@ -27,7 +27,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="p-"] {
 */
-.p-gear, .p-pause, .p-play, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-exit, .p-switch, .p-arrow-right, .p-box-add, .p-upload, .p-clock-2, .p-users, .p-key, .p-power-cord, .p-arrow-up, .p-arrow-down, .p-pencil, .p-arrow-left, .p-arrow-left-2, .p-arrow-right-2, .p-arrow-down-2, .p-arrow-up-2, .p-plus, .p-minus, .p-image {
+.p-gear, .p-pause, .p-play, .p-laptop, .p-desktop, .p-clock, .p-shield, .p-menu, .p-download, .p-lock-fill, .p-unlock-fill, .p-exit, .p-switch, .p-arrow-right, .p-box-add, .p-upload, .p-clock-2, .p-users, .p-key, .p-power-cord, .p-arrow-up, .p-arrow-down, .p-pencil, .p-arrow-left, .p-arrow-left-2, .p-arrow-right-2, .p-arrow-down-2, .p-arrow-up-2, .p-plus, .p-minus, .p-image, .p-rocket, .p-stack, .p-facebook, .p-mobile, .p-folder-open, .p-windows {
   position: relative;
   top: 2px;
 	font-family: 'pictos' !important;
@@ -38,6 +38,7 @@ you can use the generic selector below, but it's slower:
 	text-transform: none;
 	line-height: 1;
 	-webkit-font-smoothing: antialiased;
+  text-align: center;
 }
 .small .p-arrow-left-2 {
   top: 0px;
@@ -149,4 +150,33 @@ you can use the generic selector below, but it's slower:
 }
 .p-image:before {
 	content: "\e01e";
+}
+.p-rocket:before {
+	content: "\e01f";
+}
+.p-paint:before {
+	content: "\e020";
+}
+.p-stack:before {
+	content: "\e021";
+}
+.p-facebook:before {
+	content: "\e020";
+  left: -0.06em;
+  position: relative;
+}
+.p-mobile:before {
+	content: "\e023";
+  left: -0.06em;
+  position: relative;
+}
+.p-folder-open:before {
+	content: "\e024";
+  left: -0.02em;
+  position: relative;
+}
+.p-windows:before {
+	content: "\e025";
+  left: -0.06em;
+  position: relative;
 }

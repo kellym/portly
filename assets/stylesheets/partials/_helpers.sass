@@ -99,7 +99,7 @@
 // .margin-top-10, .padding-left-5, etc.
 @each $type in margin, padding
   @each $side in top, right, bottom, left
-    @for $a from 0 through 20
+    @for $a from 0 through 25
       $i: $a * 5
       .#{$type}-#{$side}-#{$i}
         #{$type}-#{$side}: $i * 1px !important
