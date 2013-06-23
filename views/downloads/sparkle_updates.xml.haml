@@ -12,8 +12,7 @@
     %atom:link{:href => "https://getportly.com/downloads/sparkle_updates.xml", :rel => "self", :type => "application/rss+xml"}
     - @versions.each do |version|
       %item
-        %title Version #{version.version}
+        %title= version.title
         %pubdate= version.created_at.to_s
-        %enclosure{:length => version.filesize, "sparkle:version" => version.version, :type => "application/octet-stream", :url => "https://getportly.com/downloads/portly_#{version.version}.zip"}
-        %guid{:ispermalink => "false"}= version.guid
+        %enclosure{:length => version.filesize, "sparkle:dsaSignature" => version.dsa, "sparkle:version" => version.version, :type => "application/octet-stream", :url => "https://getportly.com/downloads/portly_#{version.version}.zip"}
         %sparkle:releasenoteslink https://getportly.com/downloads/notes/#{version.version}

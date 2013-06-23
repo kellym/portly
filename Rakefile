@@ -104,9 +104,9 @@ namespace :versions do
 
       if file_default == 'portly' && !Version.where(version: version).exists?
         openssl = "/usr/bin/openssl"
-        guid = `#{openssl} dgst -sha1 -binary < "#{file}" | #{openssl} dgst -dss1 -sign "#{File.dirname(__FILE__) + '/dsa_priv.pem'}" | #{openssl} enc -base64`
+        dsa = `#{openssl} dgst -sha1 -binary < "#{file}" | #{openssl} dgst -dss1 -sign "#{File.dirname(__FILE__) + '/dsa_priv.pem'}" | #{openssl} enc -base64`
         filesize = File.size(file)
-        Version.create(title: "Version #{version}", version: version, guid: guid, filesize: filesize)
+        Version.create(title: "Version #{version}", version: version, dsa: dsa, filesize: filesize)
       end
     end
 
