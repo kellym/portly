@@ -93,3 +93,23 @@ namespace :assets do
   end
   # todo: add :clean_all, :clean_css, :clean_js tasks, invoke before writing new file(s)
 end
+
+namespace :versions do
+
+  desc 'synchronize all versions'
+  task :sync do
+    Dir[File.dirname(__FILE__) + '/public/downloads/portly*'].each do |file|
+      filename = file.split('/').last.gsub(/\.[^\.]*$/, '')
+      file_default, version = filename.split('-')
+
+      if file_default == 'portly' && !Version.where(version: version).exists?
+        openssl = "/usr/bin/openssl"
+        guid = `#{openssl} dgst -sha1 -binary < "#{file}" | #{openssl} dgst -dss1 -sign "#{File.dirname(__FILE__) + '/dsa_priv.pem'}" | #{openssl} enc -base64`
+        filesize = File.size(file)
+        Version.create(title: "Version #{version}", version: version, guid: guid, filesize: filesize)
+      end
+    end
+
+  end
+
+end

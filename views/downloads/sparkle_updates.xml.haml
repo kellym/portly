@@ -16,4 +16,4 @@
         %pubdate= version.created_at.to_s
         %enclosure{:length => version.filesize, "sparkle:version" => version.version, :type => "application/octet-stream", :url => "https://getportly.com/downloads/portly_#{version.version}.zip"}
         %guid{:ispermalink => "false"}= version.guid
-        %sparkle:releasenoteslink https://getportly.com/downloads/notes/#{version}
+        %sparkle:releasenoteslink https://getportly.com/downloads/notes/#{version.version}

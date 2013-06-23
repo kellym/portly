@@ -151,6 +151,7 @@ class ApplicationController < SharedController
   self << {pattern: '/api', priority: 10, target: ::ApiController}
   self << {pattern: '/auth', priority: 10, target: ::AuthController}
   self << {pattern: '/pages', priority: 10, target: ::PagesController}
+  self << {pattern: '/downloads', priority: 10, target: ::DownloadsController}
 
   route '/basic_auth/*' do |tunnel_path|
     env['nginx_request'] = true
