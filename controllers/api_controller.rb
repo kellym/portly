@@ -203,7 +203,7 @@ class ApiController < SharedController
   #
   # Returns a JSON list of all the current connectors.
   get '/connectors' do
-    connectors = Connector.where(user_id: current_user.id)
+    connectors = Connector.where(user_id: current_user.id, token_id: current_token.id)
     connectors.map { |c| c.to_hash }.to_json
   end
 
