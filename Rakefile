@@ -100,13 +100,13 @@ namespace :versions do
   task :sync do
     Dir[File.dirname(__FILE__) + '/public/downloads/portly*.zip'].each do |file|
       filename = file.split('/').last.gsub(/\.[^\.]*$/, '')
-      file_default, version = filename.split('-')
+      file_default, version, number = filename.split('-')
 
       if file_default == 'portly' && !Version.where(version: version).exists?
         openssl = "/usr/bin/openssl"
         dsa = `#{openssl} dgst -sha1 -binary < "#{file}" | #{openssl} dgst -dss1 -sign "#{File.dirname(__FILE__) + '/dsa_priv.pem'}" | #{openssl} enc -base64`
         filesize = File.size(file)
-        Version.create(title: "Version #{version}", version: version, dsa: dsa, filesize: filesize)
+        Version.create(title: "Version #{version}", number: number, version: version, dsa: dsa, filesize: filesize)
       end
     end
 
