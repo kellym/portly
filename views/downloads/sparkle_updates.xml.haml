@@ -14,5 +14,5 @@
       %item
         %title= version.title
         %pubdate= version.created_at.to_s
-        %enclosure{:length => version.filesize, "sparkle:dsaSignature" => version.dsa, "sparkle:version" => version.number, "sparkle:shortVersionString" => version.version, :type => "application/octet-stream", :url => "https://getportly.com/downloads/portly_#{version.version}.app"}
+        %enclosure{:length => version.filesize, "sparkle:dsaSignature" => version.dsa, "sparkle:version" => version.number, "sparkle:shortVersionString" => version.version, :type => "application/octet-stream", :url => "https://getportly.com/downloads/portly-#{version.version}.zip"}
         %description= "<![CDATA[#{version.notes}]]>"
