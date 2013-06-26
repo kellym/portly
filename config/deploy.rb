@@ -50,7 +50,11 @@ task :setup => :environment do
 end
 
 task :'db:migrate' => :environment do
-  queue! %[#{bundle_prefix} rake db:migrate]
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} rake db:migrate]
+end
+
+task :'versions:sync' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} rake versions:sync]
 end
 
 task :'assets:compile' => :environment do
