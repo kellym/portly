@@ -98,7 +98,7 @@ namespace :versions do
 
   desc 'synchronize all versions'
   task :sync do
-    Dir[File.dirname(__FILE__) + '/public/downloads/portly*.app'].each do |file|
+    Dir[File.dirname(__FILE__) + '/public/downloads/portly*.zip'].each do |file|
       filename = file.split('/').last.gsub(/\.[^\.]*$/, '')
       file_default, version = filename.split('-')
 
