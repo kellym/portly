@@ -107,6 +107,7 @@ namespace :versions do
         dsa = `#{openssl} dgst -sha1 -binary < "#{file}" | #{openssl} dgst -dss1 -sign "#{File.dirname(__FILE__) + '/dsa_priv.pem'}" | #{openssl} enc -base64`
         filesize = File.size(file)
         Version.create(title: "Version #{version}", number: number, version: version, dsa: dsa, filesize: filesize)
+        sleep 3 # so timestamps are different
       end
     end
 
