@@ -89,7 +89,7 @@ class User < ActiveRecord::Base
       self.account.plan ||= Plan.basic
     end
     self.build_schedule
-    self.schedule.good_until = self.schedule.trial_end = (Date.today >> 1)
+    self.schedule.good_until = self.schedule.trial_end = (Date.today + 14.days)
     self.schedule.plan = self.account.plan
     self.state ||= self.schedule.state
   end
