@@ -106,11 +106,17 @@ namespace :versions do
         openssl = "/usr/bin/openssl"
         dsa = `#{openssl} dgst -sha1 -binary < "#{file}" | #{openssl} dgst -dss1 -sign "#{File.dirname(__FILE__) + '/dsa_priv.pem'}" | #{openssl} enc -base64`
         filesize = File.size(file)
-        Version.create(title: "Version #{version}", number: number, version: version, dsa: dsa, filesize: filesize)
+        notes = ENV['SINGLE'] ? ENV['NOTES'] : ''
+        Version.create(title: "Version #{version}", number: number, version: version, dsa: dsa, filesize: filesize, notes: notes)
+        break if ENV['SINGLE']
         sleep 3 # so timestamps are different
       end
     end
+  end
 
+  task :add do
+    ENV['SINGLE'] = true
+    Rake::Task["versions:sync"].execute
   end
 
 end

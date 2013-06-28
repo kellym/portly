@@ -57,6 +57,10 @@ task :'versions:sync' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} rake versions:sync]
 end
 
+task :'versions:add' => :environment do
+  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} rake versions:add NOTES="#{ENV['NOTES']}"]
+end
+
 task :'assets:compile' => :environment do
   queue! %[#{bundle_prefix} rake assets:compile VERSION=$version]
 end
