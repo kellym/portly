@@ -74,7 +74,7 @@ class ApiController < SharedController
       attrs[:computer_model] = request[:computer_model] if request[:computer_model].present?
       attrs[:mac_address] = request[:mac_address] if request[:mac_address].present?
       token.update_attributes(attrs)
-      halt 200
+      {suffix: current_user.full_domain}.to_json
     else
       halt 403
     end
