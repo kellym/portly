@@ -36,10 +36,11 @@ class EventServer < EM::Connection
 
   def post_init
     @key_path = App.config.server_key_path
-    LOG.debug "-- someone connected to the echo server at #{Time.now}, setting up #{@key_path}/server.key"
-    start_tls :private_key_file => "#{@key_path}/server.key", :cert_chain_file => "#{@key_path}/server.crt", :verify_peer => false
+    LOG.debug "-- someone connected to the echo server at #{Time.now}, setting up #{@key_path}server.key"
+    start_tls :private_key_file => "#{@key_path}server.key", :cert_chain_file => "#{@key_path}server.crt", :verify_peer => false
     LOG.debug "-- started tls"
     send_data "HELLO\n"
+    LOG.debug "-- data sent"
     @seconds_waited = 0
     @timer = EventMachine::PeriodicTimer.new(5) do
       @seconds_waited += 5
