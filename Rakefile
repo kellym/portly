@@ -115,7 +115,7 @@ namespace :versions do
   end
 
   task :add do
-    ENV['SINGLE'] = true
+    ENV['SINGLE'] = 'true'
     Rake::Task["versions:sync"].execute
   end
 
