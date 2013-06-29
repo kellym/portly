@@ -112,6 +112,7 @@ Thread.new do
       LOG.debug "running echo server on #{App.config.event_server.port}"
     end
   rescue => error
+    LOG.error "The socket handler has gone offline. Restarting."
     LOG.error error.to_s
     sleep 1
     retry
