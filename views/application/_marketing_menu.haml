@@ -1,14 +1,15 @@
 %header#main
   .row
     .large-4.columns
-      -#%h1.logo.margin-top-30.margin-bottom-40
-        %a{:href => '/'} Portly
+      - if @show_logo
+        %h1.logo.black.margin-top-30.margin-bottom-40.margin-left-40
+          %a{:href => '/'} Portly
     .large-8.columns
       %ul.front-page-nav
         %li= nav_link_to 'Pricing', '/pricing'
         %li= nav_link_to 'Support', '/support'
         - if signed_in?
-          %li= nav_link_to 'Sign Out', '/signout', class: 'button'
+          %li= nav_link_to 'Sign Out', '/signout', class: 'button signout-button'
         - else
           %li= nav_link_to 'Sign In', '#!/signin', class: 'button signin-button', 'data-dropdown' => 'signin'
       - unless signed_in?

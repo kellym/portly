@@ -89,8 +89,14 @@ class ApplicationController < SharedController
     end
   end
 
+  get '/download' do
+    @show_logo = true
+    render :'downloads/index', :layout => :'layouts/marketing'
+  end
+
   get '/pricing' do
     @plans = Plan.all
+    @show_logo = true
     render :pricing, :layout => :'layouts/marketing'
   end
 
