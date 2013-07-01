@@ -95,7 +95,7 @@ class ApplicationController < SharedController
   end
 
   get '/pricing' do
-    @plans = Plan.all
+    @plans = Plan.order(:monthly).all
     @show_logo = true
     render :pricing, :layout => :'layouts/marketing'
   end
