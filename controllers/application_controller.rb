@@ -29,7 +29,7 @@ class ApplicationController < SharedController
   end
 
   get '/signin' do
-    render :signin
+    render :signin, :layout => :'layouts/marketing'
   end
 
   get '/signout' do
@@ -51,8 +51,14 @@ class ApplicationController < SharedController
   end
 
   post '/signin' do
-    authenticate_user!
-    redirect '/', 302
+    @user = Hashie::Mash.new(request[:user] || {})
+    if User.authenticate(request[:user]['email'], request[:user]['password'])
+      authenticate_user!
+      redirect '/', 302
+    else
+      @error = 'The email or password you provided is incorrect.'
+      render :signin, :layout => :'layouts/marketing'
+    end
   end
 
   get '/signup' do

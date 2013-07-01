@@ -1,18 +1,24 @@
 .row
-  .small-centered.small-8.columns
+  .large-5.columns
+    %header.homepage
+      %h1.logo-big
+        %a{:href => '/'} Portly
+  .large-7.columns.margin-top-50
     %h2 Sign in
     %form(action='/signin' method='post')
       .row
         .small-10.columns
+          - if @error
+            %small.error= @error
           .row.collapse
             %label(for='email')
               Email
             .small-9.columns
-              %input(type='text' name='user[email]' id='email')
+              %input(type='text' name='user[email]' id='email' value="#{@user[:email]}")
           .row.collapse
             %label(for='password')
               Password
             .small-9.columns
-              %input(type='password' name='user[password]' id='password')
+              %input(type='password' name='user[password]' id='password' value="#{@user[:password]}")
           .row.collapse
             %button.radius.button(type='submit') Sign in
