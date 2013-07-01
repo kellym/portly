@@ -77,7 +77,7 @@
         .large-8.large-centered.columns.margin-top-10.block.big-block.text-justify
           Share Portly with your friends. Everyone who sticks around
           past the trial period earns you
-          %strong $#{sprintf '%.02f', Plan.basic.monthly}
+          %strong $#{sprintf '%.02f', Plan.micro.monthly}
           to apply to your account. That means 1000 people gets you #{(current_user.schedule.plan.monthly*1000/12/5).to_i}
           years of Portly for free!
 
