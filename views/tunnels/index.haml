@@ -76,6 +76,7 @@
 
 - content_for :javascripts do
   = javascript_include_tag 'tunnels'
-  :coffeescript
-    nil = 0
-    new Portly.Tunnels.Views.Index([#{@computers.first.data_this_month[0].values}, #{@computers.first.data_this_month[1].values}])
+  - if @computers.present?
+    :coffeescript
+      nil = 0
+      new Portly.Tunnels.Views.Index([#{@computers.first.data_this_month[0].values}, #{@computers.first.data_this_month[1].values}])

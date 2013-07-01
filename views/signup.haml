@@ -14,23 +14,27 @@
           .row.collapse
             %label(for='email')
               Email
-            .small-9.columns
-              %input(type='text' name='user[email]' id='email')
+            .small-9.columns{class: error_class('email')}
+              %input(type='text' name='user[email]' id='email' value="#{@user[:email]}")
+              = error_message :email
           .row.collapse
             %label(for='subdomain')
               Username
-            .small-9.columns
-              %input.margin-bottom-5(type='text' name='user[subdomain]' id='subdomain')
-              .hint.small.mute.margin-bottom-15 This is also the subdomain for your account.
+            .small-9.columns{class: error_class('subdomain')}
+              %input(type='text' name='user[subdomain]' id='subdomain' value="#{@user[:subdomain]}")
+              = error_message :subdomain
+              .hint.small.mute.negative-margin-top-10.margin-bottom-15 This is also the subdomain for your account.
           .row.collapse
             %label(for='password')
               Password
-            .small-9.columns
-              %input(type='password' name='user[password]' id='password')
+            .small-9.columns{class: error_class('password')}
+              %input(type='password' name='user[password]' id='password' value="#{@user[:password]}")
+              = error_message :password
           .row.collapse
             %label(for='password_confirmation')
               Confirm Password
-            .small-9.columns
-              %input(type='password' name='user[password_confirmation]' id='password_confirmation')
+            .small-9.columns{class: error_class('password_confirmation')}
+              %input(type='password' name='user[password_confirmation]' id='password_confirmation' value="#{@user[:password_confirmation]}")
+              = error_message :password_confirmation
           .row.collapse
             %button.radius.button(type='submit') Sign up

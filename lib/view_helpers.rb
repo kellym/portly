@@ -1,5 +1,17 @@
 module ViewHelpers
 
+  def error_class(field)
+    @form_errors.messages.keys.include?(field.to_sym) ? 'error' : ''
+  end
+
+  def error_message(field)
+    if @form_errors.messages.keys.include?(field.to_sym)
+      "<small class='error'>#{@form_errors.messages[field.to_sym].first}</small>"
+    else
+        ''
+    end
+  end
+
   def content_for(key, &block)
     @content_for ||= Hash.new {|h, k| h[k] = [] }
     if block_given?
