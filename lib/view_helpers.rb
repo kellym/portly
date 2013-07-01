@@ -1,11 +1,11 @@
 module ViewHelpers
 
   def error_class(field)
-    @form_errors.messages.keys.include?(field.to_sym) ? 'error' : ''
+    @form_errors && @form_errors.messages.keys.include?(field.to_sym) ? 'error' : ''
   end
 
   def error_message(field)
-    if @form_errors.messages.keys.include?(field.to_sym)
+    if @form_errors && @form_errors.messages.keys.include?(field.to_sym)
       "<small class='error'>#{@form_errors.messages[field.to_sym].first}</small>"
     else
         ''
