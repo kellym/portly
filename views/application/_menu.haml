@@ -1,10 +1,10 @@
-%header#main.green
+%header#main
   .row
-    .large-3.columns
-      %h1.logo.margin-top-30.margin-bottom-20
+    .large-4.columns
+      %h1.logo.black.margin-top-20.margin-bottom-20.margin-left-40
         %a{:href => '/'} Portly
-    .large-9.columns.nav-container
-      %ul.interior-nav
+    .large-8.columns
+      %ul.front-page-nav
         %li= nav_link_to 'Tunnels', '/tunnels', restful: true
         %li= nav_link_to 'Account', '/account'
         %li= link_to 'Sign Out', '/signout', :class => 'signout'
