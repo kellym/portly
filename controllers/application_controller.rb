@@ -63,6 +63,11 @@ class ApplicationController < SharedController
 
   get '/signup' do
     @user = {}
+    if request[:plan]
+      @plan = Plan.find(request[:plan])
+    end
+    @plan ||= Plan.basic
+
     render :signup, :layout => :'layouts/marketing'
   end
 

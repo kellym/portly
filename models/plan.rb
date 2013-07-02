@@ -10,6 +10,10 @@ class Plan < ActiveRecord::Base
     @micro ||= Plan.where(:reference => 'micro').first
   end
 
+  def self.basic
+    @basic ||= Plan.where(:reference => 'basic').first
+  end
+
   def self.team
     @team ||= Plan.where(:reference => 'team').first
   end

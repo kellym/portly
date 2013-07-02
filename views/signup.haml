@@ -12,6 +12,11 @@
       .row
         .small-10.columns
           .row.collapse
+            %h4.margin-bottom-0.margin-top-0 Selected Plan: #{number_to_currency @plan.monthly}/month
+            .margin-bottom-20
+              %a.small{:href => '/pricing'} Change Plan
+            %input{type: 'hidden', name: 'user[plan_id]', value: @plan.id}
+          .row.collapse
             %label(for='email')
               Email
             .small-9.columns{class: error_class('email')}

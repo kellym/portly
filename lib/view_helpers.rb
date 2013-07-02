@@ -12,6 +12,10 @@ module ViewHelpers
     end
   end
 
+  def number_to_currency(amount)
+    "$#{sprintf('%.02f', amount)}"
+  end
+
   def content_for(key, &block)
     @content_for ||= Hash.new {|h, k| h[k] = [] }
     if block_given?

@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
 
   attr_reader :password
   attr_accessor :password_confirmation
+  attr_accessor :plan_id
   image_accessor :cover_image
 
   validates_confirmation_of :password
@@ -86,7 +87,7 @@ class User < ActiveRecord::Base
     unless self.account
       self.build_account
       self.account.admin = self
-      self.account.plan ||= Plan.basic
+      self.account.plan ||= @plan_id ? Plan.find(@plan_id) : Plan.basic
     end
     self.build_schedule
     self.schedule.good_until = self.schedule.trial_end = (Date.today + 14.days)
