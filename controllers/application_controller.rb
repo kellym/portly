@@ -29,6 +29,7 @@ class ApplicationController < SharedController
   end
 
   get '/signin' do
+    @user = {}
     render :signin, :layout => :'layouts/marketing'
   end
 
@@ -74,12 +75,13 @@ class ApplicationController < SharedController
   post '/signup' do
     @user = UserCreationService.new.create(request[:user])
     if @user.persisted?
-      env['warden'].set_user @user
+      env['warden'].set_user @user, :event => :authentication
       flash[:new_user] = true
       redirect '/', 302
     else
       @form_errors = @user.errors
       @user = Hashie::Mash.new(request[:user] || {})
+      @plan = Plan.find(request[:user]['plan_id'])
       render :signup, :layout => :'layouts/marketing'
     end
   end
@@ -95,6 +97,7 @@ class ApplicationController < SharedController
   end
 
   get '/download' do
+    flash[:new_user] = true
     @show_logo = true
     render :'downloads/index', :layout => :'layouts/marketing'
   end

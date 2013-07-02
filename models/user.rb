@@ -32,7 +32,17 @@ class User < ActiveRecord::Base
 
   before_save :downcase_email
 
-  def_delegators :schedule, :plan_id, :plan_id=
+  def plan_id
+    @plan_id || (schedule ? schedule.plan_id : nil)
+  end
+
+  def plan_id=(val)
+    if schedule
+      schedule.plan_id=val
+    else
+      @plan_id = val
+    end
+  end
 
   # Public: Initialize this user and create account and schedule first.
   def initialize(*params)

@@ -14,7 +14,9 @@
               %small.online-state= token.online? ? 'ONLINE' : 'OFFLINE'
             - first = false
     .large-1.columns.padding-left-0.padding-right-0
-- if @computers.size > 0
+- if @computers.size == 0
+  = render :'tunnels/_blank_slate'
+- else
   - first = true
   - token = @computers.first
   #tunnels
