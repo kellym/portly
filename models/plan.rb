@@ -6,8 +6,8 @@ class Plan < ActiveRecord::Base
   # property :yearly, Decimal, precision: 12, scale: 2
   # property :computers, Integer
 
-  def self.basic
-    @basic ||= Plan.where(:reference => 'basic').first
+  def self.micro
+    @micro ||= Plan.where(:reference => 'micro').first
   end
 
   def self.team
