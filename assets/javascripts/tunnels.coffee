@@ -171,7 +171,7 @@
 
     socket: (event) ->
       if @new_user
-        window.location.reload()
+        location.reload(true)
         return true
       data = $.parseJSON(event.data)
       if data["args"][0] == "on"
