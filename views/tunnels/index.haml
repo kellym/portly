@@ -1,22 +1,22 @@
-.subnav
-  .row
-    .large-11.columns.padding-left-0.padding-right-0.tunnel-nav
-      %ul.nav-bar
-        - first = true
-        - @computers.each do |token|
-          %li
-            - k = first ? 'active ' : ''
-            - k << (token.online? ? 'online' : 'offline')
-            %a{'data-section' => token.id, :title => token.ip_address.to_s, :href => "/tunnels/#{token.id}", :class => k, data: { pjax: true, container: '#tunnels'} }
-              .large-icon{:class => token.desktop? ? 'p-desktop' : 'p-laptop' }
-              = token.computer_name
-              <br />
-              %small.online-state= token.online? ? 'ONLINE' : 'OFFLINE'
-            - first = false
-    .large-1.columns.padding-left-0.padding-right-0
 - if @computers.size == 0
   = render :'tunnels/_blank_slate'
 - else
+  .subnav
+    .row
+      .large-11.columns.padding-left-0.padding-right-0.tunnel-nav
+        %ul.nav-bar
+          - first = true
+          - @computers.each do |token|
+            %li
+              - k = first ? 'active ' : ''
+              - k << (token.online? ? 'online' : 'offline')
+              %a{'data-section' => token.id, :title => token.ip_address.to_s, :href => "/tunnels/#{token.id}", :class => k, data: { pjax: true, container: '#tunnels'} }
+                .large-icon{:class => token.desktop? ? 'p-desktop' : 'p-laptop' }
+                = token.computer_name
+                <br />
+                %small.online-state= token.online? ? 'ONLINE' : 'OFFLINE'
+              - first = false
+      .large-1.columns.padding-left-0.padding-right-0
   - first = true
   - token = @computers.first
   #tunnels
@@ -82,3 +82,7 @@
     :coffeescript
       nil = 0
       new Portly.Tunnels.Views.Index([#{@computers.first.data_this_month[0].values}, #{@computers.first.data_this_month[1].values}])
+  - else
+    :coffeescript
+      new Portly.Tunnels.Views.Index()
+

@@ -76,8 +76,8 @@ class ApplicationController < SharedController
     @user = UserCreationService.new.create(request[:user])
     if @user.persisted?
       env['warden'].set_user @user, :event => :authentication
-      flash[:new_user] = true
-      redirect '/', 302
+      session[:new_user] = true
+      redirect '/tunnels', 302
     else
       @form_errors = @user.errors
       @user = Hashie::Mash.new(request[:user] || {})
@@ -97,9 +97,8 @@ class ApplicationController < SharedController
   end
 
   get '/download' do
-    flash[:new_user] = true
     @show_logo = true
-    render :'downloads/index', :layout => :'layouts/marketing'
+    render :'downloads/index', :layout => signed_in? ? :'layouts/application' : :'layouts/marketing'
   end
 
   get '/pricing' do
