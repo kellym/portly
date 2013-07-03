@@ -21,19 +21,6 @@ class Token < ActiveRecord::Base
   default_scope where(:deleted_at => nil)
   scope :active, where('tokens.computer_name IS NOT NULL AND tokens.deleted_at IS NULL')
 
-  # Public: Replace poorly encoded characters with the correct option.
-  #
-  def computer_name=(val)
-    replacements = []
-    replacements << ['â€¦', '…']           # elipsis
-    replacements << ['â€“', '–']           # long hyphen
-    replacements << ['â€™', '’']           # curly apostrophe
-    replacements << ['â€œ', '“']           # curly open quote
-    replacements << [/â€[[:cntrl:]]/, '”'] # curly close quote
-    replacements.each{ |set| val.gsub!(set[0], set[1]) }
-    super val
-  end
-
   # Internal: Generates an authentication token for the user to
   # access their data via the app.
   def generate_token
