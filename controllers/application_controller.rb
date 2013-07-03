@@ -86,6 +86,18 @@ class ApplicationController < SharedController
     end
   end
 
+  get '/support' do
+    render :support, :layout => user_layout
+  end
+
+  get '/blog' do
+    render :blog, :layout => user_layout
+  end
+
+  get '/terms' do
+    render :terms, :layout => user_layout
+  end
+
   # Public: The homepage for the site.
   get '/' do
     if signed_in?
@@ -193,4 +205,10 @@ class ApplicationController < SharedController
     response.body = '404 Not Found'
     #response.body = env.inspect
   end
+
+  def user_layout
+    @show_logo = true
+    signed_in? ? :'layouts/application' : :'layouts/marketing'
+  end
+
 end
