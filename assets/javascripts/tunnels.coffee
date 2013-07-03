@@ -169,7 +169,7 @@
       console.log "disconnect"
       console.log event.data
 
-    socket: (event) ->
+    socket: (event) =>
       if @new_user
         location.reload(true)
         return true
