@@ -5,7 +5,11 @@
     = stylesheet_include_tag 'page'
     %meta(name="viewport" content="width=device-width, initial-scale=1.0")
   %body
+    - if logo
+      .row
+        .large-8.large-centered.columns.text-center.margin-top-50.margin-bottom-20
+          %img{:src => logo, :style => 'max-width: 200px; max-height: 200px'}
     .row
       .large-8.large-centered.columns
-        = yield
+        = content
 

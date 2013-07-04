@@ -9,7 +9,11 @@ class PagesController < SharedController
       connector = Connector.where(:cname => server_name).first
     end
     if connector
-      render connector.closest_page ? connector.closest_page.content : 'Tunnel Offline', layout: :'layouts/page'
+      render :'pages/show', :layout => nil,
+        locals: {
+          content: connector.closest_page ? connector.closest_page.content : nil,
+          logo: connector.closest_page ? connector.closest_page.cover_image.thumb('400x400').url : nil,
+        }
     else
       halt 404
     end
