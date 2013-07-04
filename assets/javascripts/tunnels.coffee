@@ -22,8 +22,9 @@
       'click .inline-input'     : 'focusInlineInput'
       'blur .inline-input input': 'unfocusInlineInput'
       'click .subnav a[data-section]' : 'showComputer'
-      'click a.update-tunnel'      : 'openUpdateReveal'
+      'click a.update-tunnel'   : 'openUpdateReveal'
       'opened .update-modal'    : 'updateReveal'
+      'pjax:beforeSend'         : 'pjaxBeforeSend'
       'pjax:end'                : 'pjaxEnd'
 
     initialize: (data)=>
@@ -111,7 +112,7 @@
                 data : data[0],
                 mouseover: (e, pt, data, i, j) =>
                   e['currentTarget'] = $('.summary')
-                  @tipsy.data('title', "#{@humanNumber(data.datasets[1].data[i] || 0)} in / #{@humanNumber(data.datasets[0].data[i] || 0)} out")
+                  $('.summary').data('title', "#{@humanNumber(data.datasets[1].data[i] || 0)} in / #{@humanNumber(data.datasets[0].data[i] || 0)} out")
                   t = @tipsy.enter(e)
                   t.reset()
                   t.setPosition(pt.x1 + 4, (pt.y2 || 130) - 3)
@@ -273,7 +274,7 @@
         $('.for-local').addClass('hide')
         $('.for-remote').removeClass('hide')
 
-    showComputer: (ev) ->
+    showComputer: (ev) =>
       ev.preventDefault()
       el = $(ev.currentTarget)
       @sections.find("section[data-section='#{el.data('section')}']").show().siblings().hide()
@@ -285,6 +286,9 @@
         @menu.refresh()
       li.parent().find('.active').removeClass('active')
       li.find('a').addClass('active')
+
+    pjaxBeforeSend: (ev) =>
+      $('.tipsy').remove()
 
     pjaxEnd: (ev) =>
       relatedTarget = $(ev.relatedTarget)
