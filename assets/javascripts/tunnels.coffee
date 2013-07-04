@@ -27,14 +27,10 @@
       'pjax:end'                : 'pjaxEnd'
 
     initialize: (data)=>
-      if !data
-        @new_user = true
+      if data
+        current_computer = data['computer']
       @$('.inline-input input').autoGrow(2)
       @menu = @$('.subnav').overflowmenu(
-        #open: ->
-        #  console.log 'open'
-        #change: ->
-        #  console.log 'hello'
         appendTo: @$('.subnav .large-1')
         handleClass: 'p-menu'
         label: ''
@@ -51,51 +47,11 @@
       offset =  2 #-166 + parseInt @percent_used.find('div').height()
       @percent_used.tipsy({ gravity : 's', html: true, title: 'data-title', offset: offset })
       @tipsy.tipsy('show')
-      if data
-        @chart = new Chart($('.summary canvas')[0].getContext('2d'))
-        labels = []
-        j = 0
-        date = new Date()
-        date.setDate(date.getDate() - 1)
-        for i in [0..data[0].length-1] by 1
-          fiver = (data[0].length - j - 1) % 5 == 0
-          if fiver
-            labels[i] = "#{@months[date.getMonth()-1]} #{date.getDate()}"
-            date.setDate(date.getDate() + 5)
-          else
-            labels[i] = ''
-          j += 1
-        @chart.StackedBar( {
-          labels : labels,
-          datasets : [
-            {
-              fillColor : "rgba(131,200,152,0.8)",
-              strokeColor : "rgba(131,200,152,1)",
-              data : data[1]
-            },
-            {
-              fillColor : "rgba(198,221,171,0.8)",
-              strokeColor : "rgba(198,221,171,1)",
-              data : data[0],
-              mouseover: (e, pt, data, i, j) =>
-                e['currentTarget'] = $('.summary')
-                @tipsy.data('title', "#{@humanNumber(data.datasets[1].data[i] || 0)} in / #{@humanNumber(data.datasets[0].data[i] || 0)} out")
-                t = @tipsy.enter(e)
-                t.reset()
-                t.setPosition(pt.x1 + 4, (pt.y2 || 130) - 3)
+      if current_computer
+        @showChart(current_computer)
+      else
+        @new_user = true
 
-              mouseout: (e, pt) =>
-                e['currentTarget'] = $('.summary')
-                @tipsy.leave(e)
-            }
-          ]}, {
-            scaleShowLabels: false,
-            scaleShowGridLines: false,
-            barValueSpacing: 1,
-            scaleGridLineColor: 'rgba(0,0,0,0)',
-            scaleFontSize: 8
-          }
-        )
       @stopwatches = []
 
       @$('.stopwatch').each (i, el) =>
@@ -119,6 +75,59 @@
 
     unfocusInlineInput: (ev) ->
       $(ev.currentTarget).closest('.inline-input').removeClass('focus')
+
+    showChart: (computer) =>
+      href = "/api/tokens/#{computer}/history.js"
+      $.ajax
+        url: href
+        type: "GET"
+        dataType: 'json'
+        success: (data) =>
+          data = data['history']
+          @chart = new Chart($('.summary canvas')[0].getContext('2d'))
+          labels = []
+          j = 0
+          date = new Date()
+          date.setDate(date.getDate() - 1)
+          for i in [0..data[0].length-1] by 1
+            fiver = (data[0].length - j - 1) % 5 == 0
+            if fiver
+              labels[i] = "#{@months[date.getMonth()-1]} #{date.getDate()}"
+              date.setDate(date.getDate() + 5)
+            else
+              labels[i] = ''
+            j += 1
+          @chart.StackedBar( {
+            labels : labels,
+            datasets : [
+              {
+                fillColor : "rgba(131,200,152,0.8)",
+                strokeColor : "rgba(131,200,152,1)",
+                data : data[1]
+              },
+              {
+                fillColor : "rgba(198,221,171,0.8)",
+                strokeColor : "rgba(198,221,171,1)",
+                data : data[0],
+                mouseover: (e, pt, data, i, j) =>
+                  e['currentTarget'] = $('.summary')
+                  @tipsy.data('title', "#{@humanNumber(data.datasets[1].data[i] || 0)} in / #{@humanNumber(data.datasets[0].data[i] || 0)} out")
+                  t = @tipsy.enter(e)
+                  t.reset()
+                  t.setPosition(pt.x1 + 4, (pt.y2 || 130) - 3)
+
+                mouseout: (e, pt) =>
+                  e['currentTarget'] = $('.summary')
+                  @tipsy.leave(e)
+              }
+            ]}, {
+              scaleShowLabels: false,
+              scaleShowGridLines: false,
+              barValueSpacing: 1,
+              scaleGridLineColor: 'rgba(0,0,0,0)',
+              scaleFontSize: 8
+            }
+          )
 
     changeState: (ev) =>
       ev.preventDefault()
@@ -277,7 +286,11 @@
       li.parent().find('.active').removeClass('active')
       li.find('a').addClass('active')
 
-    pjaxEnd: (ev) ->
+    pjaxEnd: (ev) =>
+      relatedTarget = $(ev.relatedTarget)
+      if relatedTarget.data('container') == '#tunnels'
+        computer = relatedTarget.data('section')
+        @showChart(computer)
       @$('.inline-input input').autoGrow(2)
       @$('.stopwatch').each (i, el) =>
         @startWatch($(el))

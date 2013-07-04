@@ -81,7 +81,7 @@
   - if @computers.present?
     :coffeescript
       nil = 0
-      new Portly.Tunnels.Views.Index([#{@computers.first.data_this_month[0].values}, #{@computers.first.data_this_month[1].values}])
+      new Portly.Tunnels.Views.Index(computer: #{@computers.first.id})
   - else
     :coffeescript
       new Portly.Tunnels.Views.Index()

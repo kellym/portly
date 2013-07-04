@@ -81,7 +81,7 @@ class ApplicationController < SharedController
     else
       @form_errors = @user.errors
       @user = Hashie::Mash.new(request[:user] || {})
-      @plan = Plan.find(request[:user]['plan_id'])
+      @plan = Plan.find(request[:user]['plan_id']) || Plan.basic
       render :signup, :layout => :'layouts/marketing'
     end
   end

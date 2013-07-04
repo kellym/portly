@@ -66,6 +66,15 @@ class ApiController < SharedController
     end
   end
 
+  get '/tokens/*/history.js' do |token_id|
+    token = Token.where(:user_id => current_user.id, :id => token_id).first
+    if token
+      { history: [token.data_this_month[0].values, token.data_this_month[1].values] }.to_json
+    else
+      { history: [] }.to_json
+    end
+  end
+
   put '/tokens/*' do |token_code|
     token = Token.where(user_id: current_user.id, code: token_code).first
     if token
