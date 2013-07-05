@@ -8,14 +8,6 @@ class ApplicationController < SharedController
 
   include Middleware
 
-  def current_user
-    env['warden'].user
-  end
-
-  def signed_in?
-    !!env['warden'].user
-  end
-
   def authenticate_user!
     env['warden'].authenticate! unless env['warden'].authenticated?
   end

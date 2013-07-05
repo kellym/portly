@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   attr_reader :password
   attr_accessor :password_confirmation
   attr_accessor :plan_id
+  attr_accessor :auth_method
   image_accessor :cover_image
 
   validates_confirmation_of :password
@@ -23,6 +24,7 @@ class User < ActiveRecord::Base
 
   has_many :connectors
   has_many :tokens
+  has_many :api_keys, class_name: 'UserToken'
   belongs_to :account
   belongs_to :page
   has_one :admin_account, class_name: 'Account', :foreign_key => :admin_id
@@ -60,6 +62,24 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Public: Checks to see if there is a user with the specific authentication
+  def self.api_authenticate(email, password)
+    user = User.where(:email => email.downcase).first
+    if user
+      if user.valid_password?(password)
+        user.auth_method = :password
+        user
+      elsif user.valid_api_key?(password)
+        user.auth_method = password
+        user
+      else
+        nil
+      end
+    else
+      nil
+    end
+  end
+
   # Public: Checks whether the password provided matches the password on file
   # or not.
   #
@@ -69,6 +89,14 @@ class User < ActiveRecord::Base
     bcrypt   = ::BCrypt::Password.new(encrypted_password)
     password = ::BCrypt::Engine.hash_secret("#{password}#{App.config.authentication.pepper}", bcrypt.salt)
     User.secure_compare(password, encrypted_password)
+  end
+
+  # Public: Checks whether there is an API token that matches in the user's
+  # account so they can sign into the app.
+  #
+  # Returns a Boolean of true if there is a token, false otherwise.
+  def valid_api_token?(api_token)
+    self.api_tokens.where(:code => api_token).exists?
   end
 
   # Public: constant-time comparison algorithm to prevent timing attacks.

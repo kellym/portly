@@ -5,6 +5,14 @@ class SharedController < Scorched::Controller
 
   include ViewHelpers
 
+  def current_user
+    env['warden'].user
+  end
+
+  def signed_in?
+    !!env['warden'].user
+  end
+
   def media_type
     @media_type ||= MediaType.new(env['HTTP_ACCEPT'])
   end

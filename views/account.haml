@@ -64,20 +64,39 @@
               %a.trigger{:href => '/account/login'} Edit
         .hide= render :'account/_login', :layout => nil
     .large-6.large-offset-1.columns
-      %h4 Free Donuts
-      .circle-container
-        .amount= current_user.account.bonus_months
-        #{current_user.account.bonus_months == 1 ? 'month' : 'months'}
-        .circle-shadow
-          .circle-amount{style: "height: #{(350 * ((current_user.account.bonus_months > 5) ? 5 : (current_user.account.bonus_months.to_f / 5))).to_i}px"}
-            .circle
-      .headline.text-center
-        EARN GLAZE CREDITS<br />for<br/> FREE MONTHS
-      .row
-        .large-8.large-centered.columns.margin-top-10.block.big-block.text-justify
-          Share Portly with your friends. Everyone who sticks around
-          past the trial period earns you
-          %strong $3.00
-          to apply to your account. That means 1000 people gets you #{(250/current_user.schedule.plan.monthly).to_i}
-          years of Portly for free!
+      .row.large-12.columns
+        %h4 Free Donuts
+        .circle-container
+          .amount= current_user.account.bonus_months
+          #{current_user.account.bonus_months == 1 ? 'month' : 'months'}
+          .circle-shadow
+            .circle-amount{style: "height: #{(350 * ((current_user.account.bonus_months > 5) ? 5 : (current_user.account.bonus_months.to_f / 5))).to_i}px"}
+              .circle
+        .headline.text-center
+          EARN GLAZE CREDITS<br />for<br/> FREE MONTHS
+        .row
+          .large-8.large-centered.columns.margin-top-10.block.big-block.text-justify
+            Share Portly with your friends. Everyone who sticks around
+            past the trial period earns you
+            %strong $3.00
+            to apply to your account. That means 1000 people gets you #{(250/current_user.schedule.plan.monthly).to_i}
+            years of Portly for free!
+      .row.large-12.columns
+        %h4.margin-top-30 API Keys
+        %p.small
+          For accounts with multiple users, or if you would rather only
+          use your password for the website, you can generate API Keys to
+          sign into the Portly app.
+        .table.api-keys
+          - current_user.api_keys.each do |key|
+            .row.small
+              .large-7.columns.strong.code= key.code
+              .large-5.columns.text-right
+                %a{href: '#/delete'} Remove
+        %p.margin-top-10
+          %a.button.small.add-api-key{:href => '#/add'} Add a Key
 
+- content_for :javascripts do
+  = javascript_include_tag 'account'
+  :coffeescript
+    new Portly.Account.Views.Index()

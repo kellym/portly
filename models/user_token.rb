@@ -17,4 +17,9 @@ class UserToken < ActiveRecord::Base
     end
   end
 
+  def destroy
+    self.update_attribute(:deleted_at, Time.now)
+    self.token.destroy if self.token
+  end
+
 end

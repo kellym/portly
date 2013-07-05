@@ -51,7 +51,7 @@ Warden::Strategies.add(:api_password) do
   end
 
   def authenticate!
-    u = User.authenticate(params["user"]["email"], params["user"]["password"])
+    u = User.api_authenticate(params["user"]["email"], params["user"]["password"])
     u.nil? ? fail!("Could not log in") : success!(u)
   end
 

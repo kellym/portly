@@ -51,6 +51,13 @@ class ApiController < SharedController
       unless token
         token = Token.create(:user_id => current_user.id, :computer_name => request[:computer_name], :computer_model => request[:computer_model])
       end
+      if current_user.auth_method.is_a?(String)
+        # we used an API Key
+        api_key = UserToken.where(:user_id => current_user.id, :code => current_user.auth_method).first
+        if api_key
+          api_key.update_attribute(:token_id, token.id)
+        end
+      end
       puts ({code: token.code, private_key: token.authorized_key.private_key, suffix: current_user.full_domain}.to_json)
       { code: token.code,
         private_key: token.authorized_key.private_key,
@@ -107,6 +114,26 @@ class ApiController < SharedController
 
   get '/token' do
     { email: current_user.email, }.to_json
+  end
+
+  post '/keys' do
+    token = UserToken.create(:user_id => current_user.id)
+    if token
+      { code: token.code }.to_json
+    else
+      halt 400
+    end
+  end
+
+  delete '/keys/*' do |token_code|
+    token = UserToken.where(user_id: current_user.id, code: token_code).first
+    if token
+      Redis.current.publish("socket:#{token.code}", 'signout')
+      token.destroy
+      {}.to_json
+    else
+      halt 403
+    end
   end
 
   # Public: Set up a new tunnel connector
