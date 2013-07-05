@@ -52,7 +52,11 @@ class ApiController < SharedController
         token = Token.create(:user_id => current_user.id, :computer_name => request[:computer_name], :computer_model => request[:computer_model])
       end
       puts ({code: token.code, private_key: token.authorized_key.private_key, suffix: current_user.full_domain}.to_json)
-      {code: token.code, private_key: token.authorized_key.private_key, suffix: current_user.full_domain}.to_json
+      { code: token.code,
+        private_key: token.authorized_key.private_key,
+        suffix: current_user.full_domain,
+        public_key: 'getportly.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5kgL2OMp9nvRDGTlZDbKMSpEnEjDzcTdD9bE5BSfEvcTlhw1vCCqMjLwRqZRT2aMcdX8XelIeGBGmhYbleuioJ0qWe15rj/DPk4SWM7YARMo2xShSUdyM3X4zsbRmwlGLwFyWemM38rnz9wvdcg4AvtyPtI4ztmFTAYxSH3qaUwOcI5LnP8XzI5cjOTz3KRswX93Wovz/+mmTkcIBm7lUKvEDWANtS0P7dTdFCEbwCctoHIur/otYuF5X4X/MWnkh+R3N1SuuQHDkJpBj/vAD2Ou5ua7x2OFkkTt/H8pX8Iqcm9Q8fzprm8iOz9fRlOJeQREjuzCkgMhcKJlc4Inn'
+      }.to_json
     else
       puts 'missing params'
     end
