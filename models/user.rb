@@ -95,8 +95,8 @@ class User < ActiveRecord::Base
   # account so they can sign into the app.
   #
   # Returns a Boolean of true if there is a token, false otherwise.
-  def valid_api_token?(api_token)
-    self.api_tokens.where(:code => api_token).exists?
+  def valid_api_key?(api_key)
+    self.api_keys.where(:code => api_key).exists?
   end
 
   # Public: constant-time comparison algorithm to prevent timing attacks.
