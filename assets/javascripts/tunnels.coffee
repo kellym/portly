@@ -166,8 +166,6 @@
       connect.find('span').addClass('p-pause').removeClass('p-play')
       connect.data('connector', true)
       @startWatch(row.find(".stopwatch"), +new Date())
-      console.log "connect"
-      console.log event.data
 
     disconnect: (event) ->
       data = $.parseJSON(event.data)
@@ -183,8 +181,6 @@
       connect.data('connector', false)
       connect.find('span').removeClass('p-pause').addClass('p-play')
       row.find(".stopwatch").trigger "stop"
-      console.log "disconnect"
-      console.log event.data
 
     socket: (event) =>
       if @new_user
@@ -192,7 +188,6 @@
         return true
       data = $.parseJSON(event.data)
       if data["args"][0] == "on"
-        console.log "socket:on ->" + data["id"]
         link = $("a[data-section=\"" + data["id"] + "\"]")
         link.addClass('online').removeClass('offline')
         link.find(".online-state").removeClass('offline').text "ONLINE"
@@ -200,7 +195,6 @@
         socket.find(".connected-state").removeClass "state-disabled"
         socket.find('.connect').show()
       else
-        console.log "socket:off ->" + data["id"]
         link = $("a[data-section=\"" + data["id"] + "\"]")
         link.addClass('offline').removeClass('online')
         link.find(".online-state").addClass('offline').text "OFFLINE"
@@ -213,7 +207,6 @@
       $.get("/api/connectors/#{data['id']}", {access_id: data.token_id}, (html) ->
         $("section[data-section='#{data['token_id']}'] .connectors").append($(html))
       , 'html')
-      console.log event
 
     deleteItem: (event) ->
       data = $.parseJSON(event.data)
@@ -230,13 +223,13 @@
         row.find('.connect').hide()
 
     open: (event) =>
-      console.log "opened: " + @es.url
+      true
 
     message: (event) ->
-      console.log event.data
+      true
 
     error: (event) ->
-      console.log "closed"
+      true
 
     focusReveal: (ev) ->
       el = $(ev.currentTarget)
@@ -285,7 +278,6 @@
       if $(e.target).is("textarea")
         return
 
-      console.log 'almost'
       # Abort if it looks like they've selected some text (maybe they're trying
       # to copy out a bit of the description or something)
       if window.getSelection?()?.toString()
