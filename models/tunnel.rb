@@ -226,11 +226,12 @@ class Tunnel
   def within_account_limit?
     account = User.where(id: @user_id).includes(:account).first.account
     if account
-      count = Redis.current.hlen(active_key).to_i
-      if account.plan.computer_limit > count
+      computer_count = Redis.current.hlen(active_key).to_i
+      tunnel_count = Redis.current.hvals(active_key).map { |s| s.to_i }.sum
+      if (account.plan.computer_limit > computer_count) && (account.plan.tunnel_limit > tunnel_count)
         return true
       else
-        if Redis.current.hexists(active_key, @token)
+        if Redis.current.hexists(active_key, @token) && (account.plan.tunnel_limit > tunnel_count)
           return true
         else
           @errors << :exceeded_limit
