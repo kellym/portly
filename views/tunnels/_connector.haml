@@ -3,13 +3,13 @@
     .row
       .large-8.columns
         %span.connected-state{:class => "state-#{c.connected? ? 'online' : 'offline'}" + ((token.online? && c.enabled?) ? '' : ' state-disabled') }
-        %span.domain.tooltipped-top{:title => "Press Ctrl + C to copy"}
+        %span.domain
           - domain = c.cname.present? ? c.cname : c.full_subdomain
           - url = "#{c.cname.present? ? 'http' : 'https'}://#{domain}"
           - if c.connected?
-            %a.link{href: url, target: '_blank'}= domain
+            %a.link.copyable{href: url, target: '_blank'}= domain
           - else
-            %span{'data-url'=> url}= domain
+            %span.copyable{'data-url'=> url}= domain
           .show-for-small
             %a.update-tunnel.margin-right-20.margin-left-30{:href => "#/tunnels/#{c.id}/manage", data: { access_id: token.id, id: c.id, cname: c.cname, subdomain: c.subdomain, connection_string: c.connection_string }} Edit
       .large-4.text-right.columns

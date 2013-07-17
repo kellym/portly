@@ -26,7 +26,6 @@
       'opened .update-modal'    : 'updateReveal'
       'pjax:beforeSend'         : 'pjaxBeforeSend'
       'pjax:end'                : 'pjaxEnd'
-      'mouseover span.domain'   : 'setClipboardContent'
 
     initialize: (data)=>
       if data
@@ -45,11 +44,6 @@
       $('.summary').on('mouseout', (ev) ->
         $(@).tipsy('hide')
       )
-      $('.domain').attr('title', "Press #{if navigator.userAgent.indexOf('Mac') is -1 then 'Ctrl' else '&#8984;'} + C to copy")
-      $(document).keydown (e) =>
-        @selectClipboard(e)
-      $(document).keyup (e) =>
-        @deselectClipboard(e)
 
       @percent_used = $('.percent-used')
       offset =  2 #-166 + parseInt @percent_used.find('div').height()
@@ -161,7 +155,7 @@
       data = $.parseJSON(event.data)
       row = $(".connector[data-id=\"" + data["id"] + "\"]")
       span = row.find('.domain span')
-      span.replaceWith($("<a class='link' href='#{span.data('url')}' target='_blank'>#{span.text()}</a>"))
+      span.replaceWith($("<a class='copyable link' href='#{span.data('url')}' target='_blank'>#{span.text()}</a>"))
       row.find(".connected-state").addClass("state-online").removeClass "state-offline"
       connect = row.find(".connect")
       connect.attr('title', 'Disconnect')
@@ -176,7 +170,7 @@
       data = $.parseJSON(event.data)
       row = $(".connector[data-id=\"" + data["id"] + "\"]")
       link = row.find('.domain a.link')
-      link.replaceWith($("<span data-url='#{link.prop('href')}'>#{link.text()}</span>"))
+      link.replaceWith($("<span class='copyable' data-url='#{link.prop('href')}'>#{link.text()}</span>"))
       row.find(".connected-state").addClass("state-offline").removeClass "state-online"
       connect = row.find(".connect")
       connect.attr('title', 'Connect')
@@ -269,36 +263,6 @@
       modal.find('input.subdomain').autoGrow(2)
       connection_string = modal.find('.connection-string').val()
       modal.find('.connection-string').focus().val('').val(connection_string)
-
-    setClipboardContent: (ev) ->
-      el = $(ev.currentTarget).children().first()
-      @clipboard = el.text()
-
-    selectClipboard: (e) =>
-      # Only do this if there's something to be put on the clipboard, and it
-      # looks like they're starting a copy shortcut
-      if !@clipboard || !(e.ctrlKey || e.metaKey)
-        return
-
-      if $(e.target).is("textarea")
-        return
-
-      # Abort if it looks like they've selected some text (maybe they're trying
-      # to copy out a bit of the description or something)
-      if window.getSelection?()?.toString()
-        return
-
-      if document.selection?.createRange().text
-        return
-
-      _.defer =>
-        $clipboardContainer = $("#clipboard-container")
-        $clipboardContainer.empty().show()
-        $("<textarea id='clipboard'></textarea>").val(@clipboard).appendTo($clipboardContainer).focus().select()
-
-    deselectClipboard: (e) ->
-      if $(e.target).is("#clipboard")
-        $("#clipboard-container").empty().hide()
 
     changeHostingType: (ev) ->
       el = $(ev.currentTarget)

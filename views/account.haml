@@ -90,8 +90,9 @@
         .table.api-keys
           - current_user.api_keys.each do |key|
             .row.small
-              .large-7.columns.strong.code= key.code
-              .large-5.columns.text-right
+              .large-10.columns.strong.code
+                %span.copyable= key.code
+              .large-2.columns.text-right
                 %a{href: '#/delete'} Remove
         %p.margin-top-10
           %a.button.small.add-api-key{:href => '#/add'} Add a Key
