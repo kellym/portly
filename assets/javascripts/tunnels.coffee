@@ -140,6 +140,7 @@
     changeState: (ev) =>
       ev.preventDefault()
       el = $(ev.currentTarget)
+      return if el.hasClass('disabled')
       data = el.data()
       if data.connector == true
         href = "/api/tunnels/#{data.connector_id}"
