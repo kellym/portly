@@ -331,6 +331,11 @@
         computer = relatedTarget.data('section')
         @showChart(computer)
       @$('.inline-input input').autoGrow(2)
+      $('.domain').attr('title', "Press #{if navigator.userAgent.indexOf('Mac') is -1 then 'Ctrl' else '&#8984;'} + C to copy")
+      $('.tooltipped').tipsy()
+      $('.tooltipped-top').tipsy
+          gravity: 's'
+          offset: 10
       @$('.stopwatch').each (i, el) =>
         @startWatch($(el))
 
