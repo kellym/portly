@@ -171,7 +171,17 @@ class ApplicationController < SharedController
 
   get '/account/billing' do
     authenticate_user!
-      render :'account/billing'
+    render :'account/billing'
+  end
+
+  # Public: Save the credit card information to the system.
+  post '/account/billing' do
+    Stripe.api_key = App.stripe_secret_key
+    customer = Stripe::Customer.create(
+      :card => request[:stripeToken],
+      :description => current_user.id
+    )
+    current_user.account.set_customer(customer)
   end
 
   self << {pattern: '/api', priority: 10, target: ::ApiController}

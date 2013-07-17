@@ -43,8 +43,15 @@
 
     submitForm: (ev) ->
       ev.preventDefault()
-      @button.prop('disabled', true).text('Submitting information...')
-      Stripe.createToken(@$el, @handleToken)
+      @button.prop('disabled', true)
+      card = {
+        number: $('.card-number').val(),
+        cvc: $('.card-cvc').val(),
+        expMonth: $('.card-exp-month').val(),
+        expYear: $('.card-exp-year').val()
+      };
+      @button.text('Submitting information...')
+      Stripe.createToken(card, @handleToken)
 
     handleToken: (status, response) ->
       if status == 200

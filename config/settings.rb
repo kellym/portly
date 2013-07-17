@@ -21,6 +21,7 @@ App.config = {
       host: '0.0.0.0',
       port: 8900
     },
+    stripe_secret_key: 'sk_test_yYgPRbp3ijZjGEZ0IWHHz3T9',
     stripe_publishable_key: 'pk_test_eYBXSPksy20ywx0y50AtHXKE',
     cname_domain: 'tunnel.portly.co',
     github_key: ENV['GITHUB_KEY'] || '63b8753bc6ae55e1d562',
@@ -70,6 +71,8 @@ App.config = {
       user_name: 'kellymartinv@gmail.com',
       password: 'F9Pz77iRVP6q1jUYFF90fg'
     },
+    stripe_secret_key: 'sk_live_PCHtykd8a92Emk7MwWytkOov',
+    stripe_publishable_key: 'pk_live_lj3AYsMDdlNPKWhmMtgZDUhr',
     authorized_keys_path: '/home/portly_user/.ssh/authorized_keys2',
     server_key_path: '/var/www/portly/current/config/server/',
     log_path: '/var/www/portly/shared/log/',
