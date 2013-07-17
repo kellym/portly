@@ -1,5 +1,5 @@
 #= require vendor/custom.modernizr.js
-#= require vendor/zepto
+#= require vendor/jquery
 #= require vendor/json2
 #= require vendor/underscore
 #= require vendor/backbone
@@ -15,6 +15,7 @@
 #= require forms
 #= require vendor/wysihtml5
 #= require vendor/wysihtml5-foundation
+
 
 $ ->
   signin_box = $("#signin")

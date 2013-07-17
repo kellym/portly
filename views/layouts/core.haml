@@ -13,6 +13,8 @@
       = javascript_include_tag 'eventsource'
   %body{id: @body_class}
     .container= yield
+    #clipboard-container
+      %textarea#clipboard
     :coffeescript
       new Portly.DOM.Index()
       $(document).foundation('reveal forms')

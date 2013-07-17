@@ -3,7 +3,7 @@
     .row
       .large-8.columns
         %span.connected-state{:class => "state-#{c.connected? ? 'online' : 'offline'}" + ((token.online? && c.enabled?) ? '' : ' state-disabled') }
-        %span.domain
+        %span.domain.tooltipped-top{:title => "Press Ctrl + C to copy"}
           - domain = c.cname.present? ? c.cname : c.full_subdomain
           - url = "#{c.cname.present? ? 'http' : 'https'}://#{domain}"
           - if c.connected?

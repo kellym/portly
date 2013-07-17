@@ -6,6 +6,8 @@
 // https://github.com/najeira/zepto-pjax
 // https://github.com/cshenoy/zepto-pjax - zepto1.0 w/duration
 
+var Zepto = jQuery;
+
 (function($){
 
 /**
