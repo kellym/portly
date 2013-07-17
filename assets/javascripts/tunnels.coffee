@@ -143,12 +143,16 @@
       return if el.hasClass('disabled')
       data = el.data()
       if data.connector == true
+        el.attr('title', 'Disconnecting...')
+        $tipsy[el.data('tipsy-id')].reset() if $tipsy[el.data('tipsy-id')]
         href = "/api/tunnels/#{data.connector_id}"
         $.ajax
           url: href
           data: data
           type: "DELETE"
       else
+        el.attr('title', 'Connecting...')
+        $tipsy[el.data('tipsy-id')].reset() if $tipsy[el.data('tipsy-id')]
         href ="/api/tunnels"
         $.post href, data
       el.addClass('disabled')
