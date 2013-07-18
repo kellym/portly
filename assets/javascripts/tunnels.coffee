@@ -205,6 +205,7 @@
       data = $.parseJSON(event.data)
       $.get("/api/connectors/#{data['id']}", {access_id: data.token_id}, (html) ->
         $("section[data-section='#{data['token_id']}'] .connectors").append($(html))
+        $('.new_connector').remove()
       , 'html')
 
     deleteItem: (event) ->
