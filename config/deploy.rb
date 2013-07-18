@@ -107,8 +107,8 @@ end
 
 desc "Deploys the current version to the server."
 task :deploy => :environment do
-  invoke :'socket:stop'
-  invoke :'data_monitor:stop'
+  #invoke :'socket:stop'
+  #invoke :'data_monitor:stop'
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
@@ -121,8 +121,8 @@ task :deploy => :environment do
     to :launch do
       invoke :get_release
       invoke :'thin:restart'
-      invoke :'socket:start'
-      invoke :'data_monitor:start'
+      #invoke :'socket:start'
+      #invoke :'data_monitor:start'
       # set up launch agent
     end
   end
