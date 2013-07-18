@@ -253,7 +253,7 @@ class ApiController < SharedController
     connector = connector(connector_id)
     if connector
       if media_type.html?
-        render :'tunnels/_connector.haml', locals: { c: connector, token: current_token }
+        render :'tunnels/_connector.haml', locals: { c: connector, token: current_token }, layout: nil
       else
         connector.to_hash.to_json
       end
