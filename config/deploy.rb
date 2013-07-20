@@ -115,11 +115,11 @@ task :deploy => :environment do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
-    invoke :'db:migrate'
     invoke :'assets:compile'
     #invoke :'rails:assets_precompile'
     to :launch do
       invoke :get_release
+      invoke :'db:migrate'
       invoke :'thin:restart'
       #invoke :'socket:start'
       #invoke :'data_monitor:start'
