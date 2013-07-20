@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rack'
+gem 'rspec'
 gem 'activesupport'
 gem 'activerecord'
 gem 'activerecord-postgresql-adapter'

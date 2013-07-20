@@ -5,7 +5,6 @@ SOCKETS = Hash.new {|h, k| h[k] = [] }
 
 class ApplicationController < SharedController
 
-
   include Middleware
 
   def authenticate_user!
