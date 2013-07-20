@@ -1,48 +1,5 @@
 $stdout.sync = true
 require './app'
-
-use ActiveRecord::ConnectionAdapters::ConnectionManagement
-use Rack::ActiveRecord
-use Rack::Session::Dalli,
-  :compression => true,
-  :memcache_server => 'localhost:11211',
-  :expire_after => ::App.config.memcache.expires,
-  :namespace => ::App.config.memcache.namespace,
-  :key => '_sess',
-  :secure => ::App.config.memcache.secure
-use Warden::Manager do |config|
-  config.default_scope = :user
-  config.scope_defaults :user,
-    :strategies => [:password],
-    :action     => 'unauthenticated'
-  config.scope_defaults :api,
-    :strategies => [:api_token, :api_password, :password],
-    :action     => 'api/unauthenticated'
-  config.scope_defaults :basic,
-    :strategies => [:basic],
-    :action     => 'basic_auth'
-  config.failure_app = ApplicationController
-end
-use Rack::CommonLogger
-use OmniAuth::Builder do
-  provider :github, ::App.config.github_key, ::App.config.github_secret
-end
-
-
-# Airbrake
-Airbrake.configure do |config|
-  config.api_key = 'e3008a5af646469d059e3cd9f5d85ac7'
-end
-use Airbrake::Rack
-
-# Dragonfly
-use Rack::Cache,
-  :verbose     => true,
-  :metastore   => URI.encode("file:#{::App.config.tmp_path}/cache/meta"),
-  :entitystore => URI.encode("file:#{::App.config.tmp_path}/cache/body")
-
-use Dragonfly::Middleware, :images
-
 run ApplicationController
 
 Thread.new do

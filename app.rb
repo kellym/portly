@@ -53,7 +53,6 @@ Mail.defaults do
   }
 end
 
-
 # Dragonfly
 DRAGONFLY = Dragonfly[:images].configure_with(:imagemagick) do |c|
   c.url_format = '/media/:job'
