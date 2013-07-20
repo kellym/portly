@@ -39,14 +39,16 @@ class ApiController < SharedController
   # Public: Generates a token for the client to use for additional requests.
   post '/authorizations' do
     match_client = request[:client_id]==App.config.client_id && request[:client_secret]==App.config.client_secret
-    if match_client && request[:computer_name] && request[:computer_model] && request[:mac_address]
+    if !match_client
+      halt 403
+    elsif request[:computer_name] && request[:computer_model] && request[:uuid]
       # generate a token here for this user or return one if available
       if request[:token]
         token = Token.where(:user_id => current_user.id, :code => request[:token]).first
       end
-      # now find it by mac address if it exists
+      # now find it by uuid if it exists
       unless token
-        token = Token.where(:user_id => current_user.id, :mac_address => request[:mac_address]).first
+        token = Token.where(:user_id => current_user.id, :uuid => request[:uuid]).first
       end
       unless token
         token = Token.create(:user_id => current_user.id, :computer_name => request[:computer_name], :computer_model => request[:computer_model])
@@ -66,12 +68,17 @@ class ApiController < SharedController
       }.to_json
     else
       puts 'missing params'
+      halt 400, { error: 'missing_params' }.to_json
     end
   end
 
   put '/authorizations' do
     if current_token
-      current_token.update_attributes(allow_remote: request[:allow_remote] == 'true')
+      if current_user.computers_connected < current_user.account.plan.computer_limit
+        current_token.update_attributes(allow_remote: request[:allow_remote] == 'true')
+      else
+        halt 400, { error: 'exceeded_limit' }.to_json
+      end
     else
       halt 404
     end
@@ -92,7 +99,7 @@ class ApiController < SharedController
       attrs = {}
       attrs[:computer_name] = request[:computer_name] if request[:computer_name].present?
       attrs[:computer_model] = request[:computer_model] if request[:computer_model].present?
-      attrs[:mac_address] = request[:mac_address] if request[:mac_address].present?
+      attrs[:uuid] = request[:uuid] if request[:uuid].present?
       token.update_attributes(attrs)
       {suffix: current_user.full_domain}.to_json
     else

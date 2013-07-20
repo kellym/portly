@@ -119,6 +119,12 @@ class User < ActiveRecord::Base
     self.encrypted_password = User.encrypt_password(password)
   end
 
+  # Public: Gets the number of computers actually connected to a socket
+  # at the moment.
+  def computers_connected
+    @computers_connected ||= Redis.current.hlen("#{self.id}:active").to_i
+  end
+
   # Internal: Creates the initial account and payment schedule for the
   # user.
   def create_account_and_schedule
