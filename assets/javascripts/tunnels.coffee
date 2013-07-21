@@ -45,9 +45,7 @@
         $(@).tipsy('hide')
       )
 
-      @percent_used = $('.percent-used')
-      offset =  2 #-166 + parseInt @percent_used.find('div').height()
-      @percent_used.tipsy({ gravity : 's', html: true, title: 'data-title', offset: offset })
+      $('.percent-used').tipsy({ gravity : 's', html: true, title: 'data-title', offset: 2 })
       @tipsy.tipsy('show')
       if current_computer
         @showChart(current_computer)
@@ -298,6 +296,7 @@
       @$('.inline-input input').autoGrow(2)
       $('.domain').attr('title', "Press #{if navigator.userAgent.indexOf('Mac') is -1 then 'Ctrl' else '&#8984;'} + C to copy")
       $('.tooltipped').tipsy()
+      $('.percent-used').tipsy({ gravity : 's', html: true, title: 'data-title', offset: 2 })
       $('.tooltipped-top').tipsy
           gravity: 's'
           offset: 10
