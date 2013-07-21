@@ -38,10 +38,12 @@ module Middleware
 
 
         # Airbrake
-        Airbrake.configure do |config|
-          config.api_key = 'e3008a5af646469d059e3cd9f5d85ac7'
+        if ENV['RACK_ENV'] == 'production'
+          Airbrake.configure do |config|
+            config.api_key = 'e3008a5af646469d059e3cd9f5d85ac7'
+          end
+          use Airbrake::Rack
         end
-        use Airbrake::Rack
 
         # Dragonfly
         use Rack::Cache,

@@ -4,6 +4,9 @@ require 'yui/compressor'
 
 #require 'bundler/setup'
 #require 'logger'
+task :environment do
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+end
 
 namespace :db do
   desc "Migrate the database through scripts in db/migrate. Target specific version with VERSION=x"

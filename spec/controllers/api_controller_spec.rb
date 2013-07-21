@@ -25,6 +25,7 @@ describe ApiController do
   describe 'routes' do
     before do
       @user = double(:user).as_null_object
+      @user.stub(:id).and_return 1
       login_as(@user, :scope => :api)
     end
 
@@ -37,12 +38,56 @@ describe ApiController do
     end
 
     describe 'POST /authorizations' do
+      let(:params) do
+        {client_id: App.config.client_id, client_secret: App.config.client_secret}
+      end
       it 'should require matching the app id and secret to create a token' do
         response = post '/api/authorizations'
         response.status.should == 403
 
-        response = post '/api/authorizations', client_id: App.config.client_id, client_secret: App.config.client_secret
+        response = post '/api/authorizations', params
         response.status.should_not == 403
+      end
+      it 'should return an error of missing_params without computer name, model, and uuid' do
+        response = post '/api/authorizations', params
+        response.status.should == 400
+        response.body['missing_params'].should be_present
+      end
+      context 'when all params are present' do
+        let(:valid_params) { params.merge({ computer_name: 'Charles', computer_model: 'Macaroni', uuid: '123456' }) }
+        it 'should return a status of 200' do
+          response = post '/api/authorizations', valid_params
+          response.status.should == 200
+        end
+        it 'should try to find a token if passed in' do
+          code = '12345'
+          tokens = double(:token).as_null_object
+          Token.should_receive(:where).with(:user_id => @user.id, :code => code).and_return tokens
+
+          post '/api/authorizations', valid_params.merge(token: code)
+        end
+        it 'should try to find the token by UUID if no token code' do
+          tokens = double(:token).as_null_object
+          Token.should_receive(:where).with(:user_id => @user.id, :uuid => valid_params[:uuid]).and_return tokens
+
+          post '/api/authorizations', valid_params
+        end
+        it 'should link a token with a user token if a user token was used' do
+          api_key = double(:api_key)
+          @user.stub(:auth_method).and_return 'string'
+          UserToken.stub(:where).and_return([api_key])
+          api_key.should_receive(:update_attribute).with(:token_id, anything)
+          post '/api/authorizations', valid_params
+        end
+      end
+    end
+
+    describe 'PUT /authorizations' do
+      context 'without a valid token' do
+        it 'should return a 404' do
+          response = put '/api/authorizations'
+          response.status.should == 404
+        end
       end
     end
   end

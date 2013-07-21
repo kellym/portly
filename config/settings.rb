@@ -3,6 +3,7 @@ App.config = {
     app_string: 'com.fully.portly',
     client_id: 'c0209d3eafecd05f2f8f7',
     client_secret: '26a1f643c98aa11c44539ebcab67ee6ae211834c776d431f669931fa1e02379a5',
+    public_key: "getportly.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5kgL2OMp9nvRDGTlZDbKMSpEnEjDzcTdD9bE5BSfEvcTlhw1vCCqMjLwRqZRT2aMcdX8XelIeGBGmhYbleuioJ0qWe15rj/DPk4SWM7YARMo2xShSUdyM3X4zsbRmwlGLwFyWemM38rnz9wvdcg4AvtyPtI4ztmFTAYxSH3qaUwOcI5LnP8XzI5cjOTz3KRswX93Wovz/+mmTkcIBm7lUKvEDWANtS0P7dTdFCEbwCctoHIur/otYuF5X4X/MWnkh+R3N1SuuQHDkJpBj/vAD2Ou5ua7x2OFkkTt/H8pX8Iqcm9Q8fzprm8iOz9fRlOJeQREjuzCkgMhcKJlc4Inn\n",
     authentication: {
       pepper:    'LfyutEhrLJqn4UushzvZCefeM3AJC7E2DW7BKwYBQhrvLUHt8fv3PfxecafvSFdmXX5bJ4DrcF8mss9gWxhzRnysHVzVqvmarxYv',
       stretches: 10

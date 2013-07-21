@@ -1,3 +1,4 @@
+ENV['RACK_ENV'] = 'test'
 require 'rack/test'
 require './app.rb'
 
@@ -14,6 +15,7 @@ module SpecHelper
   include Rack::Test::Methods
   include Warden::Test::Helpers
 
+  %x[rake db:migrate RACK_ENV=test]
   Warden.test_mode!
 
   def app
@@ -22,6 +24,12 @@ module SpecHelper
 
   def controller
     app.any_instance
+  end
+
+  def self.included(base)
+    base.after do
+      Warden.test_reset!
+    end
   end
 
 end
