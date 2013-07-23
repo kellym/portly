@@ -8,6 +8,10 @@ describe ApiController do
     ApiController.any_instance
   end
 
+  def expect_controller_to(*args)
+    expect_any_instance_of(ApiController).to(*args)
+  end
+
   describe 'setup' do
     it 'should require authentication' do
       response = get '/api/token'
@@ -15,7 +19,7 @@ describe ApiController do
     end
     it 'should return a 403 when the user is inactive' do
       @user = double(:user).as_null_object
-      @user.should_receive(:active?).and_return false
+      expect(@user).to receive(:active?).and_return false
       login_as(@user, :scope => :api)
       response = get '/api/token'
       response.status.should == 403
@@ -25,14 +29,14 @@ describe ApiController do
   describe 'routes' do
     before do
       @user = double(:user).as_null_object
-      @user.stub(:id).and_return 1
+      allow(@user).to receive(:id).and_return 1
       login_as(@user, :scope => :api)
     end
 
     describe "GET /api/token" do
       it "should return the current user's email address" do
-        controller.should_receive(:current_user).and_return @user
-        @user.should_receive(:email)
+        expect_controller_to receive(:current_user).and_return @user
+        expect(@user).to receive(:email)
         get '/api/token'
       end
     end
@@ -62,21 +66,21 @@ describe ApiController do
         it 'should try to find a token if passed in' do
           code = '12345'
           tokens = double(:token).as_null_object
-          Token.should_receive(:where).with(:user_id => @user.id, :code => code).and_return tokens
+          expect(Token).to receive(:where).with(:user_id => @user.id, :code => code).and_return tokens
 
           post '/api/authorizations', valid_params.merge(token: code)
         end
         it 'should try to find the token by UUID if no token code' do
           tokens = double(:token).as_null_object
-          Token.should_receive(:where).with(:user_id => @user.id, :uuid => valid_params[:uuid]).and_return tokens
+          expect(Token).to receive(:where).with(:user_id => @user.id, :uuid => valid_params[:uuid]).and_return tokens
 
           post '/api/authorizations', valid_params
         end
         it 'should link a token with a user token if a user token was used' do
           api_key = double(:api_key)
-          @user.stub(:auth_method).and_return 'string'
-          UserToken.stub(:where).and_return([api_key])
-          api_key.should_receive(:update_attribute).with(:token_id, anything)
+          allow(@user).to receive(:auth_method).and_return 'string'
+          allow(UserToken).to receive(:where).and_return([api_key])
+          expect(api_key).to receive(:update_attribute).with(:token_id, anything)
           post '/api/authorizations', valid_params
         end
       end
