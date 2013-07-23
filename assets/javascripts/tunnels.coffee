@@ -240,7 +240,7 @@
     openUpdateReveal: (ev) ->
       ev.preventDefault()
       el = $(ev.currentTarget)
-      modal = $("#update-tunnel-modal-#{el.data('access_id')}")
+      modal = $("#update-tunnel-modal-#{el.data('access-id')}")
       modal.find('input.cname').val(el.data('cname'))
       modal.find('input.subdomain').val(el.data('subdomain'))
       if el.data('cname') == ''
