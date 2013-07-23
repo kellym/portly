@@ -6,6 +6,12 @@ class UserMailer < Mailer
     mail.subject = 'Welcome to Portly!'
   end
 
+  def reset_password(user_id)
+    @user = User.find(user_id)
+    mail.to = @user.email
+    mail.subject = 'Portly Password Reset'
+  end
+
   def exceeded_bandwidth(user_id)
     @user = User.find(user_id)
     mail.to = @user.email

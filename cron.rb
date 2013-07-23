@@ -45,6 +45,7 @@ begin
 rescue => e
   LOG.debug "CRON-ERROR"
   LOG.debug e.message
+  retry
 end
 
 

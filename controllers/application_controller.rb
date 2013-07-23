@@ -77,6 +77,49 @@ class ApplicationController < SharedController
     end
   end
 
+  get '/reset-password/*' do |token|
+    halt 404 unless token
+    @user = User.where(:reset_password_token => token).first
+    @token = token
+    if @user
+      render :'account/reset_password', :layout => :'layouts/marketing'
+    else
+      halt 404
+    end
+  end
+
+  get '/reset-password' do
+    render :'account/reset_password', :layout => :'layouts/marketing'
+  end
+
+  post '/reset-password' do
+    halt 404 unless request[:token] || request[:user]
+    if request[:token]
+      @user = User.where(:reset_password_token => request[:token]).first
+      if @user
+        @token = request[:token]
+        if @user.update_password(request[:user])
+          env['warden'].set_user @user, scope: :user
+          redirect '/', 302
+        else
+          @form_errors = @user.errors
+          render :'account/reset_password', :layout => :'layouts/marketing'
+        end
+      else
+        halt 404
+      end
+    else
+      @user = User.where(:email => request[:user]['email']).first
+      if @user
+        @user.reset_password!
+        render :'account/reset_password_sent', :layout => :'layouts/marketing'
+      else
+        @form_errors = @user.errors
+        render :'account/reset_password', :layout => :'layouts/marketing'
+      end
+    end
+  end
+
   get '/support' do
     render :support, :layout => user_layout
   end

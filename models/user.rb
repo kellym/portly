@@ -119,6 +119,27 @@ class User < ActiveRecord::Base
     self.encrypted_password = User.encrypt_password(password)
   end
 
+  # Public: Reset the password and send a reset email to the user.
+  def reset_password!
+    self.reset_password_token = SecureRandom.hex(32)
+    self.reset_password_sent_at = Time.now
+    self.save
+    UserMailer.reset_password(self.id)
+  end
+
+  # Public: Updates the password and clears the token
+  #
+  # Returns a boolean of whether it could be updated or not.
+  def update_password(params)
+    if params['password'].present? && params['password_confirmation'].present?
+      self.update_attributes(password: params['password'], password_confirmation: params['password_confirmation'], reset_password_token: nil, reset_password_sent_at: nil)
+    else
+      self.errors[:password] << 'is required' unless params['password'].present?
+      self.errors[:password_confirmation] << 'is required' unless params['password_confirmation'].present?
+      false
+    end
+  end
+
   # Public: Gets the number of computers actually connected to a socket
   # at the moment.
   def computers_connected
