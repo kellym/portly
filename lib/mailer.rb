@@ -29,7 +29,8 @@ class Mailer
 
   def self.method_missing(*args)
     args.unshift self.name
-    Redis.current.publish('email_monitor', args.to_msgpack)
+    args.unshift SecureRandom.hex
+    Redis.current.lpush('email_monitor', args.to_msgpack)
     true
   end
 

@@ -1,6 +1,5 @@
 $stdout.sync = true
 require './app'
-run ApplicationController
 
 Thread.new do
   begin
@@ -46,15 +45,15 @@ Thread.new do
     @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
     LOG.debug "connecting to redis again on #{@redis_port}"
     redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
-    redis.subscribe('email_monitor') do |on|
-      # When a message is published to 'em'
-      on.message do |chan, msg|
-        args = MessagePack.unpack(msg)
-        klass = args.shift
-        action = args.shift
-        puts "Sending email: #{klass}##{action} #{args.inspect}"
-        klass.constantize.create(action.to_sym, *args).deliver
-      end
+    loop do
+      msg = redis.brpoplpush 'email_monitor', 'email_monitor:working', 0
+      args = MessagePack.unpack(msg)
+      uuid = args.shift
+      klass = args.shift
+      action = args.shift
+      puts "Sending email: #{klass}##{action} #{args.inspect}"
+      klass.constantize.create(action.to_sym, *args).deliver
+      redis.lrem 'email_monitor:working', -1, msg
     end
   rescue => error
     LOG.error error.to_s
