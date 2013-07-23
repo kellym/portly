@@ -112,6 +112,7 @@ class ApplicationController < SharedController
       @user = User.where(:email => request[:user]['email']).first
       if @user
         @user.reset_password!
+        @show_logo = true
         render :'account/reset_password_sent', :layout => :'layouts/marketing'
       else
         @form_errors = @user.errors
