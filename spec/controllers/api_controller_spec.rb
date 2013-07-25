@@ -5,11 +5,7 @@ describe ApiController do
   include SpecHelper
 
   def controller
-    ApiController.any_instance
-  end
-
-  def expect_controller_to(*args)
-    expect_any_instance_of(ApiController).to(*args)
+    ApiController
   end
 
   describe 'setup' do

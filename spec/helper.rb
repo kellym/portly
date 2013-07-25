@@ -23,7 +23,15 @@ module SpecHelper
   end
 
   def controller
-    app.any_instance
+    app
+  end
+
+  def expect_controller_to(*args)
+    expect_any_instance_of(controller).to(*args)
+  end
+
+  def allow_controller_to(*args)
+    allow_any_instance_of(controller).to(*args)
   end
 
   def self.included(base)
