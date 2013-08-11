@@ -11,7 +11,7 @@
       .row
         .small-10.columns
           .row.collapse
-            %h4.margin-bottom-0.margin-top-0 Selected Plan: #{@plan.reference}
+            %h4.margin-bottom-0.margin-top-0 Selected Plan: #{@plan.name}
             - unless @plan.gratis?
               .small.panel.small-9.margin-bottom-0
                 %h5.margin-bottom-0= "#{number_to_currency @plan.monthly}/month or #{number_to_currency @plan.yearly}/year"
