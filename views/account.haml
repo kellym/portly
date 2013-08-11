@@ -1,15 +1,14 @@
 - ordinal = current_user.schedule.good_until.day.ordinalize
 
-.banner{:class => current_user.active? ? 'white' : 'yellow' }
-  .row
-    .large-12.columns
-      - if current_user.trial?
-        No worries, you're still running for free until #{current_user.schedule.good_until.strftime("%B %e")}.
-        - unless current_user.account.customer?
+- unless current_user.plan.gratis?
+  .banner{:class => current_user.active? ? 'white' : 'yellow' }
+    .row
+      .large-12.columns
+        - if !current_user.account.customer?
           = succeed '.' do
             %a{:href => '/account/billing'} Set up payment information now
-      - elsif current_user.schedule.valid?
-        Your next payment is scheduled for the #{ordinal} of the month.
+        - elsif current_user.schedule.valid?
+          Your next payment is scheduled for the #{ordinal} of the month.
 .padding-bottom-50
   .row.padding-top-20.padding-bottom-20
     .large-12.columns
@@ -29,8 +28,9 @@
       .row
         .large-12.columns
           .panel.callout.radius
-            - if current_user.trial?
-              You signed up on #{current_user.created_at.strftime("%B %e")}, so it's all good.
+            - if current_user.plan.gratis?
+              You're on the free plan.
+              %a.color-blue{:href => '/upgrade'} Looking to upgrade?
             - elsif current_user.account.transactions.present?
               You were recently billed on #{current_user.account.transactions.last.created_at}
             - else
@@ -49,22 +49,8 @@
                   .text-center.margin-top-10
                     %a.trigger{:href => '/account/billing'} Set up payment information
             .hide= render :'account/_card', :layout => nil
-      %h4.margin-top-30 Login Information
-      .toggle.login-information
-        .show
-          .table
-            .row
-              .large-5.columns Email Address:
-              .large-7.columns.strong.login-email= current_user.email
-            .row
-              .large-5.columns Password:
-              .large-7.columns.strong *****
-          .row.margin-top-20
-            .large-12.columns.text-right
-              %a.trigger{:href => '/account/login'} Edit
-        .hide= render :'account/_login', :layout => nil
     .large-6.large-offset-1.columns
-      .row.large-12.columns
+      -#.row.large-12.columns
         %h4 Free Donuts
         .circle-container
           .amount= current_user.account.bonus_months
@@ -81,21 +67,55 @@
             %strong $3.00
             to apply to your account. That means 1000 people gets you #{(250/current_user.schedule.plan.monthly).to_i}
             years of Portly for free!
-      .row.large-12.columns
-        %h4.margin-top-30 API Keys
-        %p.small
-          For accounts with multiple users, or if you would rather only
-          use your password for the website, you can generate API Keys to
-          sign into the Portly app.
-        .table.api-keys
-          - current_user.api_keys.each do |key|
-            .row.small
-              .large-10.columns.strong.code
-                %span.copyable= key.code
-              .large-2.columns.text-right
-                %a{href: '#/delete'} Remove
-        %p.margin-top-10
-          %a.button.small.add-api-key{:href => '#/add'} Add a Key
+      .row
+        .large-12.columns
+          .panel.radius.text-center.small
+            .row
+              .large-2.columns
+                %strong= current_user.plan.computer_limit
+                <br />Computer#{current_user.plan.computer_limit == 1 ? '' : 's'}
+              .large-2.columns
+                %strong= current_user.plan.tunnel_limit
+                <br />Connection#{current_user.plan.tunnel_limit == 1 ? '' : 's'}
+              .large-3.columns
+                %strong= current_user.plan.free? ? '15 Minute' : 'No'
+                <br />Time Limit
+              .large-2.columns
+                %strong.tooltipped{style: 'line-height: 2.5', :title => "<strong>#{current_user.plan.free? ? "Here's what you're missing" : "Some of your other features"}</strong><br />Auto-reconnects<br />HTTP Basic Authentication<br />Custom Placeholder Pages"} And...
+              .large-3.columns
+                %a.margin-bottom-0.button{:href => '/upgrade'} Upgrade
+      .row
+        .large-12.columns
+          %h4 API Keys
+          %p.small
+            For accounts with multiple users, or if you would rather only
+            use your password for the website, you can generate API Keys to
+            sign into the Portly app.
+          .table.api-keys
+            - current_user.api_keys.each do |key|
+              .row.small
+                .large-10.columns.strong.code
+                  %span.copyable= key.code
+                .large-2.columns.text-right
+                  %a{href: '#/delete'} Remove
+          %p.margin-top-10
+            %a.button.small.add-api-key{:href => '#/add'} Add a Key
+      .row
+        .large-12.columns
+          %h4.margin-top-30 Login Information
+          .toggle.login-information
+            .show
+              .table
+                .row
+                  .large-5.columns Email Address:
+                  .large-7.columns.strong.login-email= current_user.email
+                .row
+                  .large-5.columns Password:
+                  .large-7.columns.strong *****
+              .row.margin-top-20
+                .large-12.columns.text-right
+                  %a.trigger{:href => '/account/login'} Edit
+            .hide= render :'account/_login', :layout => nil
 
 - content_for :javascripts do
   = javascript_include_tag 'account'

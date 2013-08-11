@@ -1,0 +1,18 @@
+.row
+  .large-10.large-centered.columns
+    %h1.text-center.margin-top-50.margin-bottom-30 Billing Information
+    - if session[:new_user]
+      %p.text-center
+        You're almost there! Complete the billing information below and
+        we'll get you started.
+      %p
+        Well, we're almost ready for you... give us a few more
+        days and we'll get you set up with one of these awesome
+        plans!
+    - else
+      %p.text-center.margin-bottom-50
+        Need to update your billing information? You can do it
+        from the
+        %a{:href => '/account'} Account Page
+        if you'd like.
+

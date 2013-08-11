@@ -63,7 +63,8 @@ class ApiController < SharedController
       { code: token.code,
         private_key: token.authorized_key.private_key,
         suffix: current_user.full_domain,
-        public_key: App.config.public_key
+        public_key: App.config.public_key,
+        plan_type: current_user.plan.reference
       }.to_json
     else
       halt 400, { error: 'missing_params' }.to_json
@@ -99,7 +100,7 @@ class ApiController < SharedController
       attrs[:computer_model] = request[:computer_model] if request[:computer_model].present?
       attrs[:uuid] = request[:uuid] if request[:uuid].present?
       token.update_attributes(attrs)
-      {suffix: current_user.full_domain}.to_json
+      {suffix: current_user.full_domain, plan_type: current_user.plan.reference}.to_json
     else
       halt 403
     end

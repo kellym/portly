@@ -10,6 +10,7 @@
       'click a[data-pjax]'   : 'pjaxClick'
       'mouseover .copyable'  : 'setClipboardContent'
       'pjax:end'             : 'setupContent'
+      'change .masked-radios input': 'toggleRadioClass'
 
     initialize: ->
       $(document).keydown (e) =>
@@ -33,6 +34,16 @@
         state.addClass('hide').hide()
         pane.find('.show').show()
         pane.data('state', false)
+
+    setMaskedRadios: (selector) ->
+      selector ?= $('.masked-radios')
+      $('input:checked', selector).each ->
+        $(@).closest('label').addClass('selected')
+      $('input:not(:checked)', selector).each ->
+        $(@).closest('label').removeClass('selected')
+
+    toggleRadioClass: (ev) =>
+      @setMaskedRadios $(ev.currentTarget).closest('.masked-radios')
 
     closeReveal: (ev) ->
       ev.preventDefault()

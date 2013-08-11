@@ -39,7 +39,7 @@
                   %span.p-arrow-up
                   = human_number token.bytes_this_month[:out]
             .large-2.columns.padding-left-0
-              .percent-used{:'data-title' => "Data used this month:<br />#{human_number current_user.total_monthly_bandwidth_used} (#{current_user.monthly_bandwidth_percent_used}%)"}
+              -#.percent-used{:'data-title' => "Data used this month:<br />#{human_number current_user.total_monthly_bandwidth_used} (#{current_user.monthly_bandwidth_percent_used}%)"}
                 - if current_user.monthly_bandwidth_percent_used < 75
                   #{current_user.monthly_bandwidth_percent_used}%
                 %div{style: "height: #{current_user.monthly_bandwidth_percent_used}%"}

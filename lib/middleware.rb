@@ -26,6 +26,9 @@ module Middleware
           config.scope_defaults :api,
             :strategies => [:api_token, :api_password, :password],
             :action     => 'api/unauthenticated'
+          config.scope_defaults :affiliate,
+            :strategies => [:affiliate],
+            :action     => 'unauthenticated'
           config.scope_defaults :basic,
             :strategies => [:basic],
             :action     => 'basic_auth'

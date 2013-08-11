@@ -12,10 +12,6 @@ class Account < ActiveRecord::Base
     customer_id?
   end
 
-  def bonus_months
-    (self.balance.to_f / self.plan.monthly).to_i
-  end
-
   def set_customer(customer)
     self.customer_id = customer.id
     self.card.destroy if self.card

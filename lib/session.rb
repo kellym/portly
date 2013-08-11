@@ -23,6 +23,26 @@ Warden::Strategies.add(:password) do
   end
 end
 
+Warden::Strategies.add(:affiliate) do
+  def valid?
+    params['access_token']
+  end
+
+  def authenticate!
+    t = Affiliate.where(code: params['access_token']).first
+    if t
+      success!(t)
+    else
+      fail!("Could not log in")
+    end
+  end
+
+  def store?
+    false
+  end
+end
+
+
 Warden::Strategies.add(:api_token) do
   def valid?
     params['access_token']

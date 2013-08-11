@@ -6,7 +6,10 @@ class UserCreationService
 
   def create(params)
     @user_klass.create(params).tap do |u|
-      @mailer_klass.signup u.id if u.persisted?
+      if u.persisted?
+        @mailer_klass.signup u.id
+        u.invite.mark_as_used_by(u)
+      end
     end
   end
 end

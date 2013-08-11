@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# SEE portly/chef FOR THE ACTIVE SCRIPT
+
 # This script runs when a user starts a forwarding agent.
-local_cid="$CID"
-client_token="$TOKEN"
-redis_key="watching:$TOKEN"
+local_cid="${CID//[^0-9]/}"
+client_token="${TOKEN//[^0-9A-Za-z]}"
+redis_key="watching:$client_token"
 redis_port=6380
 
 function redis-client() {
@@ -53,14 +55,22 @@ function on_exit()
 
 trap on_exit EXIT
 
+start_time=`date +%s`
+
 while true
 do
   exec 6<>/dev/tcp/localhost/$redis_port # open the connection
   result=$(redis-client 6 SISMEMBER $redis_key "$local_cid")
+  #free_time=$(redis-client 6 HGET free_time "$client_token")
+  free_time=$(psql -d $dbname -U $username -h localhost -p 5432 -t -c "SELECT 1")
+  exec 6>&- # close the connection
   if [ "$result" = "0" ]; then
     exit
   fi
-  exec 6>&- # close the connection
+  # if it's a free account and it's more than X minutes open, disconnect
+  if [ "$free_time" != "-1" ] && [ "$((`date +%s` - $start_time > (60 * $free_time) ))" = "1" ]; then
+    exit
+  fi
   echo 'HI'
   sleep 5
 done

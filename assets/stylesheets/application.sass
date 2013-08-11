@@ -19,6 +19,9 @@ a
     color: $pink3
 
 header#main
+  box-shadow: 1px 1px 20px #efefef
+  &.marketing-header
+    box-shadow: none
   a
     color: $black
 
@@ -42,14 +45,44 @@ header.pricing-header
   width: 100%
   float: left
   .pricing-table
-    .cta-button .button
-      opacity: 0.1
-    &:hover .cta-button .button
-      opacity: 1
+    .free, .pro, .enterprise
+      width: 100%
+      height: 250px
+    .free
+      background: url(/images/plans/free.png) center center no-repeat
+      background-size: 87px 115px
+    .pro
+      background: url(/images/plans/pro.png) center center no-repeat
+      background-size: 139px 168px
+    .enterprise
+      background: url(/images/plans/enterprise.png) center center no-repeat
+      background-size: 162px 230px
+    &:hover
+      background-color: lighten($pink4,20%)
+    border: none
+    border-left: 1px solid $gray7
+    &:first-child
+      border-left: none
+    .cta-button,
+    .bullet-item
+      background: none
+    .footer
+      height: 20px
+      margin-top: 10px
+      padding-bottom: 30px
+      text-align: center
+      font-style: italic
+      color: $gray4
+      font-size: 1.2em
     margin-bottom: 0
-    width: 20%
+    width: 33%
     float: left
+    .cta-button
+      padding-bottom: 20px
     .price
+      margin-top: -10px
+      padding-bottom: 0
+      background: none
       &.gray1
         border-top: 8px solid $gray1
       &.gray2
@@ -63,12 +96,6 @@ header.pricing-header
       font-family: 'source-sans-pro', sans-serif
       font-weight: 600
       font-size: 2em
-      &:before
-        content: '$'
-        font-size: 0.6em
-        position: relative
-        top: -7px
-        left: -2px
 
 .homepage
   font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
@@ -305,7 +332,7 @@ section.section
     padding: 10px
     text-align: center
     background: $gray6
-    width: 250px
+    width: 291px
   canvas, .canvas-frame
     background: lighten($gray9, 2%)
     height: 160px
@@ -338,10 +365,10 @@ section.section
 
 .stacked-boxes
   .flat-box
-    width: 250px
+    width: 291px
     margin-top: 0
-    line-height: 68px
-    height: 68px
+    line-height: 62px
+    height: 62px
 
 .state-online
   background: url(/images/state_online.png) center center no-repeat
@@ -914,3 +941,91 @@ ul.wysihtml5-toolbar
   width: 1px
   height: 1px
   padding: 0px
+
+// Masked Radios
+.masked-radios
+  label
+    input, .custom
+      display: none
+    &:not(.selected):hover
+      border-color: $blue2
+    &.selected
+      background: rgba(black, .02)
+      .avatar
+        &:after
+          border-radius: 5px
+          color: $white
+          content: '✓'
+          background: rgba($green, .5)
+          display: block
+          font-family: 'SSPika'
+          font-size: .4em
+          height: 100%
+          left: 0px
+          line-height: 2.5em
+          position: absolute
+          text-align: center
+          top: 0px
+          width: 100%
+  &.categories
+    label
+      border-radius: 5px
+      border: 1px solid $gray7
+      font-size: 13px
+      height: 150px
+      line-height: 1.2em
+      margin: 0px
+      padding: 10px
+      text-align: center
+      &.icon-box
+        > [class*='pc'], > [class*='ss']
+          font-size: 50px
+          margin-bottom: 10px
+      &.selected
+        background: $gray2
+        color: $white
+      strong
+        display: block
+  &.plans
+    li
+      list-style: none
+      width: 32%
+      float: left
+      margin-left: 2%
+      &:first-child
+        margin-left: 0
+    h3
+      margin-top: 10px
+      font-family: 'source-sans-pro', sans-serif
+      font-weight: 600
+      font-size: 2em
+    label
+      border-radius: 5px
+      border: 3px solid $gray7
+      font-size: 13px
+      height: 220px
+      line-height: 1.2em
+      margin: 0px
+      padding: 10px
+      text-align: center
+      opacity: .5
+      &.selected
+        border: 3px solid $blue
+        background: white
+        opacity: 1
+      .image
+        background-position: center
+        background-repeat: no-repeat
+        background-size: 140px 50px
+        height: 105px
+        margin-bottom: -10px
+      .name
+        font-weight: bold
+        font-size: 18px
+        margin-bottom: 10px
+      .direct-help
+        font-size: 13px
+        margin-left: 30px
+        margin-right: 30px
+      strong
+        display: block

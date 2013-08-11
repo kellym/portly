@@ -1,19 +1,40 @@
-%header.pricing-header.margin-top-50.margin-bottom-0.padding-top-0.padding-bottom-60
-  %h1.source.margin-top-0 Try us free for 14 days.
-  %h5.margin-bottom-0 (Get your friends to join in and you could be free for life.)
+-#%header.pricing-header.margin-top-50.margin-bottom-0.padding-top-0.padding-bottom-60
+  %h1.source.margin-top-0 Check out our Dessert Tray
+  %h5.margin-bottom-0 Pick whatever suits your fancy.
 .content-area
   .row
-    .large-10.columns.large-offset-1.margin-bottom-100
+    .large-12.columns.margin-bottom-100.margin-top-30
       .pricing-box
-        - @plans.each do |plan|
-          %ul.pricing-table
-            %li.price.gray1= plan.monthly.to_i
-            %li.bullet-item #{plan.computer_limit.to_i} #{"computer".pluralize plan.computer_limit}
-            %li.bullet-item
-              %strong.block= plan.tunnel_limit
-              Open #{"Connection".pluralize plan.tunnel_limit}
-            %li.bullet-item
-              %strong.block #{plan.bandwidth} GB
-              Monthly Bandwidth
-            %li.cta-button
-              %a.button{:href => "/signup?plan=#{plan.id}"} TRY
+        %ul.pricing-table
+          %li.free
+          %li.price Free
+          %li.footer As in beer
+          %li.bullet-item 1 Computer
+          %li.bullet-item
+            %strong.block 1
+            Open Connection
+          %li.bullet-item 15-minute timeout
+          %li.cta-button
+            %a.button{:href => "/signup"} Get Started
+        %ul.pricing-table
+          %li.pro
+          %li.price Pro
+          %li.footer Starting at $5/month
+          %li.bullet-item 2+ Computers
+          %li.bullet-item
+            %strong.block 4+
+            Open Connections
+          %li.bullet-item No timeouts + Auto-reconnect + SSL
+          %li.cta-button
+            %a.button{:href => "/upgrade"} I Want It
+        %ul.pricing-table
+          %li.enterprise
+          %li.price Enterprise
+          %li.footer Starting at $50/month
+          %li.bullet-item 20+ Computers
+          %li.bullet-item
+            %strong.block 40+
+            Open Connections
+          %li.bullet-item No timeouts + Auto-reconnect + SSL
+          %li.cta-button
+            %a.button{:href => "/support?contact"} Let's Talk

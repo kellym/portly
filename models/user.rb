@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   validates_length_of :password, within: 6..50, :allow_blank => :persisted?
   validates :subdomain, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true, email: true
+  validate :plan_is_usable
 
   has_many :connectors
   has_many :tokens
@@ -30,9 +31,11 @@ class User < ActiveRecord::Base
   has_one :admin_account, class_name: 'Account', :foreign_key => :admin_id
   has_one :schedule
   has_one :plan, :through => :account
+  has_one :invite
   has_many :orders
 
   before_save :downcase_email
+  before_save :set_user_active_state
 
   def plan_id
     @plan_id || (schedule ? schedule.plan_id : nil)
@@ -44,6 +47,10 @@ class User < ActiveRecord::Base
     else
       @plan_id = val
     end
+  end
+
+  def invite_id=(id)
+    self.invite = Invite.where(id: id, user_id: nil).first
   end
 
   # Public: Initialize this user and create account and schedule first.
@@ -155,7 +162,7 @@ class User < ActiveRecord::Base
       self.account.plan ||= @plan_id ? Plan.find(@plan_id) : Plan.basic
     end
     self.build_schedule
-    self.schedule.good_until = self.schedule.trial_end = (Date.today + 14.days)
+    self.schedule.good_until = Date.today + 30
     self.schedule.plan = self.account.plan
     self.state ||= self.schedule.state
   end
@@ -212,6 +219,25 @@ class User < ActiveRecord::Base
     today = Date.today
     day = self.created_at.day
     @billing_period_start = Date.new(today.year, day > today.day ? today.month - 1 : today.month, self.created_at.day)
+  end
+
+  # Internal: Validates that the user has access to use this plan
+  def plan_is_usable
+    if self.plan_id && Plan.find(self.plan_id).invite_required? && (!self.invite || self.invite.plan_id != self.plan_id.to_i)
+      self.errors[:plan] << 'requires an invite'
+      false
+    else
+      true
+    end
+  end
+
+  # Internal: Sets the user as inactive if they are signing up
+  # for a paid plan.
+  def set_user_active_state
+    plan = Plan.find(self.plan_id)
+    if plan.monthly > 0
+      self.active = false
+    end
   end
 
 end

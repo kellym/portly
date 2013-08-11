@@ -1,14 +1,24 @@
-.placeholder-modal.reveal-modal{:id => "placeholder-tunnel-#{token.id}" }
+.placeholder-modal.reveal-modal{:id => "placeholder-tunnel-#{token.id}", :class => current_user.plan.free? ? 'small' : '' }
   %h2 Edit Placeholder Page
-  %p
-    When your tunnels are offline, you can set up a custom page to let your
-    clients know they made it to the right place. Just enter your message and
-    provide a brand image for us to display.
-  %form{'data-action' => "/api/pages", :method => token.page_id? ? 'put' : 'post'}
-    %input{:type => 'hidden', :name => 'access_id', :value => token.id}
-    %input{:type => 'hidden', :name => 'page[token_id]', :value => token.id}
-    %textarea.wysihtml5.width-100{style: 'height: 200px', name: 'page[content]'}= token.page_id? ? token.page.content : ''
-    %input.fake-file{:type => 'file', :name => 'page[cover_image]'}
+  - if current_user.plan.free?
+    %p
+      When your tunnels are offline, we'll show a default placeholder page
+      to let your clients know that they're in the right place.
+      %a{href: '/upgrade'} Upgrade your account
+      to be able to set up a custom placeholder page.
     .margin-top-20
-      %button.margin-bottom-0{:type => 'submit'} Save Page
+      %a.button{:href => '/upgrade'} I want to upgrade
       %a.margin-left-10.close-reveal{:href => '#'} Cancel
+  - else
+    %p
+      When your tunnels are offline, you can set up a custom page to let your
+      clients know they made it to the right place. Just enter your message and
+      provide a brand image for us to display.
+    %form{'data-action' => "/api/pages", :method => token.page_id? ? 'put' : 'post'}
+      %input{:type => 'hidden', :name => 'access_id', :value => token.id}
+      %input{:type => 'hidden', :name => 'page[token_id]', :value => token.id}
+      %textarea.wysihtml5.width-100{style: 'height: 200px', name: 'page[content]'}= token.page_id? ? token.page.content : ''
+      %input.fake-file{:type => 'file', :name => 'page[cover_image]'}
+      .margin-top-20
+        %button.margin-bottom-0{:type => 'submit'} Save Page
+        %a.margin-left-10.close-reveal{:href => '#'} Cancel

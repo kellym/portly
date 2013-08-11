@@ -19,7 +19,7 @@
       'opened .add-modal'       : 'focusReveal'
       'closed .add-modal'       : 'clearReveal'
       'change .hosting-type'    : 'changeHostingType'
-      'click .inline-input'     : 'focusInlineInput'
+      'mousedown .inline-input'     : 'focusInlineInput'
       'blur .inline-input input': 'unfocusInlineInput'
       'click .subnav a[data-section]' : 'showComputer'
       'click a.update-tunnel'   : 'openUpdateReveal'
@@ -70,6 +70,7 @@
       number
 
     focusInlineInput: (ev) ->
+      return true if $(ev.target).hasClass('input')
       ev.preventDefault()
       $(ev.currentTarget).addClass('focus').find('input').focus()
 

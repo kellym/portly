@@ -18,4 +18,10 @@ class UserMailer < Mailer
     mail.subject = "Oops! You've exceeded your monthly bandwidth."
   end
 
+  def invite(invite_id)
+    @invite = Invite.find(invite_id)
+    mail.to = @invite.email
+    mail.subject = "You've been invited to Portly!"
+  end
+
 end

@@ -5,14 +5,19 @@
         %a{:href => '/'} Portly
       %p.text-center
         Sign up today. <br />
-        Free for 14 days.
   .large-7.columns
     %h2.margin-top-50 Sign up
     %form(action='/signup' method='post')
       .row
         .small-10.columns
           .row.collapse
-            %h4.margin-bottom-0.margin-top-0 Selected Plan: #{number_to_currency @plan.monthly}/month
+            %h4.margin-bottom-0.margin-top-0 Selected Plan: #{@plan.reference}
+            - unless @plan.gratis?
+              .small.panel.small-9.margin-bottom-0
+                %h5.margin-bottom-0= "#{number_to_currency @plan.monthly}/month or #{number_to_currency @plan.yearly}/year"
+                = "#{@plan.computer_limit} computer#{@plan.computer_limit == 1 ? '' : 's'}"
+                <br />
+                = "#{@plan.tunnel_limit} simultaneously open tunnel#{@plan.tunnel_limit == 1 ? '' : 's'}"
             .margin-bottom-20
               %a.small{:href => '/pricing'} Change Plan
             %input{type: 'hidden', name: 'user[plan_id]', value: @plan.id}

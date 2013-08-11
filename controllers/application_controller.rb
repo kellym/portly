@@ -1,5 +1,7 @@
 require_relative 'shared_controller'
 Dir[File.dirname(__FILE__) + '/*.rb'].each {|file| require file }
+Dir[File.dirname(__FILE__) + '/api/base_controller.rb'].each {|file| require file }
+Dir[File.dirname(__FILE__) + '/api/*.rb'].each {|file| require file }
 
 SOCKETS = Hash.new {|h, k| h[k] = [] }
 
@@ -56,24 +58,43 @@ class ApplicationController < SharedController
   get '/signup' do
     @user = {}
     if request[:plan]
-      @plan = Plan.find(request[:plan])
+      @plan = Plan.where(id: request[:plan], invite_required: false).first
+    elsif session[:invite_id]
+      invite = Invite.includes(:affiliate => :plan).find(session[:invite_id])
+      @plan = invite.affiliate.plan if invite
     end
-    @plan ||= Plan.basic
+    @plan ||= Plan.free
 
     render :signup, :layout => :'layouts/marketing'
   end
 
   post '/signup' do
+    if request[:user] && session[:invite_id]
+      request[:user][:invite_id] = session[:invite_id]
+    end
     @user = UserCreationService.new.create(request[:user])
     if @user.persisted?
+      session.delete :invite_id if session[:invite_id]
       env['warden'].set_user @user, :event => :authentication
       session[:new_user] = true
-      redirect '/tunnels', 302
+      if @user.active?
+        redirect '/tunnels', 302
+      else
+        redirect '/billing', 302
+      end
     else
       @form_errors = @user.errors
       @user = Hashie::Mash.new(request[:user] || {})
       @plan = Plan.find(request[:user]['plan_id']) || Plan.basic
       render :signup, :layout => :'layouts/marketing'
+    end
+  end
+
+  get '/billing' do
+    if signed_in?
+      render :billing
+    else
+      redirect '/', 302
     end
   end
 
@@ -141,6 +162,11 @@ class ApplicationController < SharedController
       @html_class = 'homepage'
       render :homepage, :layout => :'layouts/marketing'
     end
+  end
+
+  get '/upgrade' do
+    @show_logo = true
+    render :upgrade, :layout => :'layouts/marketing'
   end
 
   get '/download' do
@@ -227,10 +253,27 @@ class ApplicationController < SharedController
     current_user.account.set_customer(customer)
   end
 
-  self << {pattern: '/api', priority: 10, target: ::ApiController}
+  self << {pattern: '/api/authorizations', priority: 10, target: ::Api::AuthorizationsController}
+  self << {pattern: '/api/connectors', priority: 10, target: ::Api::ConnectorsController}
+  self << {pattern: '/api/keys', priority: 10, target: ::Api::KeysController}
+  self << {pattern: '/api/pages', priority: 10, target: ::Api::PagesController}
+  self << {pattern: '/api/tokens', priority: 10, target: ::Api::TokensController}
+  self << {pattern: '/api/tunnels', priority: 10, target: ::Api::TunnelsController}
+  self << {pattern: '/api/affiliates', priority: 10, target: ::Api::AffiliatesController}
+
   self << {pattern: '/auth', priority: 10, target: ::AuthController}
   self << {pattern: '/pages', priority: 10, target: ::PagesController}
   self << {pattern: '/downloads', priority: 10, target: ::DownloadsController}
+
+  get '/invites/*' do |invite_code|
+    invite = Invite.where(code: invite_code, user_id: nil).first
+    if invite
+      session[:invite_id] = invite.id
+      redirect '/signup', 302
+    else
+      redirect '/'
+    end
+  end
 
   route '/basic_auth/*' do |tunnel_path|
     env['nginx_request'] = true

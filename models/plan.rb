@@ -6,8 +6,10 @@ class Plan < ActiveRecord::Base
   # property :yearly, Decimal, precision: 12, scale: 2
   # property :computers, Integer
 
-  def self.micro
-    @micro ||= Plan.where(:reference => 'micro').first
+  AFFILIATES = %w(changelog)
+
+  def self.free
+    @free ||= Plan.where(:reference => 'free').first
   end
 
   def self.basic
@@ -20,6 +22,19 @@ class Plan < ActiveRecord::Base
 
   def self.business
     @business ||= Plan.where(:reference => 'business').first
+  end
+
+  def gratis?
+    %(free friends).include? reference
+  end
+
+  def free?; reference == 'free'; end
+  def basic?; reference == 'basic'; end
+  def team?; reference == 'team'; end
+  def business?; reference == 'business'; end
+
+  def affiliate?
+    AFFILIATES.include? reference
   end
 
 end
