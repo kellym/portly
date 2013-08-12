@@ -289,11 +289,6 @@ class ApplicationController < SharedController
     response.body = '403 Unauthorized'
   end
 
-  after status: 404 do
-    response.body = '404 Not Found'
-    #response.body = env.inspect
-  end
-
   def user_layout
     @show_logo = true
     signed_in? ? :'layouts/application' : :'layouts/marketing'

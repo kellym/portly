@@ -39,4 +39,14 @@ class SharedController < Scorched::Controller
     response.headers['Content-Type'] = media_type.to_s
   end
 
+  after status: 404 do
+    response.body = render :'errors/show'
+  end
+
+  after status: 500 do
+    response.body = render :'errors/show'
+  end
+
+
+
 end

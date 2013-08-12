@@ -26,3 +26,16 @@
     .text-center.small
       All Pro plans come with SSL support, no timeouts, built-in auto-reconnecting
       and CNAME support for using your own domain.
+  .row
+    .large-10.large-offset-1.columns
+      %ul.masked-radios.frequency
+        %li.width-100
+          %label
+            %input{:type => 'radio', :value => 5, :name => 'plan'}
+            .text-center
+              %h3 Bill me monthly
+        %li.width-100
+          %label
+            %input{:type => 'radio', :value => 20, :name => 'plan'}
+            .text-center
+              %h3 Bill me yearly
