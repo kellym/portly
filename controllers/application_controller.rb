@@ -58,7 +58,7 @@ class ApplicationController < SharedController
   get '/signup' do
     @user = {}
     if request[:plan]
-      @plan = Plan.where(id: request[:plan], invite_required: false).first
+      @plan = Plan.where(reference: request[:plan], invite_required: false).first
     elsif session[:invite_id]
       invite = Invite.includes(:affiliate => :plan).find(session[:invite_id])
       @plan = invite.affiliate.plan if invite

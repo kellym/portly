@@ -47,6 +47,4 @@ class SharedController < Scorched::Controller
     response.body = render :'errors/show'
   end
 
-
-
 end
