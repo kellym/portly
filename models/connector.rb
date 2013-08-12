@@ -134,6 +134,6 @@ class Connector < ActiveRecord::Base
 
   # Public: Get the Page that is closest tied to this connector
   def closest_page
-    page || token.page || user.page
+    page || (token && token.page) || (user && user.page)
   end
 end
