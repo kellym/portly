@@ -32,22 +32,31 @@
             .small
               %a{href: '/pricing'} Change Plan
 
-      .large-3.columns
-        .small.billing-box
-          %ul.masked-radios.plans
-            %li{class: @plan.gratis? ? 'big' : ''}
-              %label.selected
-                %input{type: 'radio', name: 'billing_period', value: 'monthly', checked: true} &nbsp;#{number_to_currency @plan.monthly} / mo
-            - unless @plan.gratis?
+      - if @plan.gratis?
+        .large-9.columns
+          %h3.margin-top-60.text-center Are you sure you want to switch to the free plan?
+          %p.text-center
+            Your ports will
+            be limited to 15-minute sessions<br /> and you'll lose some of your
+            custom features.
+          %p.text-center
+            %button{type: 'submit'} Confirm this plan
+          - content_for :javascripts do
+            :coffeescript
+              new Portly.Forms.Views.CreditCard
+                post: '/account/billing'
+                success: '/account'
+      - else
+        .large-3.columns
+          .small.billing-box
+            %ul.masked-radios.plans
+              %li{class: @plan.gratis? ? 'big' : ''}
+                %label.selected
+                  %input{type: 'radio', name: 'billing_period', value: 'monthly', checked: true} &nbsp;#{number_to_currency @plan.monthly} / mo
               %li
                 %label
                   %input{type: 'radio', name: 'billing_period', value: 'yearly'} &nbsp;#{number_to_currency @plan.yearly} / year
                   .small.mute #{number_to_currency(@plan.yearly / 12)} / month
-      .large-6.columns
-        - if @plan.gratis?
-          - if !current_user.plan.gratis?
-            %p.margin-top-80 You'll be refunded the portion of the month that you previously paid.
-          %button{type: 'submit'} Confirm this plan
-        - else
+        .large-6.columns
           = render :'account/_card', :layout => nil, locals: { :card => current_user.account.card, billing: true }
 

@@ -16,7 +16,8 @@
 
       @post_url = args.post
       @success_url = args.success
-      Stripe.setPublishableKey args.key
+      if args.key
+        Stripe.setPublishableKey args.key
       @number = @$('.card-number')
       @button = @$('button')
       @cvc = @$('.card-cvc')
@@ -49,27 +50,32 @@
     submitForm: (ev) =>
       ev.preventDefault()
       @button.prop('disabled', true)
-      if @number.val().indexOf('*') > -1
-        @button.text('Submitting information...')
-        $.post(@post_url, @$el.serialize())
-          .success( =>
-            window.location = @success_url
-          ).fail( =>
-            @button.prop('disabled', false)
-            @button.text(@original_button_text)
-            alert('There was an error processing your request. Please verify your information is correct.')
-          )
-        return true
+      if @number.length > 0
+        if @number.val().indexOf('*') > -1
+          @button.text('Submitting information...')
+          @postForm()
+          return true
+        else
+          card = {
+            number: @number.val(),
+            cvc: @cvc.val(),
+            expMonth: @expmo.val(),
+            expYear: @expyr.val()
+          };
+          @button.text('Submitting information...')
+          Stripe.createToken(card, @handleToken)
       else
-        card = {
-          number: @number.val(),
-          cvc: @cvc.val(),
-          expMonth: @expmo.val(),
-          expYear: @expyr.val()
-        };
-        @button.text('Submitting information...')
-        Stripe.createToken(card, @handleToken)
+        @postForm()
 
+    postForm: =>
+      $.post(@post_url, @$el.serialize())
+        .success( =>
+          window.location = @success_url
+        ).fail( =>
+          @button.prop('disabled', false)
+          @button.text(@original_button_text)
+          alert('There was an error processing your request. Please verify your information is correct.')
+        )
     handleToken: (status, response) =>
       if status == 200
         # send this response on to us
