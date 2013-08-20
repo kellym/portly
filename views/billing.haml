@@ -1,18 +1,53 @@
 .row
   .large-10.large-centered.columns
     %h1.text-center.margin-top-50.margin-bottom-30 Billing Information
-    - if session[:new_user]
-      %p.text-center
-        You're almost there! Complete the billing information below and
-        we'll get you started.
-      %p
-        Well, we're almost ready for you... give us a few more
-        days and we'll get you set up with one of these awesome
-        plans!
-    - else
-      %p.text-center.margin-bottom-50
-        Need to update your billing information? You can do it
-        from the
-        %a{:href => '/account'} Account Page
-        if you'd like.
+    %form.stripe-form
+      %input{:type => 'hidden', :name => 'plan', :value => @plan.reference}
+      %p.text-center.margin-bottom-40
+        You're almost there!
+        - if current_user.account.customer?
+          Verify the billing information below
+        - else
+          Complete the billing information below
+        and we'll get you started.
+        - if current_user.account.customer?
+          We'll prorate the new plan until next month.
+      .large-3.columns
+        .pricing-box
+          %h4.negative-margin-bottom-20 Your Plan
+          - case @plan.reference
+            - when 'glazed'
+              .five
+            - when 'creme'
+              .ten
+            - when 'burger'
+              .twenty{style: 'width: 188px'}
+            - when 'changelog'
+              .changelog
+            - else
+              .free
+          .text-center
+            .negative-margin-top-10.strong= @plan.name
+            .small #{@plan.tunnel_limit} open connection#{@plan.tunnel_limit == 1 ? '' : 's'}
+            .small
+              %a{href: '/pricing'} Change Plan
+
+      .large-3.columns
+        .small.billing-box
+          %ul.masked-radios.plans
+            %li{class: @plan.gratis? ? 'big' : ''}
+              %label.selected
+                %input{type: 'radio', name: 'billing_period', value: 'monthly', checked: true} &nbsp;#{number_to_currency @plan.monthly} / mo
+            - unless @plan.gratis?
+              %li
+                %label
+                  %input{type: 'radio', name: 'billing_period', value: 'yearly'} &nbsp;#{number_to_currency @plan.yearly} / year
+                  .small.mute #{number_to_currency(@plan.yearly / 12)} / month
+      .large-6.columns
+        - if @plan.gratis?
+          - if !current_user.plan.gratis?
+            %p.margin-top-80 You'll be refunded the portion of the month that you previously paid.
+          %button{type: 'submit'} Confirm this plan
+        - else
+          = render :'account/_card', :layout => nil, locals: { :card => current_user.account.card, billing: true }
 

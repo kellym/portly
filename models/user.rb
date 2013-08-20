@@ -171,6 +171,18 @@ class User < ActiveRecord::Base
     self.state == 'active' && self.schedule.state == 'active'
   end
 
+  # Public: Activates the user's account after their billing information
+  # has been added.
+  #
+  # Returns nothing.
+  def activate!
+    self.update_column(:state, 'active')
+  end
+
+  def new?
+    self.state == 'new'
+  end
+
   # Public: Generates an encrypted password from a normal string. Uses a
   # pepper string and runs the number of stretches as defined in the config.
   #
@@ -236,7 +248,7 @@ class User < ActiveRecord::Base
   def set_user_active_state
     plan = Plan.find(self.plan_id)
     if plan.monthly > 0
-      self.active = false
+      self.state = 'new'
     end
   end
 

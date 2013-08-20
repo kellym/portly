@@ -10,6 +10,7 @@ require 'active_record'
 require 'rack/rest_api_versioning'
 require 'sass'
 require 'sshkey'
+require 'stripe'
 require 'haml'
 require 'json'
 require 'socket'
@@ -40,6 +41,9 @@ LOG.level = Logger::DEBUG
 Redis.current = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 require_relative 'config/settings'
+
+# Set up the Stripe API Key
+Stripe.api_key = App.config.stripe_secret_key
 
 database_setup = YAML.load(File.read('config/database.yml'))
 ActiveRecord::Base.establish_connection database_setup[ENV['RACK_ENV']]

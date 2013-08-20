@@ -40,23 +40,36 @@ header.pricing-header
     margin-bottom: 0
   h5
     color: $gray1
+.full-width.gray
+  background: $gray7
+
+.full-width
+  margin: 0 auto
+  width: 100%
+  max-width: 100%
 
 .pricing-box
   width: 100%
   float: left
+  .five, .ten, .twenty, .free, .changelog
+    width: 100%
+    height: 175px
+    -webkit-filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.1))
+    filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.1))
+    -webkit-transform: translateZ(0)
+  .five
+    background: url(/images/plans/glazed.png) center center no-repeat
+    background-size: 188px 100px
+  .ten
+    background: url(/images/plans/creme.png) center center no-repeat
+    background-size: 188px 105px
+  .twenty
+    background: url(/images/plans/burger.png) center center no-repeat
+    background-size: 188px 138px
+  .free
+    background: url(/images/plans/free.png) center center no-repeat
+    background-size: 150px 150px
   .pricing-table
-    .free, .pro, .enterprise
-      width: 100%
-      height: 250px
-    .free
-      background: url(/images/plans/free.png) center center no-repeat
-      background-size: 87px 115px
-    .pro
-      background: url(/images/plans/pro.png) center center no-repeat
-      background-size: 139px 168px
-    .enterprise
-      background: url(/images/plans/enterprise.png) center center no-repeat
-      background-size: 162px 230px
     &:hover
       background-color: lighten($pink4,20%)
     border: none
@@ -138,6 +151,20 @@ header.pricing-header
     p
       color: $blue2
 
+.box
+  +clearfix
+  padding-top: 1.5em
+  border: 1px solid $gray3
+
+.billing-box
+  +clearfix
+  background: $gray8
+  border-radius: 5px
+  padding: 2em
+  height: 280px
+
+.large.round
+  border-radius: 5px
 
 ol
   list-style-position: inside
@@ -713,7 +740,6 @@ h4
   width: 38px
   height: 24px
   display: inline-block
-  margin-right: 2px
   background-repeat: no-repeat
   background-size: 38px 24px
   background-position: 0 0
@@ -997,10 +1023,17 @@ ul.wysihtml5-toolbar
       strong
         display: block
   &.plans li
-    width: 32%
-    margin-left: 2%
+    width: 100%
     label
-      height: 220px
+      font-weight: bold
+      height: 110px
+      line-height: 70px
+      .small
+        line-height: 20px
+        margin-top: -30px
+    &.big label
+      height: 240px
+      line-height: 190px
   &.plans, &.frequency
     li
       list-style: none

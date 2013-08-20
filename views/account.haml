@@ -1,14 +1,17 @@
 - ordinal = current_user.schedule.good_until.day.ordinalize
 
 - unless current_user.plan.gratis?
-  .banner{:class => current_user.active? ? 'white' : 'yellow' }
+  .banner{:class => flash[:plan_change] || flash[:card_change] ? 'yellow' : 'white' }
     .row
       .large-12.columns
         - if !current_user.account.customer?
           = succeed '.' do
-            %a{:href => '/account/billing'} Set up payment information now
-        - elsif current_user.schedule.valid?
-          Your next payment is scheduled for the #{ordinal} of the month.
+            %a{:href => '/billing'} Set up payment information now
+        - else #if current_user.active?
+          = flash[:card_change] if flash[:card_change]
+          = flash[:plan_change] if flash[:plan_change]
+          - unless flash[:card_change] || flash[:plan_change]
+            Your account is up to date.
 .padding-bottom-50
   .row.padding-top-20.padding-bottom-20
     .large-12.columns
@@ -18,19 +21,19 @@
       .table
         .row
           .large-6.columns Payment Frequency:
-          .large-6.columns.strong 1 month
+          .large-6.columns.strong= current_user.account.billing_period.titleize
         .row
           .large-6.columns Next Billing Date:
           .large-6.columns.strong= current_user.schedule.good_until.strftime("%B %e, %Y")
         .row
           .large-6.columns #{current_user.schedule.plan.name}:
-          .large-6.columns.strong $#{sprintf('%.02f', current_user.schedule.plan.monthly)}
-      .row
+          .large-6.columns.strong $#{sprintf('%.02f', current_user.schedule.plan.send(current_user.account.billing_period.to_sym))}
+      -#.row
         .large-12.columns
           .panel.callout.radius
             - if current_user.plan.gratis?
               You're on the free plan.
-              %a.color-blue{:href => '/upgrade'} Looking to upgrade?
+              %a.color-blue{:href => '/pricing'} Looking to upgrade?
             - elsif current_user.account.transactions.present?
               You were recently billed on #{current_user.account.transactions.last.created_at}
             - else
@@ -41,14 +44,27 @@
           .toggle
             .show
               - if current_user.account.customer?
-
+                .panel.radius
+                  %h5.margin-bottom-0 Card on File
+                  = current_user.account.card.card_type
+                  ending in
+                  = current_user.account.card.last4
+                  .small.margin-top-15
+                    %a.trigger.button.margin-bottom-0{:href => '/billing'} Change your payment information
+              - elsif current_user.plan.gratis?
+                .panel.radius
+                  You're currently using our free plan. To remove time limits
+                  and add handfuls of other features,
+                  = succeed '.' do
+                    %a{:href => '/pricing'} upgrade your account
               - else
                 .panel.radius
                   You haven't provided and payment information yet.  To make sure you have
                   uninterrupted service, save this information now.
                   .text-center.margin-top-10
-                    %a.trigger{:href => '/account/billing'} Set up payment information
-            .hide= render :'account/_card', :layout => nil
+                    %a.trigger{:href => '/billing'} Set up payment information
+            .hide
+              %form.stripe-form= render :'account/_card', :layout => nil, locals: { card: current_user.account.card }
     .large-6.large-offset-1.columns
       -#.row.large-12.columns
         %h4 Free Donuts
@@ -83,7 +99,7 @@
               .large-2.columns
                 %strong.tooltipped{style: 'line-height: 2.5', :title => "<strong>#{current_user.plan.free? ? "Here's what you're missing" : "Some of your other features"}</strong><br />Auto-reconnects<br />HTTP Basic Authentication<br />Custom Placeholder Pages"} And...
               .large-3.columns
-                %a.margin-bottom-0.button{:href => '/upgrade'} Upgrade
+                %a.margin-bottom-0.button{:href => '/pricing'} Upgrade
       .row
         .large-12.columns
           %h4 API Keys

@@ -85,13 +85,16 @@ class ApplicationController < SharedController
     else
       @form_errors = @user.errors
       @user = Hashie::Mash.new(request[:user] || {})
-      @plan = Plan.find(request[:user]['plan_id']) || Plan.basic
+      @plan = Plan.find(request[:user]['plan_id']) || Plan.free
       render :signup, :layout => :'layouts/marketing'
     end
   end
 
   get '/billing' do
     if signed_in?
+      @plan = (session[:plan] && Plan.where(reference: session[:plan]).first) || current_user.plan
+      @plan ||= Plan.where(reference: 'free').first
+
       render :billing
     else
       redirect '/', 302
@@ -165,8 +168,12 @@ class ApplicationController < SharedController
   end
 
   get '/upgrade' do
-    @show_logo = true
-    render :upgrade, :layout => :'layouts/marketing'
+    if signed_in?
+      session[:plan] = request[:plan]
+      redirect '/billing', 302
+    else
+      redirect "/signup?plan=#{request[:plan]}", 302
+    end
   end
 
   get '/download' do
@@ -245,12 +252,83 @@ class ApplicationController < SharedController
 
   # Public: Save the credit card information to the system.
   post '/account/billing' do
-    Stripe.api_key = App.stripe_secret_key
-    customer = Stripe::Customer.create(
-      :card => request[:stripeToken],
-      :description => current_user.id
-    )
-    current_user.account.set_customer(customer)
+    if request[:plan] || request[:id]
+      if request[:plan]
+        plan = Plan.where(reference: request[:plan]).first
+
+        # set up the billing period to only allow monthly/yearly
+        billing_period = request[:billing_period].to_s
+        unless %w(monthly yearly).include? billing_period
+          billing_period = current_user.account.billing_period || 'monthly'
+        end
+
+        # if this is an invite-only plan and they weren't invited, ship them
+        # back to the free plan
+        if plan && plan.invite_required? && !Invite.where(user_id: current_user.id, plan_id: plan.id).exists?
+          plan = nil
+        end
+        plan ||= current_user.Plan.where(reference: 'free').first
+        if plan.gratis?
+          stripe_plan = 'free'
+        else
+          stripe_plan = "#{plan.reference}_#{billing_period}"
+        end
+      else
+        stripe_plan = nil
+      end
+
+      if current_user.account.customer.present?
+        current_plan_id = current_user.plan.id
+        if stripe_plan
+          response = current_user.account.customer.update_subscription(plan: stripe_plan, card: request[:id])
+          if response
+            current_user.account.update_attributes(plan_id: plan.id, billing_period: billing_period)
+            current_user.schedule.update_attributes(plan_id: plan.id, good_until: Time.at(response.current_period_end.to_i) + 1.day)
+            if current_plan_id != plan.id
+              flash[:plan_change] = 'Your current plan has been updated.'
+            end
+          end
+        else
+          customer = current_user.account.customer
+          customer.card = request[:id]
+          response = customer.save
+          if response
+            flash[:card_change] = 'Your credit card has been updated.'
+          end
+        end
+        current_user.account.update_customer
+        if stripe_plan
+          begin
+            Stripe::Invoice.create(
+              customer: current_user.account.customer_id
+            )
+          rescue Stripe::InvalidRequestError
+          end
+        end
+      else
+        flash[:plan_change] = 'Your information has been saved to your account.'
+        customer = Stripe::Customer.create(
+          :card => request[:id],
+          :description => current_user.id
+        )
+        current_user.account.set_customer(customer)
+        current_user.account.update_attributes(plan_id: plan.id)
+        current_user.schedule.update_attributes(plan_id: plan.id)
+        customer.update_subscription(plan: stripe_plan)
+        current_user.activate!
+      end
+    elsif request[:exp_mo] && request[:exp_yr]
+      # update the month and year if they are different from what's on file
+      unless request[:exp_mo].to_i == current_user.account.card.exp_month.to_i &&
+             request[:exp_yr].to_i == current_user.account.card.exp_year.to_i
+        current_user.account.stripe_card.exp_month = request[:exp_mo].to_i
+        current_user.account.stripe_card.exp_year = request[:exp_yr].to_i
+        current_user.account.stripe_card.save
+        current_user.account.update_customer
+        flash[:card_change] = 'Your card expiration date has been updated.'
+      end
+    end
+    'true'
   end
 
   self << {pattern: '/api/authorizations', priority: 10, target: ::Api::AuthorizationsController}

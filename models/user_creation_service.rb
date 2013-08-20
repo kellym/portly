@@ -8,7 +8,7 @@ class UserCreationService
     @user_klass.create(params).tap do |u|
       if u.persisted?
         @mailer_klass.signup u.id
-        u.invite.mark_as_used_by(u)
+        u.invite.mark_as_used_by(u) if u.invite
       end
     end
   end

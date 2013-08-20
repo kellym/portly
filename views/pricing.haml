@@ -1,40 +1,56 @@
 -#%header.pricing-header.margin-top-50.margin-bottom-0.padding-top-0.padding-bottom-60
   %h1.source.margin-top-0 Check out our Dessert Tray
   %h5.margin-bottom-0 Pick whatever suits your fancy.
+- if signed_in?
+  - button_text = 'Choose this plan'
+  - url = '/upgrade'
+- else
+  - button_text = 'Sign Up'
+  - url = '/signup'
 .content-area
   .row
-    .large-12.columns.margin-bottom-100.margin-top-30
+    .large-12.columns.margin-bottom-60.margin-top-30
       .pricing-box
         %ul.pricing-table
-          %li.free
-          %li.price Free
-          %li.footer As in beer
-          %li.bullet-item 1 Computer
+          %li.five
+          %li.price Glazed
+          %li.footer $4.99 a month
+          %li.bullet-item 2 Computers
           %li.bullet-item
-            %strong.block 1
-            Open Connection
-          %li.bullet-item 15-minute timeout
-          %li.cta-button
-            %a.button{:href => "/signup?plan=free"} Get Started
-        %ul.pricing-table
-          %li.pro
-          %li.price Pro
-          %li.footer Starting at $5/month
-          %li.bullet-item 2+ Computers
-          %li.bullet-item
-            %strong.block 4+
+            %strong.block 2
             Open Connections
           %li.bullet-item No timeouts + Auto-reconnect + SSL
           %li.cta-button
-            %a.button{:href => "/upgrade"} I Want It
+            %a.button{:href => "#{url}?plan=glazed"}= button_text
         %ul.pricing-table
-          %li.enterprise
-          %li.price Enterprise
-          %li.footer Starting at $50/month
-          %li.bullet-item 20+ Computers
+          %li.ten
+          %li.price Boston Creme
+          %li.footer $9.99 a month
+          %li.bullet-item 4 Computers
           %li.bullet-item
-            %strong.block 40+
+            %strong.block 5
             Open Connections
           %li.bullet-item No timeouts + Auto-reconnect + SSL
           %li.cta-button
-            %a.button{:href => "/support?contact"} Let's Talk
+            %a.button{:href => "#{url}?plan=creme"}= button_text
+        %ul.pricing-table
+          %li.twenty
+          %li.price Donut Burger
+          %li.footer $19.99 a month
+          %li.bullet-item 10 Computers
+          %li.bullet-item
+            %strong.block 10
+            Open Connections
+          %li.bullet-item No timeouts + Auto-reconnect + SSL
+          %li.cta-button
+            %a.button{:href => "#{url}?plan=burger"}= button_text
+.full-width.gray
+  .row.padding-top-50.padding-bottom-50.negative-margin-bottom-50
+    .large-10.columns
+      If you can't decide right now, try out our limited 1-connection
+      plan for free.
+      .small
+        The connection has a 15-minute time limit, but you can start it up
+        as often as you want.
+    .large-2.columns
+      %a.button.margin-top-10{:href => "#{url}?plan=free"} Try it Free

@@ -1,38 +1,44 @@
-%form.stripe-form
-  .row.margin-top-20
-    .input.large-6.columns
-      %label{for: 'card-number'}
-        Card Number
-      %input.card-number{ type: 'text', 'data-stripe' => 'number'}
-    .large-6.columns.margin-top-20
-      .card-icon.visa.disabled
-      .card-icon.mastercard.disabled
-      .card-icon.discover.disabled
-      .card-icon.amex.disabled
+- card ||= Card.new
+.row.margin-top-20
+  .input.large-6.columns
+    %label{for: 'card-number'}
+      Card Number
+    %input.card-number{ type: 'text', 'data-stripe' => 'number', value: card.persisted? ? "****#{card.last4}" : ''}
+  .large-6.columns.margin-top-35
+    .card-icon.visa{class: card.persisted? && card.card_type == 'Visa' ? '' : 'disabled'}
+    .card-icon.mastercard{class: card.persisted? && card.card_type == 'MasterCard' ? '' : 'disabled'}
+    .card-icon.discover{class: card.persisted? && card.card_type == 'Discover' ? '' : 'disabled'}
+    .card-icon.amex{class: card.persisted? && card.card_type == 'American Express' ? '' : 'disabled'}
 
-  .row
-    .input.large-4.columns
-      %label{for: 'card-cvc'} CVC
-      %input.card-cvc{type: 'text', size: 4, 'data-stripe' => 'cvc'}
-    .input.large-8.columns
-      %label{for: 'card-exp-month'} Expiration
-      .row
-        .large-6.columns
-          %select.card-exp-month{'data-stripe' => 'exp-month'}
-            %option Month
-            - Date::MONTHNAMES.slice(1,12).each_with_index do |m, i|
-              %option{value: i+1} #{i+1} - #{m}
-        .large-6.columns
-          %select.card-exp-year{'data-stripe' => 'exp-year'}
-            %option Year
-            - (Date.today.year..(Date.today.year+10)).each do |year|
-              %option{value: year}= year
+.row
+  .input.large-4.columns
+    %label{for: 'card-cvc'} CVC
+    %input.card-cvc{type: 'text', size: 4, 'data-stripe' => 'cvc'}
+  .input.large-8.columns
+    %label{for: 'card-exp-month'} Expiration
+    .row
+      .large-6.columns
+        %select.card-exp-month{'data-stripe' => 'exp-month', name: 'exp_mo'}
+          %option Month
+          - Date::MONTHNAMES.slice(1,12).each_with_index do |m, i|
+            %option{value: i+1, selected: card.exp_month.to_i == i + 1} #{i+1} - #{m}
+      .large-6.columns
+        %select.card-exp-year{'data-stripe' => 'exp-year', name: 'exp_yr'}
+          %option Year
+          - (Date.today.year..(Date.today.year+10)).each do |year|
+            %option{value: year, selected: card.exp_year.to_i == year}= year
 
-    %hr.full-bleed
+  %hr.full-bleed
 
-  .row
-    .large-12.columns
-      %button.margin-right-20.card-submit{type: 'submit', disabled: true} Save Card Information
+.row
+  .large-12.columns
+    %button.margin-right-20.card-submit{type: 'submit', disabled: true}
+      - if current_user.new?
+        Submit Information
+      - else
+        Save Card Information
+    - billing ||= nil
+    - unless billing
       %a.trigger Cancel
 
 - content_for :javascripts do
@@ -41,4 +47,5 @@
     new Portly.Forms.Views.CreditCard
       key: '#{App.config.stripe_publishable_key}'
       post: '/account/billing'
+      success: '#{current_user.new? ? '/tunnels' : '/account'}'
 
