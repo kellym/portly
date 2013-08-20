@@ -339,6 +339,8 @@ class ApplicationController < SharedController
   self << {pattern: '/api/tunnels', priority: 10, target: ::Api::TunnelsController}
   self << {pattern: '/api/affiliates', priority: 10, target: ::Api::AffiliatesController}
 
+  self << {pattern: '/stripe_webhook', priority: 10, target: ::StripeController}
+
   self << {pattern: '/auth', priority: 10, target: ::AuthController}
   self << {pattern: '/pages', priority: 10, target: ::PagesController}
   self << {pattern: '/downloads', priority: 10, target: ::DownloadsController}
