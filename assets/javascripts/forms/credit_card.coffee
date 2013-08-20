@@ -85,5 +85,4 @@
           )
       else
         # handle the error
-        console.log status
-        console.log response
+        alert('There was an error processing your request. Please verify your information is correct.')
