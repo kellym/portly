@@ -162,7 +162,7 @@ class User < ActiveRecord::Base
       self.account.plan ||= @plan_id ? Plan.find(@plan_id) : Plan.basic
     end
     self.build_schedule
-    self.schedule.good_until = Date.today + 30
+    self.schedule.good_until = Date.today
     self.schedule.plan = self.account.plan
     self.state ||= self.schedule.state
   end
