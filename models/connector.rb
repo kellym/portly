@@ -29,12 +29,12 @@ class Connector < ActiveRecord::Base
 
   # Public: Provides the full subdomain
   def full_subdomain
-    self.subdomain ? "#{self.subdomain}.#{user.subdomain}#{App.config.suffix}" : nil
+    self.subdomain ? "#{self.subdomain}-#{user.subdomain}#{App.config.suffix}" : nil
   end
 
   # Public: Provides the full subdomain
   def full_subdomain_was
-    self.subdomain_was ? "#{self.subdomain_was}.#{user.subdomain}#{App.config.suffix}" : nil
+    self.subdomain_was ? "#{self.subdomain_was}-#{user.subdomain}#{App.config.suffix}" : nil
   end
 
   def to_hash
