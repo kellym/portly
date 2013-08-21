@@ -55,11 +55,11 @@ class Account < ActiveRecord::Base
   # plan.
   def update_redis_data
     if plan.free?
-      user.tokens.each do |token|
+      admin.tokens.each do |token|
         Redis.current.sadd 'free_plan', token
       end
     else
-      user.tokens.each do |token|
+      admin.tokens.each do |token|
         Redis.current.srem 'free_plan', token
       end
     end
