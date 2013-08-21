@@ -7,6 +7,7 @@ class Account < ActiveRecord::Base
   belongs_to :card
 
   before_create :generate_account_code
+  after_save :update_redis_data
 
   def customer
     return nil unless customer?
@@ -50,4 +51,18 @@ class Account < ActiveRecord::Base
     end
   end
 
+  # Internal: Removes any data that may be remaining around a free
+  # plan.
+  def update_redis_data
+    if plan.free?
+      user.tokens.each do |token|
+        Redis.current.sadd 'free_plan', token
+      end
+    else
+      user.tokens.each do |token|
+        Redis.current.srem 'free_plan', token
+      end
+    end
+    true
+  end
 end

@@ -27,6 +27,9 @@ class Tunnel
 
       Redis.current.sadd('ports_in_use',port)
       Redis.current.sadd "watching:#{@token}", @connector_id
+      if connector.user.plan.free?
+        Redis.current.sadd 'free_plan', @token
+      end
       Redis.current.hincrby(active_key, @token, 1)
       Redis.current.sadd('connectors_online',"#{@connector_id}")
       #if @publish
