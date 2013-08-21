@@ -5,7 +5,7 @@
     %meta{:content => "width=device-width", :name => "viewport"}/
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     %title= mail.subject
-    %link{:href => "https://getportly.com/assets/email.css", :rel => "stylesheet", :type => "text/css"}/
+    = stylesheet_include_tag 'email'
   %body{:bgcolor => "#FFFFFF"}
     / HEADER
     %table.head-wrap{:bgcolor => "#FFFFFF"}

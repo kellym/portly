@@ -6,15 +6,15 @@
     %input.input.connection-string{:type => 'text', :name => 'connection_string', :placeholder => 'localhost:8080'}
     %label Public Endpoint
     %select.hosting-type
-      %option{value: 'local'} Use [subdomain].#{token.user.full_domain}
+      %option{value: 'local'} Use [subdomain]-#{token.user.full_domain}
       %option{value: 'remote'} Set my own CNAME record at my DNS
     .for-local
       %label Subdomain
       .inline-input
         %input.input{:type => 'text', :name => 'subdomain', :placeholder => ''}
-        \.#{token.user.full_domain}
+        \-#{token.user.full_domain}
       .margin-bottom-10
-        %small.mute Use an asterisk (<strong>*.#{token.user.full_domain}</strong>) to create a catch-all tunnel
+        %small.mute Use an asterisk (<strong>*-#{token.user.full_domain}</strong>) to create a catch-all tunnel
     .hide.for-remote
       %label CNAME Record
       %input.input.margin-bottom-0{:type => 'text', :name => 'cname', :placeholder => ''}

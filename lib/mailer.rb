@@ -1,4 +1,8 @@
+require_relative 'view_helpers'
+
 class Mailer
+
+  include ViewHelpers
 
   def initialize(render_view)
     @render = render_view
