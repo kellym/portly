@@ -23,6 +23,7 @@ class ApplicationController < SharedController
 
   get '/signin' do
     @user = {}
+    @plan = request[:plan]
     render :signin, :layout => :'layouts/marketing'
   end
 
@@ -48,9 +49,15 @@ class ApplicationController < SharedController
     @user = Hashie::Mash.new(request[:user] || {})
     if User.authenticate(request[:user]['email'], request[:user]['password'])
       authenticate_user!
-      redirect '/', 302
+      if request[:plan]
+        session[:plan] = request[:plan]
+        redirect '/billing', 302
+      else
+        redirect '/', 302
+      end
     else
       @error = 'The email or password you provided is incorrect.'
+      @plan = request[:plan]
       render :signin, :layout => :'layouts/marketing'
     end
   end

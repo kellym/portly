@@ -6,6 +6,7 @@
   .large-7.columns.margin-top-50
     %h2 Sign in
     %form(action='/signin' method='post')
+      %input{:type => 'hidden', :name => 'plan', :value => @plan}
       .row
         .small-10.columns
           - if @error
