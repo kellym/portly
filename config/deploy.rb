@@ -19,7 +19,7 @@ set :bundle_prefix, 'source /var/www/portly/shared/config/env.sh && bundle exec'
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/database.yml', 'log']
+set :shared_paths, ['config/database.yml', 'log', 'public/downloads']
 
 # Optional settings:
 set :user, 'portly'    # Username in the server to SSH to.
