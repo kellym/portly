@@ -15,7 +15,7 @@
 #= require forms
 #= require vendor/wysihtml5
 #= require vendor/wysihtml5-foundation
-
+#= require vendor/highlight
 
 $ ->
   signin_box = $("#signin")
