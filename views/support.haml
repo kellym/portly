@@ -35,13 +35,18 @@
       if you aren't already using it.
     %p
       The setup is pretty easy on both sides. On the Portly side, just create a new tunnel with the
-      subdomain path of <strong>*</strong>. On the Pow side, simply add an additional <strong>POW_DOMAIN</strong> to your
+      subdomain path of <code>*</code>. On the Pow side, edit <strong>~/.powconfig</strong> and add an
+      additional domain to your <strong>POW_DOMAINS</strong> variable in your
       settings:
-    %p.strong
-      export POW_DOMAINS=dev,your-subdomain.portly.co
+    %pre
+      %code
+        export POW_DOMAINS=dev,your_subdomain.portly.co
     %p
-      You'll have to reinstall Pow after that, but it's a one-liner and you'll be able to set up
-      and endless number of sites.
+      You'll have to reinstall a slightly modified version of Pow after that to handle dashes for subdomains, but it's a one-liner and you'll be able to set up
+      and endless number of sites at <strong>whatever-your_subdomain.portly.co</strong>.
+    %pre
+      %code
+        curl portly.co/pow | sh
 
 .row
   .large-10.large-centered.columns.large-offset-1.margin-bottom-30
