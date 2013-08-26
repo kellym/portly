@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rsync -a downloads/ portly@getportly.com:/var/www/portly/shared/public/downloads
