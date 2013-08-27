@@ -12,7 +12,11 @@
     .large-12.columns.margin-bottom-30.margin-top-30
       - if signed_in?
         %h1.text-center Choose your plan
-        %p.text-center.margin-bottom-30 Pick a free hot donut or the whole dozen. Change plans anytime.
+        %p.text-center.margin-bottom-30
+          Pick a free hot donut or the whole dozen. Change plans anytime. Or
+          %span.tooltipped{:title => '<strong>Try our 1-connection plan for free.</strong><br/> The connection has a 15-minute time limit, but you can start it up as often as you want.'}
+            = succeed '.' do
+              %a{:href => (current_user && current_user.plan && current_user.plan.free?) ? '/tunnels' : "#{url}?plan=free"} Try it free
       .pricing-box
         %ul.pricing-table
           %li.five
