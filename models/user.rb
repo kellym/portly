@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   has_many :orders
 
   before_save :downcase_email
-  before_save :set_user_active_state
+  before_create :set_user_active_state
 
   def plan_id
     @plan_id || (schedule ? schedule.plan_id : nil)
@@ -56,6 +56,7 @@ class User < ActiveRecord::Base
   # Public: Initialize this user and create account and schedule first.
   def initialize(*params)
     super
+    self.plan_id ||= Plan.free.id
     create_account_and_schedule
   end
 
@@ -246,9 +247,11 @@ class User < ActiveRecord::Base
   # Internal: Sets the user as inactive if they are signing up
   # for a paid plan.
   def set_user_active_state
-    plan = Plan.find(self.plan_id)
-    if plan.monthly > 0
-      self.state = 'new'
+    if self.plan_id
+      plan = Plan.find(self.plan_id)
+      if plan.monthly > 0
+        self.state = 'new'
+      end
     end
   end
 

@@ -70,7 +70,7 @@ class ApplicationController < SharedController
       invite = Invite.includes(:affiliate => :plan).find(session[:invite_id])
       @plan = invite.affiliate.plan if invite
     end
-    @plan ||= Plan.free
+    #@plan ||= Plan.free
 
     render :signup, :layout => :'layouts/marketing'
   end
@@ -79,15 +79,20 @@ class ApplicationController < SharedController
     if request[:user] && session[:invite_id]
       request[:user][:invite_id] = session[:invite_id]
     end
+    free_id = Plan.free.id
+    free_plan_chosen = request[:user]['plan_id'] && (request[:user]['plan_id'].to_i == free_id)
+    request[:user]['plan_id'] ||= free_id
     @user = UserCreationService.new.create(request[:user])
     if @user.persisted?
       session.delete :invite_id if session[:invite_id]
       env['warden'].set_user @user, :event => :authentication
       session[:new_user] = true
-      if @user.active?
+      if free_plan_chosen
         redirect '/tunnels', 302
-      else
+      elsif @user.plan.id != free_id
         redirect '/billing', 302
+      else
+        redirect '/pricing', 302
       end
     else
       @form_errors = @user.errors
@@ -191,7 +196,7 @@ class ApplicationController < SharedController
   get '/pricing' do
     @plans = Plan.order(:monthly).all
     @show_logo = true
-    render :pricing, :layout => :'layouts/marketing'
+    render :pricing, :layout => signed_in? ? :'layouts/application' : :'layouts/marketing'
   end
 
   get '/about' do
@@ -291,6 +296,7 @@ class ApplicationController < SharedController
           if response
             current_user.account.update_attributes(plan_id: plan.id, billing_period: billing_period)
             current_user.schedule.update_attributes(plan_id: plan.id, good_until: Time.at(response.current_period_end.to_i) + 1.day)
+            current_user.activate!
             if current_plan_id != plan.id
               flash[:plan_change] = 'Your current plan has been updated.'
             end
