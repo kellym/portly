@@ -43,7 +43,7 @@
         .large-12.columns
           .toggle
             .show
-              - if current_user.account.customer?
+              - if current_user.account.customer? && current_user.account.card
                 .panel.radius
                   %h5.margin-bottom-0 Card on File
                   = current_user.account.card.card_type
