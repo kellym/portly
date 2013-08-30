@@ -3,7 +3,8 @@ class PagesController < SharedController
   get '/offline' do
     server_name = request.env['HTTP_HOST']
     if server_name =~ /\.portly\.co$/
-      server_name.gsub!(/\.[^\.]*\.portly\.co$/,'')
+      server_name.gsub!(/\-?([^\.])*\.portly\.co$/,'')
+      subdomain = $1
       connector = Connector.where(:subdomain => server_name).first
     else
       connector = Connector.where(:cname => server_name).first
@@ -15,7 +16,15 @@ class PagesController < SharedController
           logo: connector.closest_page && connector.closest_page.cover_image_uid ? connector.closest_page.cover_image.thumb('400x400#').url : nil,
         }
     else
-      halt 404
+      if subdomain && (user = User.where(:subdomain => subdomain).first)
+        render :'pages/show', :layout => nil,
+        locals: {
+          content: user.page ? user.page.content : nil,
+          logo: user.page && user.page.cover_image_uid ? user.page.cover_image.thumb('400x400#').url : nil,
+        }
+      else
+        halt 404
+      end
     end
   end
 
