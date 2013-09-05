@@ -49,7 +49,7 @@ class Api::AuthorizationsController < Api::BaseController
 
   get '/keys' do
     if current_token
-      { private_key: token.authorized_key.private_key,
+      { private_key: current_token.authorized_key.private_key,
         public_key: App.config.public_key,
       }.to_json
     else
