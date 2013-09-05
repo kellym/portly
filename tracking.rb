@@ -38,6 +38,7 @@ Thread.new do
     end
   rescue => error
     LOG.error error.to_s
+    retry
   end
 end
 
