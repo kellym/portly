@@ -165,7 +165,8 @@ class ApplicationController < SharedController
     filename = "./blog/#{page}"
     if File.exists?(filename)
       @file = File.read(filename).lines
-      @title = @file.shift
+      @title = @file.shift.chomp
+      @meta_description = @file.shift.chomp
       @file
     else
       throw :pass
