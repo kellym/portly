@@ -175,6 +175,7 @@ class ApplicationController < SharedController
 
   get '/blog' do |page|
     parse_blog('index.html')
+    @index = true
     render :blog, :layout => user_layout
   end
 
