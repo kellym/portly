@@ -26,7 +26,7 @@
                   <br />
                   = "#{@plan.tunnel_limit} simultaneously open tunnel#{@plan.tunnel_limit == 1 ? '' : 's'}"
               .margin-bottom-20
-                %a.small{:href => '/pricing'} Change Plan
+                %a.small{:href => '/plans'} Change Plan
               %input{type: 'hidden', name: 'user[plan_id]', value: @plan.id}
           .row.collapse
             %label(for='email')

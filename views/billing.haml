@@ -13,7 +13,7 @@
         - if current_user.account.customer?
           We'll prorate the new plan until next month.
       .large-3.columns
-        .pricing-box
+        .plan-box
           %h4.negative-margin-bottom-20 Your Plan
           - case @plan.reference
             - when 'glazed'
@@ -30,7 +30,7 @@
             .negative-margin-top-10.strong= @plan.name
             .small #{@plan.tunnel_limit} open connection#{@plan.tunnel_limit == 1 ? '' : 's'}
             .small
-              %a{href: '/pricing'} Change Plan
+              %a{href: '/plans'} Change Plan
 
       - if @plan.gratis?
         .large-9.columns

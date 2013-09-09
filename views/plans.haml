@@ -1,4 +1,4 @@
--#%header.pricing-header.margin-top-50.margin-bottom-0.padding-top-0.padding-bottom-60
+-#%header.plan-header.margin-top-50.margin-bottom-0.padding-top-0.padding-bottom-60
   %h1.source.margin-top-0 Check out our Dessert Tray
   %h5.margin-bottom-0 Pick whatever suits your fancy.
 - if signed_in?
@@ -17,8 +17,8 @@
           %span.tooltipped{:title => '<strong>Try our 1-connection plan for free.</strong><br/> The connection has a 15-minute time limit, but you can start it up as often as you want.'}
             = succeed '.' do
               %a{:href => (current_user && current_user.plan && current_user.plan.free?) ? '/tunnels' : "#{url}?plan=free"} Try it free
-      .pricing-box
-        %ul.pricing-table
+      .plan-box
+        %ul.plan-table
           %li.five
           %li.price Glazed
           %li.footer $4.99 a month
@@ -29,7 +29,7 @@
             No timeouts + Auto-reconnect + SSL
           %li.cta-button
             %a.button{:href => "#{url}?plan=glazed"}= button_text
-        %ul.pricing-table
+        %ul.plan-table
           %li.ten
           %li.price Boston Creme
           %li.footer $9.99 a month
@@ -39,7 +39,7 @@
           %li.bullet-item No timeouts + Auto-reconnect + SSL
           %li.cta-button
             %a.button{:href => "#{url}?plan=creme"}= button_text
-        %ul.pricing-table
+        %ul.plan-table
           %li.twenty
           %li.price Donut Burger
           %li.footer $19.99 a month

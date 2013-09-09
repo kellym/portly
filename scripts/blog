@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rsync -a blog/ portly@getportly.com:/var/www/portly/shared/blog

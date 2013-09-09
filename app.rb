@@ -1,33 +1,4 @@
-require 'rubygems'
-require 'rack'
-require 'redis'
-require 'scorched'
-require 'coffee_script'
-require 'kgio'
-require 'rack/session/dalli'
-require 'hashie'
-require 'active_record'
-require 'rack/rest_api_versioning'
-require 'sass'
-require 'sshkey'
-require 'stripe'
-require 'haml'
-require 'json'
-require 'socket'
-require 'sprockets'
-require 'bcrypt'
-require 'haml'
-require 'eventmachine'
-require 'thin'
-require 'active_support/core_ext/integer/inflections'
-require 'omniauth'
-require 'omniauth-github'
-require 'msgpack'
-require 'mail'
-require 'airbrake'
-require 'logger'
-require 'dragonfly'
-require 'rack/cache'
+require_relative 'config/dependencies'
 
 ROOT_PATH = File.dirname(__FILE__)
 if ENV['RACK_ENV'] == 'development'
@@ -56,6 +27,9 @@ Mail.defaults do
     password:  ::App.config.mail.password
   }
 end
+
+# HAML Options
+Haml::Options.defaults[:ugly] = true
 
 # Dragonfly
 DRAGONFLY = Dragonfly[:images].configure_with(:imagemagick) do |c|

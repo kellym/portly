@@ -33,7 +33,7 @@
           .panel.callout.radius
             - if current_user.plan.gratis?
               You're on the free plan.
-              %a.color-blue{:href => '/pricing'} Looking to upgrade?
+              %a.color-blue{:href => '/plans'} Looking to upgrade?
             - elsif current_user.account.transactions.present?
               You were recently billed on #{current_user.account.transactions.last.created_at}
             - else
@@ -56,7 +56,7 @@
                   You're currently using our free plan. To remove time limits
                   and add handfuls of other features,
                   = succeed '.' do
-                    %a{:href => '/pricing'} upgrade your account
+                    %a{:href => '/plans'} upgrade your account
               - else
                 .panel.radius
                   You haven't provided and payment information yet.  To make sure you have
@@ -99,7 +99,7 @@
               .large-2.columns
                 %strong.tooltipped{style: 'line-height: 2.5', :title => "<strong>#{current_user.plan.free? ? "Here's what you're missing" : "Some of your other features"}</strong><br />Auto-reconnects<br />HTTP Basic Authentication<br />Custom Placeholder Pages"} And...
               .large-3.columns
-                %a.margin-bottom-0.button{:href => '/pricing'} Upgrade
+                %a.margin-bottom-0.button{:href => '/plans'} Upgrade
       .row
         .large-12.columns
           %h4 API Keys

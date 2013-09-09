@@ -92,7 +92,7 @@ class ApplicationController < SharedController
       elsif @user.plan.id != free_id
         redirect '/billing', 302
       else
-        redirect '/pricing', 302
+        redirect '/plans', 302
       end
     else
       @form_errors = @user.errors
@@ -161,7 +161,24 @@ class ApplicationController < SharedController
     render :support, :layout => user_layout
   end
 
-  get '/blog' do
+  def parse_blog(page)
+    filename = "./blog/#{page}"
+    if File.exists?(filename)
+      @file = File.read(filename).lines
+      @title = @file.shift
+      @file
+    else
+      throw :pass
+    end
+  end
+
+  get '/blog' do |page|
+    parse_blog('index.html')
+    render :blog, :layout => user_layout
+  end
+
+  get '/blog/**' do |page|
+    parse_blog("blog/#{page.gsub(/[^0-9a-zA-Z\-\_\/]/,'')}/index.html")
     render :blog, :layout => user_layout
   end
 
@@ -194,9 +211,13 @@ class ApplicationController < SharedController
   end
 
   get '/pricing' do
+    redirect '/plans', 301
+  end
+
+  get '/plans' do
     @plans = Plan.order(:monthly).all
     @show_logo = true
-    render :pricing, :layout => signed_in? ? :'layouts/application' : :'layouts/marketing'
+    render :plans, :layout => signed_in? ? :'layouts/application' : :'layouts/marketing'
   end
 
   get '/about' do
