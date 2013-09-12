@@ -99,7 +99,7 @@
               .large-2.columns
                 %strong.tooltipped{style: 'line-height: 2.5', :title => "<strong>#{current_user.plan.free? ? "Here's what you're missing" : "Some of your other features"}</strong><br />Auto-reconnects<br />HTTP Basic Authentication<br />Custom Placeholder Pages"} And...
               .large-3.columns
-                %a.margin-bottom-0.button{:href => '/plans'} Upgrade
+                %a.margin-bottom-0.button{:href => '/plans'}= current_user.plan.free? "Upgrade" : "Change"
       .row
         .large-12.columns
           %h4 API Keys
