@@ -322,6 +322,14 @@ class ApplicationController < SharedController
             current_user.activate!
             if current_plan_id != plan.id
               flash[:plan_change] = 'Your current plan has been updated.'
+              current_user.tokens.each do |token|
+                Redis.current.publish("socket:#{token}", "plan:#{plan.reference}")
+                if plan.free?
+                  Redis.current.sadd 'free_plan', token
+                else
+                  Redis.current.srem 'free_plan', token
+                end
+              end
             end
           end
         else
@@ -352,6 +360,14 @@ class ApplicationController < SharedController
         current_user.schedule.update_attributes(plan_id: plan.id)
         customer.update_subscription(plan: stripe_plan)
         current_user.activate!
+        current_user.tokens.each do |token|
+          Redis.current.publish("socket:#{token}", "plan:#{plan.reference}")
+          if plan.free?
+            Redis.current.sadd 'free_plan', token
+          else
+            Redis.current.srem 'free_plan', token
+          end
+        end
       end
     elsif request[:exp_mo] && request[:exp_yr]
       # update the month and year if they are different from what's on file
