@@ -323,7 +323,7 @@ class ApplicationController < SharedController
             if current_plan_id != plan.id
               flash[:plan_change] = 'Your current plan has been updated.'
               current_user.tokens.each do |token|
-                Redis.current.publish("socket:#{token}", "plan:#{plan.reference}")
+                Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
                 if plan.free?
                   Redis.current.sadd 'free_plan', token
                 else
@@ -361,7 +361,7 @@ class ApplicationController < SharedController
         customer.update_subscription(plan: stripe_plan)
         current_user.activate!
         current_user.tokens.each do |token|
-          Redis.current.publish("socket:#{token}", "plan:#{plan.reference}")
+          Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
           if plan.free?
             Redis.current.sadd 'free_plan', token
           else
