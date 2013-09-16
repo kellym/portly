@@ -129,7 +129,7 @@ class Tunnel
     elsif connector.tcp?
       port = connector.server_port
       pid = Redis.current.hget "raw:#{connector.id}", 'pid'
-      Process.kill("KILL", pid)
+      Process.kill("KILL", pid.to_i)
     end
     if port
       EventSource.publish(connector.user_id, 'disconnect', @connector_id)
