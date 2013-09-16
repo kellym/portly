@@ -131,7 +131,7 @@ class Tunnel
       pid = Redis.current.hget("raw:#{connector.id}", 'pid').to_i
       begin
         Process.kill("KILL", pid)
-        Process.wait
+        Process.waitpid(pid)
       rescue
         # if it fails to kill it, we'll clean it up later?
       end
