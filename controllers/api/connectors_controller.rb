@@ -94,6 +94,7 @@ class Api::ConnectorsController < Api::BaseController
         user_port: request[:port].to_i,
         user_host: request[:host],
         subdomain: request[:subdomain],
+        nickname: request[:nickname],
         cname: request[:cname],
         auth_type: request[:auth_type]
       )
@@ -129,6 +130,7 @@ class Api::ConnectorsController < Api::BaseController
         data = {
           user_port: request[:port],
           user_host: request[:host],
+          nickname: request[:nickname],
           token_id: current_token.id,
           subdomain: request[:subdomain],
           cname: request[:cname]

@@ -59,6 +59,7 @@ class Connector < ActiveRecord::Base
       host: user_host,
       port: user_port,
       subdomain: subdomain,
+      nickname: nickname,
       cname: cname,
       auth_type: auth_type,
       auths: auths.map { |a| a.to_hash }
