@@ -1,0 +1,101 @@
+Blog
+Keep up-to-date with new features and ideas of Portly around SSH tunneling, remote pairing, API integration and more.
+
+  <h2 class="text-center margin-bottom-30"><a href="/blog/2013/09/08/facebook-integration/">Facebook integration in development.</a></h2>
+  <div class="content margin-bottom-50">
+<p>So many of our sites integrate the use of Facebook&#39;s authentication or
+Open Graph tags now, but it&#39;s not entirely easy to test those features of a site
+before they&#39;re out in the wild. Well, it <strong>wasn&#39;t</strong> easy, but now it is.</p>
+
+<p>Testing Facebook integration in development means you&#39;ll need to create your own
+app in Facebook just for your setup.  Just head to <a href="https://developers.facebook.com/apps">the app page</a> and
+add a new app.  If you haven&#39;t created your app for your live server, make that
+one first. Select your use, and put in your domain/URL for your production server.</p>
+
+<p>Then create another app to use on your development server.  We generally
+name ours the same as the live one with our name in parentheses, like <strong>Portly (Donuteater)</strong>.
+For the domain, put <code>your-subdomain.portly.co</code> or your respective domain
+for development.  If you&#39;re using Facebook for authentication, select &quot;Website with
+Facebook Login&quot; and put in your site URL for your Portly site (you can copy the link
+from the app). Just leave the development one in Sandbox mode so you&#39;re not spamming
+all your friends with test data.</p>
+
+<p>So you should have two apps now&mdash;one for production, and one for development. Now
+it&#39;s time to set up your app.</p>
+
+<p>In your Devise setup, use something like this:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">config.omniauth :facebook,
+                ENV[&#39;FB_APP_ID&#39;] || Rails.configuration.facebook_app_id,
+                ENV[&#39;FB_APP_SECRET&#39;] || Rails.configuration.facebook_secret,
+                :strategy_class =&gt; OmniAuth::Strategies::Facebook,
+                :scope =&gt; &#39;email&#39;
+</code></pre></div>
+<p>We like to use environment variables in development to allow our team to set up
+their own custom environment without modifying code or config files. You can set
+these environment variables in your <code>.bashrc</code> file, or you can
+use <a href="https://github.com/ddollar/foreman">foreman</a> and set your environment using an <code>.env</code> file.</p>
+
+<p>Now when you try to sign into Facebook from <code>your-subdomain.portly.co</code>,
+Facebook will recognize your App ID and secret and the associated domain and
+grant you access to your site.</p>
+
+  <p class="author small">
+    Posted <span class="date">September 08, 2013</span>.
+  </p>
+  </div>
+
+  <h2 class="text-center margin-bottom-30"><a href="/blog/2013/09/04/stay-awake-all-night/">Stay awake all night.</a></h2>
+  <div class="content margin-bottom-50">
+<p>We just launched a new feature this week that really helps for those of you
+who want to keep your website available for long periods of time, even when
+you&#39;re away from your computer.</p>
+
+<p>It&#39;s a new setting in the app that prevents
+your computer from going to sleep when a port is active.  Since it&#39;s a smart
+feature, it won&#39;t keep your computer from sleeping when you shut the lid of
+your laptop or force sleep mode.</p>
+
+<p>All right, now that we&#39;ve thoroughly tested it, it&#39;s <a href="http://rd.io/x/QUhXKDeqvmg/">3am and I want to go
+to bed</a>.</p>
+
+  <p class="author small">
+    Posted <span class="date">September 04, 2013</span>.
+  </p>
+  </div>
+
+  <h2 class="text-center margin-bottom-30"><a href="/blog/2013/08/22/so-new/">So new you knew we're new.</a></h2>
+  <div class="content margin-bottom-50">
+<p>Today we&#39;re launching a product we think you&#39;ll really love.  We built it because
+we spent so much time setting our development environments up to be able to
+test mobile platforms and API integrations that we wanted to simplify that
+process.</p>
+
+<p>Now, granted, there are other tools out there that we have discovered in the
+process of building Portly that help with the tasks we first intended for Portly,
+but our idea took a shape of its own.  We went native.</p>
+
+<p>In our eyes, a native Mac app was the only real way to simplify development.  We
+didn&#39;t want to have to run several dedicated tabs in our console. We didn&#39;t want to
+have to deal with variable URLs. We didn&#39;t want to have to deal with connections
+timing out from inactivity.</p>
+
+<p>Really, we just wanted to be able to set it up once, click a couple buttons,
+and be able to spend all day or week or month without thinking about it again.
+So that&#39;s what we built.</p>
+
+<p>In the process, we found ourselves using Portly for <a href="http://pssh.me">remote pairing</a>,
+collaborating, and even using it to grab files on our computer while we&#39;re away.</p>
+
+<p>If you&#39;ve found a use (or have a need) for Portly, let us know! We&#39;re here and
+listening, we&#39;ve got plenty more to share, and we want to hear your feedback.</p>
+
+<p><a href="https://twitter.com/getportly">Follow us on Twitter</a> to keep up with all our new ideas.</p>
+
+  <p class="author small">
+    Posted <span class="date">August 22, 2013</span>.
+  </p>
+  </div>
+
+
+
+
