@@ -15,13 +15,18 @@ class Tunnel
   def save
     if valid?
       @port = get_open_port
-      address_keys.each do |key|
-        Redis.current.hmset key, 'port', @port,
-                                 'auth', (connector.auth_type == 'basic'),
-                                 'connector_id', @connector_id,
-                                 'host', "#{connector.user_host}:#{connector.user_port}",
-                                 'token', @token,
-                                 'connected_at', DateTime.now
+      if connector.http?
+        address_keys.each do |key|
+          Redis.current.hmset key, 'port', @port,
+                                   'auth', (connector.auth_type == 'basic'),
+                                   'connector_id', @connector_id,
+                                   'host', "#{connector.user_host}:#{connector.user_port}",
+                                   'token', @token,
+                                   'connected_at', DateTime.now
+        end
+      elsif connector.tcp?
+        pid = fork { exec "socat TCP-LISTEN:#{@port},fork TCP:#{App.config.tcp_ip}:#{@port}" }
+        Redis.current.hmset "raw:#{connector.id}", 'port', @port, 'pid', pid
       end
       EventSource.publish(connector.user_id, 'connect', @connector_id)
 
@@ -115,14 +120,20 @@ class Tunnel
   # Public: Closes the current tunnel without needing the authentication
   # token if the user is removing the connector.
   def destroy!
-    port = nil
-    address_keys.each do |key|
-      port ||= Redis.current.hget key, 'port'
-      Redis.current.del key
+    if connector.http?
+      port = nil
+      address_keys.each do |key|
+        port ||= Redis.current.hget key, 'port'
+        Redis.current.del key
+      end
+    elsif connector.tcp?
+      port = connector.server_port
+      pid = Redis.current.hget "raw:#{connector.id}", 'pid'
+      Process.kill("KILL", pid)
     end
     if port
       EventSource.publish(connector.user_id, 'disconnect', @connector_id)
-      Redis.current.srem('ports_in_use', port)
+      Redis.current.srem('ports_in_use', port) if connector.http?
     end
     Redis.current.srem('connectors_online',"#{@connector_id}")
     Redis.current.srem "watching:#{@token}", @connector_id
@@ -140,7 +151,7 @@ class Tunnel
   #
   # Returns a Boolean of whether it is valid or not.
   def valid?
-    required_values? && authorized? && socket_online? && within_account_limit? && address_available?
+    required_values? && authorized? && socket_online? && within_account_limit? && (!connector.http? || address_available?)
   end
 
   # Internal: Finds the connector which this tunnel will use to connect to.
@@ -187,14 +198,18 @@ class Tunnel
   #
   # Returns an Integer of an available port.
   def get_open_port
-    port = loop do
-      @socket = Socket.new(:INET, :STREAM, 0)
-      @socket.bind(Addrinfo.tcp('127.0.0.1', 0))
-      port = @socket.getsockname.unpack('snA*')[1]
-      break port unless Redis.current.sismember('ports_in_use',port)
+    if connector.http?
+      port = loop do
+        @socket = Socket.new(:INET, :STREAM, 0)
+        @socket.bind(Addrinfo.tcp('127.0.0.1', 0))
+        port = @socket.getsockname.unpack('snA*')[1]
+        @socket.close
+        break port unless Redis.current.sismember('ports_in_use',port) || Connector.where(server_port: port).exists?
+      end
+      port
+    else
+      connector.server_port
     end
-    @socket.close
-    port
   end
 
   # Internal: Provides the key in Redis used to monitor open connectors.

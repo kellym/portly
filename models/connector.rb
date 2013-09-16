@@ -19,6 +19,8 @@ class Connector < ActiveRecord::Base
   has_many :auths, :class_name => 'ConnectorAuth'
   has_many :bytes, :class_name => 'ConnectorByte'
 
+  validate :http_only_if_free_account # we should be able to handle 15 minutes for TCP sockets too if we wanted
+  before_save :get_server_port
   after_save :update_tunnels
 
   default_scope where(:deleted_at => nil)
@@ -53,6 +55,14 @@ class Connector < ActiveRecord::Base
     end
   end
 
+  def http?
+    socket_type == 'http'
+  end
+
+  def tcp?
+    socket_type == 'tcp'
+  end
+
   def to_hash
     {
       id: id,
@@ -61,6 +71,7 @@ class Connector < ActiveRecord::Base
       subdomain: subdomain,
       nickname: nickname,
       socket_type: socket_type,
+      server_port: server_port,
       cname: cname,
       auth_type: auth_type,
       auths: auths.map { |a| a.to_hash }
@@ -124,6 +135,21 @@ class Connector < ActiveRecord::Base
     self.update_attribute(:deleted_at, Time.now)
   end
 
+  def get_server_port
+    if http?
+      server_port = nil
+    elsif server_port.empty?
+      port = loop do
+        socket = Socket.new(:INET, :STREAM, 0)
+        socket.bind(Addrinfo.tcp('127.0.0.1', 0))
+        port = socket.getsockname.unpack('snA*')[1]
+        socket.close
+        break port unless Redis.current.sismember('ports_in_use',port) || Connector.where(server_port: port).exists?
+      end
+      self.server_port = port
+    end
+  end
+
   def incoming_traffic_today
     bytes_today['in'].to_i
   end
@@ -154,4 +180,11 @@ class Connector < ActiveRecord::Base
   def closest_page
     page || (token && token.page) || (user && user.page)
   end
+
+  def http_only_if_free_account
+    if !http? && user.plan.free?
+      errors.add(:socket_type, 'not allowed for free plans')
+    end
+  end
+
 end

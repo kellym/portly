@@ -63,6 +63,7 @@ class Api::ConnectorsController < Api::BaseController
       if current_token.version < "1.0.0"
         h.delete(:nickname)
         h.delete(:socket_type)
+        h.delete(:server_port)
       end
       h
     end.to_json
@@ -80,6 +81,7 @@ class Api::ConnectorsController < Api::BaseController
         if current_token.version < "1.0.0"
           c.delete(:nickname)
           c.delete(:socket_type)
+          c.delete(:server_port)
         end
         c.to_json
       end
@@ -100,7 +102,7 @@ class Api::ConnectorsController < Api::BaseController
   post '/' do
     if request[:connection_string] || (request[:port] && request[:host])
       parse_connection_string
-      connector = Connector.create(
+      data = {
         user_id: current_user.id,
         token_id: current_token.id,
         user_port: request[:port].to_i,
@@ -109,12 +111,14 @@ class Api::ConnectorsController < Api::BaseController
         nickname: request[:nickname],
         cname: request[:cname],
         auth_type: request[:auth_type]
-      )
+      }
+      data[:socket_type] = request[:socket_type] if request[:socket_type]
+      connector = Connector.create(data)
       if connector
         response.status = 201
         EventSource.publish(current_user.id, 'new_connector', id: connector.id, token_id: current_token.id)
         publish_action "create:#{connector.id}"
-        response.body = {:id => connector.id}.to_json
+        response.body = {:id => connector.id, :server_port => connector.server_port }.to_json
       else
         halt 409
       end
@@ -148,6 +152,7 @@ class Api::ConnectorsController < Api::BaseController
           cname: request[:cname]
         }
         data[:auth_type] = request[:auth_type] if request[:auth_type]
+        data[:socket_type] = request[:socket_type] if request[:socket_type]
         if connector.update_attributes(data)
           EventSource.publish(current_user.id, 'update', id: connector.id, token_id: connector.token_id)
           publish_action "update:#{connector.id}"

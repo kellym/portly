@@ -322,6 +322,9 @@ class ApplicationController < SharedController
             current_user.activate!
             if current_plan_id != plan.id
               flash[:plan_change] = 'Your current plan has been updated.'
+              if plan.free?
+                current_user.connectors.update_all(socket_type: 'http', server_port: nil)
+              end
               current_user.tokens.each do |token|
                 Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
                 if plan.free?
@@ -360,6 +363,9 @@ class ApplicationController < SharedController
         current_user.schedule.update_attributes(plan_id: plan.id)
         customer.update_subscription(plan: stripe_plan)
         current_user.activate!
+        if plan.free?
+          current_user.connectors.update_all(socket_type: 'http', server_port: nil)
+        end
         current_user.tokens.each do |token|
           Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
           if plan.free?
