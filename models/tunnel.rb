@@ -131,10 +131,11 @@ class Tunnel
       pid = Redis.current.hget("raw:#{connector.id}", 'pid').to_i
       begin
         Process.kill("KILL", pid)
-        Process.wait(pid)
+        Process.wait
       rescue
         # if it fails to kill it, we'll clean it up later?
       end
+      Redis.current.del "raw:#{connector.id}"
     end
     if port
       EventSource.publish(connector.user_id, 'disconnect', @connector_id)
