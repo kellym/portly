@@ -138,7 +138,7 @@ class Connector < ActiveRecord::Base
   def get_server_port
     if http?
       server_port = nil
-    elsif server_port.empty?
+    elsif server_port.nil?
       port = loop do
         socket = Socket.new(:INET, :STREAM, 0)
         socket.bind(Addrinfo.tcp('127.0.0.1', 0))
