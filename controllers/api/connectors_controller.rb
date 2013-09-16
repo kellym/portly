@@ -58,7 +58,14 @@ class Api::ConnectorsController < Api::BaseController
   # Returns a JSON list of all the current connectors.
   get '/' do
     connectors = Connector.where(user_id: current_user.id, token_id: current_token.id)
-    connectors.map { |c| c.to_hash }.to_json
+    connectors.map do |c|
+      h = c.to_hash
+      if current_token.version < "1.0.0"
+        h.delete(:nickname)
+        h.delete(:socket_type)
+      end
+      h
+    end.to_json
   end
 
   # Public: Get a current connector for the user.
@@ -70,7 +77,10 @@ class Api::ConnectorsController < Api::BaseController
         render :'tunnels/_connector.haml', locals: { c: connector, token: current_token }, layout: nil
       else
         c = connector.to_hash
-        c.delete(:nickname) if current_token.version < "1.0.0"
+        if current_token.version < "1.0.0"
+          c.delete(:nickname)
+          c.delete(:socket_type)
+        end
         c.to_json
       end
     else
