@@ -15,7 +15,7 @@ class Api::AuthorizationsController < Api::BaseController
         token = Token.where(:user_id => current_user.id, :uuid => request[:uuid]).first
       end
       unless token
-        token = Token.create(:user_id => current_user.id, :computer_name => request[:computer_name], :computer_model => request[:computer_model])
+        token = Token.create(:user_id => current_user.id, :version => request[:version].to_s, :computer_name => request[:computer_name], :computer_model => request[:computer_model])
       end
       if current_user.auth_method.is_a?(String)
         # we used an API Key

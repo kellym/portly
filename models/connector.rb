@@ -54,7 +54,7 @@ class Connector < ActiveRecord::Base
   end
 
   def to_hash
-    {
+    hash = {
       id: id,
       host: user_host,
       port: user_port,
@@ -63,6 +63,10 @@ class Connector < ActiveRecord::Base
       auth_type: auth_type,
       auths: auths.map { |a| a.to_hash }
     }
+
+    hash[:nickname] = nickname if nickname
+
+    hash
   end
 
   # Public: Uses Redis to determine if the connector is currently online

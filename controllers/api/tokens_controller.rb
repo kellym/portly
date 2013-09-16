@@ -16,6 +16,7 @@ class Api::TokensController < Api::BaseController
       attrs[:computer_name] = request[:computer_name] if request[:computer_name].present?
       attrs[:computer_model] = request[:computer_model] if request[:computer_model].present?
       attrs[:uuid] = request[:uuid] if request[:uuid].present?
+      attrs[:version] = request[:version] if request[:version].present?
       token.update_attributes(attrs)
       {suffix: current_user.full_domain, plan_type: current_user.plan.name.downcase}.to_json
     else

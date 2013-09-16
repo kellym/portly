@@ -69,7 +69,9 @@ class Api::ConnectorsController < Api::BaseController
       if media_type.html?
         render :'tunnels/_connector.haml', locals: { c: connector, token: current_token }, layout: nil
       else
-        connector.to_hash.to_json
+        c = connector.to_hash
+        c.delete(:nickname) if current_token.version < "1.0.0"
+        c.to_json
       end
     else
       halt 403
