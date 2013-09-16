@@ -129,11 +129,14 @@ class Tunnel
     elsif connector.tcp?
       port = connector.server_port
       pid = Redis.current.hget("raw:#{connector.id}", 'pid').to_i
-      begin
-        Process.kill("TERM", pid)
-        Process.wait(pid)
-      rescue
-        # if it fails to kill it, we'll clean it up later?
+      if pid > 0
+        begin
+          Process.getpgid(pid)
+          Process.kill("TERM", pid)
+          Process.wait(pid)
+        rescue
+          # if it fails to kill it, we'll clean it up later?
+        end
       end
       Redis.current.del "raw:#{connector.id}"
     end
