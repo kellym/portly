@@ -50,6 +50,7 @@ App.config = {
       user: 'portlyuser'
     },
     authorized_keys_path: '/Users/portlyuser/.ssh/authorized_keys',
+    pro_authorized_keys_path: '/Users/portlyuser/.ssh/authorized_keys',
     tmp_path: '/Users/kelly/w/portly/tmp/'
   },
   staging: {
@@ -76,6 +77,7 @@ App.config = {
     stripe_secret_key: 'sk_live_PCHtykd8a92Emk7MwWytkOov',
     stripe_publishable_key: 'pk_live_lj3AYsMDdlNPKWhmMtgZDUhr',
     authorized_keys_path: '/home/portly_user/.ssh/authorized_keys2',
+    pro_authorized_keys_path: '/home/portly_pro/.ssh/authorized_keys2',
     server_key_path: '/var/www/portly/current/config/server/',
     log_path: '/var/www/portly/shared/log/',
     tmp_path: '/var/www/portly/shared/tmp/'

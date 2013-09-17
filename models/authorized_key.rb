@@ -20,9 +20,43 @@ class AuthorizedKey < ActiveRecord::Base
   # Internal: Save the ssh public_key to the authorized_keys file
   # so the user can access the server for tunneling.
   def save_to_file
-    File.open(App.config.authorized_keys_path, 'a') do |f|
-      f.puts "#{self.public_key} #{self.id}"
+    unless key_exists_in_file(App.config.authorized_keys_path)
+      File.open(App.config.authorized_keys_path, 'a') do |f|
+        f.puts "#{self.public_key} #{self.id}"
+      end
     end
+    if token.user.plan.free?
+      # remove it if it exists
+      if key_exists_in_file(App.config.pro_authorized_keys_path)
+        f = File.new(App.config.pro_authorized_keys_path, 'r+')
+        f.each do |line|
+          if line.chomp == "#{self.public_key} #{self.id}"
+            # seek back to the beginning of the line.
+            f.seek(-line.length, IO::SEEK_CUR)
+
+            # overwrite line with spaces and add a newline char
+            f.write(' ' * (line.length - 1))
+            f.write("\n")
+          end
+        end
+        f.close
+      end
+    elsif !key_exists_in_file(App.config.pro_authorized_keys_path)
+      File.open(App.config.pro_authorized_keys_path, 'a') do |file|
+        file.puts "#{self.public_key} #{self.id}"
+      end
+    end
+  end
+
+  def key_exists_in_file(file)
+    f = File.open(file)
+    f.each do line
+      line.chomp!
+      if line == "#{self.public_key} #{self.id}"
+         return true
+      end
+    end
+    false
   end
 
 end

@@ -326,6 +326,7 @@ class ApplicationController < SharedController
                 current_user.connectors.update_all(socket_type: 'http', server_port: nil)
               end
               current_user.tokens.each do |token|
+                token.authorized_key.save_to_file
                 Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
                 if plan.free?
                   Redis.current.sadd 'free_plan', token
@@ -367,6 +368,7 @@ class ApplicationController < SharedController
           current_user.connectors.update_all(socket_type: 'http', server_port: nil)
         end
         current_user.tokens.each do |token|
+          token.authorized_key.save_to_file
           Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
           if plan.free?
             Redis.current.sadd 'free_plan', token
