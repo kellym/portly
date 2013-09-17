@@ -26,7 +26,7 @@ class Tunnel
         end
       elsif connector.tcp?
         #pid = fork { exec "socat TCP-LISTEN:#{@port},fork TCP:#{App.config.tcp_ip}:#{@port}" }
-        #Redis.current.hmset "raw:#{connector.id}", 'port', @port, 'pid', pid
+        Redis.current.hmset "raw:#{connector.id}", 'port', @port #, 'pid', pid
       end
       EventSource.publish(connector.user_id, 'connect', @connector_id)
 
@@ -126,18 +126,18 @@ class Tunnel
         port ||= Redis.current.hget key, 'port'
         Redis.current.del key
       end
-    elsif connector.tcp? && false
+    elsif connector.tcp?
       port = connector.server_port
-      pid = Redis.current.hget("raw:#{connector.id}", 'pid').to_i
-      if pid > 0
-        begin
-          Process.getpgid(pid)
-          Process.kill("TERM", pid)
-          Process.wait(pid)
-        rescue
-          # if it fails to kill it, we'll clean it up later?
-        end
-      end
+      #pid = Redis.current.hget("raw:#{connector.id}", 'pid').to_i
+      #if pid > 0
+      #  begin
+      #    Process.getpgid(pid)
+      #    Process.kill("TERM", pid)
+      #    Process.wait(pid)
+      #  rescue
+      #    # if it fails to kill it, we'll clean it up later?
+      #  end
+      #end
       Redis.current.del "raw:#{connector.id}"
     end
     if port
