@@ -160,7 +160,11 @@ class Tunnel
   #
   # Returns a Boolean of whether it is valid or not.
   def valid?
-    required_values? && authorized? && socket_online? && within_account_limit? && (!connector.http? || address_available?)
+    if connector.http?
+      required_values? && authorized? && socket_online? && within_account_limit? && address_available?
+    elsif connector.tcp?
+      required_values? && authorized? && socket_online? && within_account_limit? && !port_in_use?
+    end
   end
 
   # Internal: Finds the connector which this tunnel will use to connect to.
@@ -169,6 +173,13 @@ class Tunnel
   # Returns a Connector or nil.
   def connector
     @connector ||= Connector.where(id: @connector_id, user_id: @user_id).first
+  end
+
+  # Internal: Determines if the port is already in use if it's a TCP socket
+  #
+  # Returns a Boolean.
+  def port_in_use?
+    Redis.current.sismember 'ports_in_use', connector.server_port
   end
 
   # Internal: Determines if the socket is online before we try to connect.
