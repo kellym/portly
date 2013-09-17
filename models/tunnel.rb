@@ -25,8 +25,8 @@ class Tunnel
                                    'connected_at', DateTime.now
         end
       elsif connector.tcp?
-        pid = fork { exec "socat TCP-LISTEN:#{@port},fork TCP:#{App.config.tcp_ip}:#{@port}" }
-        Redis.current.hmset "raw:#{connector.id}", 'port', @port, 'pid', pid
+        #pid = fork { exec "socat TCP-LISTEN:#{@port},fork TCP:#{App.config.tcp_ip}:#{@port}" }
+        #Redis.current.hmset "raw:#{connector.id}", 'port', @port, 'pid', pid
       end
       EventSource.publish(connector.user_id, 'connect', @connector_id)
 
@@ -126,7 +126,7 @@ class Tunnel
         port ||= Redis.current.hget key, 'port'
         Redis.current.del key
       end
-    elsif connector.tcp?
+    elsif connector.tcp? && false
       port = connector.server_port
       pid = Redis.current.hget("raw:#{connector.id}", 'pid').to_i
       if pid > 0
