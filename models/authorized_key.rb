@@ -50,7 +50,7 @@ class AuthorizedKey < ActiveRecord::Base
 
   def key_exists_in_file(file)
     f = File.open(file)
-    f.each do line
+    f.each do |line|
       line.chomp!
       if line == "#{self.public_key} #{self.id}"
          return true
