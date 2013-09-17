@@ -98,7 +98,13 @@ class Tunnel
   end
 
   def connection_string
-    @connection_string ||= [App.config.forwarding_server.user,App.config.forwarding_server.host].join '@'
+    if connector.user.plan.free? || connector.http?
+      user = App.config.forwarding_server.user
+    elsif connector.tcp?
+      user = App.config.forwarding_server.tcp_user
+    end
+
+    @connection_string ||= [user,App.config.forwarding_server.host].join '@'
   end
 
   def tunnel_string

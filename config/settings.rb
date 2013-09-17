@@ -47,7 +47,8 @@ App.config = {
     forwarding_server: {
       localhost: 'localhost',
       host: 'localhost',
-      user: 'portlyuser'
+      user: 'portlyuser',
+      tcp_user: 'portlyuser'
     },
     authorized_keys_path: '/Users/portlyuser/.ssh/authorized_keys',
     pro_authorized_keys_path: '/Users/portlyuser/.ssh/authorized_keys',
@@ -62,7 +63,8 @@ App.config = {
     forwarding_server: {
       localhost: 'localhost',
       host: 'getportly.com',
-      user: 'portly_user'
+      user: 'portly_user',
+      tcp_user: 'portly_pro'
     },
     event_server: {
       host: '72.14.178.208',
