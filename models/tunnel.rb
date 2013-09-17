@@ -179,7 +179,7 @@ class Tunnel
   #
   # Returns a Boolean.
   def port_in_use?
-    Redis.current.sismember 'ports_in_use', connector.server_port
+    Redis.current.exists "raw:#{connector.id}"
   end
 
   # Internal: Determines if the socket is online before we try to connect.
