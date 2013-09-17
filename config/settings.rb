@@ -47,6 +47,7 @@ App.config = {
     forwarding_server: {
       localhost: 'localhost',
       host: 'localhost',
+      short_host: 'portly.co',
       user: 'portlyuser',
       tcp_user: 'portlyuser'
     },
@@ -63,6 +64,7 @@ App.config = {
     forwarding_server: {
       localhost: 'localhost',
       host: 'getportly.com',
+      short_host: 'portly.co',
       user: 'portly_user',
       tcp_user: 'portly_pro'
     },

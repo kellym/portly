@@ -64,6 +64,7 @@ class Api::ConnectorsController < Api::BaseController
         h.delete(:nickname)
         h.delete(:socket_type)
         h.delete(:server_port)
+        h.delete(:server_host)
       end
       h
     end.to_json
@@ -82,6 +83,7 @@ class Api::ConnectorsController < Api::BaseController
           c.delete(:nickname)
           c.delete(:socket_type)
           c.delete(:server_port)
+          c.delete(:server_host)
         end
         c.to_json
       end
@@ -118,7 +120,7 @@ class Api::ConnectorsController < Api::BaseController
         response.status = 201
         EventSource.publish(current_user.id, 'new_connector', id: connector.id, token_id: current_token.id)
         publish_action "create:#{connector.id}"
-        response.body = {:id => connector.id, :server_port => connector.server_port }.to_json
+        response.body = {:id => connector.id, :server_port => connector.server_port, :server_host => connector.server_host }.to_json
       else
         halt 409
       end

@@ -63,6 +63,10 @@ class Connector < ActiveRecord::Base
     socket_type == 'tcp'
   end
 
+  def server_host
+    App.config.forwarding_server.short_host
+  end
+
   def to_hash
     {
       id: id,
@@ -72,6 +76,7 @@ class Connector < ActiveRecord::Base
       nickname: nickname,
       socket_type: socket_type,
       server_port: server_port,
+      server_host: server_host,
       cname: cname,
       auth_type: auth_type,
       auths: auths.map { |a| a.to_hash }
