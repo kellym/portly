@@ -4,8 +4,12 @@
       .large-8.columns
         %span.connected-state{:class => "state-#{c.connected? ? 'online' : 'offline'}" + ((token.online? && c.enabled?) ? '' : ' state-disabled') }
         %span.domain
-          - domain = c.cname.present? ? c.cname : c.full_subdomain
-          - url = c.http? ? ("#{c.cname.present? ? 'http' : 'https'}://#{domain}") : "#{c.server_host}:#{c.server_port}"
+          - if c.http?
+            - domain = c.cname.present? ? c.cname : c.full_subdomain
+            - url = "#{c.cname.present? ? 'http' : 'https'}://#{domain}"
+          - else
+            - domain = "#{c.server_host}:#{c.server_port}"
+            - url = domain
           - if c.connected?
             %a.link.copyable{href: url, target: '_blank'}= domain
           - else
