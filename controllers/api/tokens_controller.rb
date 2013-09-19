@@ -18,7 +18,7 @@ class Api::TokensController < Api::BaseController
       attrs[:uuid] = request[:uuid] if request[:uuid].present?
       attrs[:version] = request[:version] if request[:version].present?
       token.update_attributes(attrs)
-      {suffix: current_user.full_domain, plan_type: current_user.plan.name.downcase}.to_json
+      {suffix: current_user.full_domain, plan_type: current_user.plan.name}.to_json
     else
       halt 403
     end
