@@ -74,29 +74,25 @@ task :'thin:restart' => :environment do
 end
 
 task :'cron:start' => :environment do
-  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby cron_control.rb start]
+  queue! %[eye start portly:cron]
 end
-
 task :'cron:stop' => :environment do
-  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby cron_control.rb stop]
+  queue! %[eye stop portly:cron]
 end
 
 task :'data_monitor:start' => :environment do
-  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby data_monitor_control.rb start]
+  queue! %[eye start portly:data_monitor]
 end
-
 task :'data_monitor:stop' => :environment do
-  queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby data_monitor_control.rb stop]
+  queue! %[eye stop portly:data_monitor]
 end
 
 task :'socket:start' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb start && #{bundle_prefix} ruby tracking_control.rb start && #{bundle_prefix} ruby server_control.rb start]
 end
-
 task :'socket:stop' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb stop && #{bundle_prefix} ruby server_control.rb stop]
 end
-
 task :'socket:restart' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb restart && #{bundle_prefix} ruby server_control.rb restart]
 end
