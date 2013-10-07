@@ -52,7 +52,7 @@ Warden::Strategies.add(:api_token) do
     t = Token.where(code: params['access_token']).first
     if t
       if params['computer_name'] && params['computer_name'] != t.computer_name
-        t.update(computer_name: params['computer_name'])
+        t.update_attributes(computer_name: params['computer_name'])
       end
       success!(t.user)
     else
