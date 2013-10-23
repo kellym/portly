@@ -1,5 +1,6 @@
 #= require vendor/custom.modernizr.js
 #= require vendor/jquery
+#= require vendor/smartquotes
 #= require vendor/json2
 #= require vendor/underscore
 #= require vendor/backbone
