@@ -20,7 +20,7 @@ Thread.new do
           if action == 'socket' && args.first == 'off'
             # kill all the connectors this way, since sometimes they can stagnate
             token = Token.where(:code => socket).first
-            token.disconnect
+            token.disconnect if token
           else
             token = Token.select('tokens.id, tokens.user_id').where(:code => socket).first
           end
