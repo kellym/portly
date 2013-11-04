@@ -71,6 +71,7 @@ class EventServer < EM::Connection
     when /^STATE:([0-9]+):(.*)/
       connector = $1
       state = $2
+      LOG.debug "state change of #{connector}: #{state}"
       token = SOCKETS.key(self)
       if state == 'on'
         redis.sadd "connectors_enabled:#{token}", connector do
