@@ -85,7 +85,7 @@ class EventServer < EM::Connection
         end
       end
     else
-      LOG.debug "---- data received: #{data}"
+      #LOG.debug "---- data received: #{data}"
       ping
     end
   end
