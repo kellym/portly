@@ -68,7 +68,7 @@ class EventServer < EM::Connection
       redis.publish "track_ip:on", "#{token}|#{@ip_address}|#{@online}"
       redis.publish 'socket_monitor', "#{token}:socket:on"
 
-    when /^STATE:([0-9]+):(.*)/
+    when /^S?TATE:([0-9]+):(.*)/ # bug in 1.0.5 made the S need to be optional
       connector = $1
       state = $2
       LOG.debug "state change of #{connector}: #{state}"
