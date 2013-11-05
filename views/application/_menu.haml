@@ -1,10 +1,10 @@
 %header#main
   .row
-    .large-4.columns
-      %h1.logo.black.margin-top-20.margin-bottom-20.margin-left-40
-        %a{:href => '/'} Portly
-    .large-8.columns
-      %ul.front-page-nav
-        %li= nav_link_to 'Tunnels', '/tunnels', restful: true
-        %li= nav_link_to 'Account', '/account'
-        %li= link_to 'Sign Out', '/signout', :class => 'signout'
+    %h1.logo.black.margin-top-20
+      %a{:href => '/'} Portly
+    .large-12.columns
+      %nav.nav-collapse
+        %ul.front-page-nav
+          %li= nav_link_to 'Tunnels', '/tunnels', restful: true
+          %li= nav_link_to 'Account', '/account'
+          %li= link_to 'Sign Out', '/signout', :class => 'signout'

@@ -1,18 +1,18 @@
 %header#main{:class => @show_logo ? '' : 'marketing-header'}
   .row
-    .large-4.columns
-      - if @show_logo
-        %h1.logo.black.margin-top-30.margin-bottom-30.margin-left-40
-          %a{:href => '/'} Portly
-    .large-8.columns
-      %ul.front-page-nav.menu
-        %li= nav_link_to 'Plans', '/plans'
-        %li= nav_link_to 'Blog', '/blog'
-        %li= nav_link_to 'Support', '/support'
-        - if signed_in?
-          %li.signin= nav_link_to 'Sign Out', '/signout', class: 'button signout-button'
-        - else
-          %li.signin= nav_link_to 'Sign In', '#!/signin', class: 'button signin-button', 'data-dropdown' => 'signin'
+    - if @show_logo
+      %h1.logo.black.margin-top-30
+        %a{:href => '/'} Portly
+    .large-12.columns
+      %nav.nav-collapse
+        %ul.front-page-nav.menu
+          %li= nav_link_to 'Plans', '/plans'
+          %li= nav_link_to 'Blog', '/blog'
+          %li= nav_link_to 'Support', '/support'
+          - if signed_in?
+            %li.signin= nav_link_to 'Sign Out', '/signout', class: 'button signout-button'
+          - else
+            %li.signin= nav_link_to 'Sign In', '#!/signin', class: 'button signin-button', 'data-dropdown' => 'signin'
       - unless signed_in?
         #signin.f-dropdown
           %form{:action => '/signin', :method => 'post'}

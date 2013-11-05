@@ -1,0 +1,64 @@
+.nav-collapse
+  ul
+    margin: 0
+    padding: 0
+    display: block
+    list-style: none
+  li
+    display: block
+
+@media screen and (max-width: 52em)
+  .js .nav-collapse
+    clip: rect(0 0 0 0)
+    max-height: 0
+    position: absolute
+    display: block
+    overflow: hidden
+    zoom: 1
+
+  .nav-collapse
+    max-height: 9999px !important
+    margin-left: -0.9375em
+    margin-right: -0.9375em
+    background: #777
+    color: #fff
+    ul
+      width: 100% !important
+      margin: 0 !important
+      li
+        width: 100% !important
+        padding: 10px 0 !important
+        border-bottom: 1px solid #999
+        height: auto !important
+        a
+          color: #fff !important
+          width: auto !important
+          background: none !important
+          margin: 0 !important
+
+.nav-toggle
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  -o-user-select: none
+  user-select: none
+  padding: 100px 0 0
+  height: 0
+  float: right
+  width: 100px
+  overflow: hidden
+  display: block
+  background: #777 url('/images/hamburger-retina.gif') 0 0 no-repeat
+  background-size: 100px 100px
+
+@media screen and (min-width: 52em)
+  .js .nav-collapse
+    position: relative
+    &.closed
+      max-height: none
+  .nav-toggle
+    display: none
+  .nav-collapse #main ul.interior-nav li, .nav-collapse #main ul.front-page-nav li
+    width: 100%

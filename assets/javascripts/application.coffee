@@ -7,6 +7,7 @@
 #= require vendor/creditcard
 #= require vendor/autogrow
 #= require vendor/menu
+#= require vendor/responsive-nav
 #= require vendor/pjax
 #= require vendor/tipsy
 #= require foundation/index
