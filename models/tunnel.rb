@@ -22,7 +22,8 @@ class Tunnel
                                    'connector_id', @connector_id,
                                    'host', "#{connector.user_host}:#{connector.user_port}",
                                    'token', @token,
-                                   'connected_at', DateTime.now
+                                   'connected_at', DateTime.now,
+                                   'original_port', connector.user_port
         end
       elsif connector.tcp?
         #pid = fork { exec "socat TCP-LISTEN:#{@port},fork TCP:#{App.config.tcp_ip}:#{@port}" }
