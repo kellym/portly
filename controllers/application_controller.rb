@@ -151,7 +151,7 @@ class ApplicationController < SharedController
         @show_logo = true
         render :'account/reset_password_sent', :layout => :'layouts/marketing'
       else
-        @form_errors = @user.errors
+        @form_errors = nil #@user.errors
         render :'account/reset_password', :layout => :'layouts/marketing'
       end
     end
