@@ -5,6 +5,7 @@ class Connector < ActiveRecord::Base
   # property :user_host, String, length: 255
   # property :user_port, Integer
   # property :user_ip, String
+  # property :path, String
   # property :token_id, Integer
   # property :connector_string, String
   # property :subdomain, String, unique: true
@@ -79,6 +80,7 @@ class Connector < ActiveRecord::Base
       server_host: server_host,
       cname: cname,
       auth_type: auth_type,
+      path: path,
       auths: auths.map { |a| a.to_hash }
     }
   end
@@ -169,6 +171,12 @@ class Connector < ActiveRecord::Base
 
   def bytes_today
     @bytes ||= Redis.current.hgetall("bytes:#{self.id}") rescue {'in' => 0, 'out' => 0}
+  end
+
+  def path=(val)
+    val = '/' + val if val[0]!='/'
+    val.gsub!(/\/*$/, '')
+    super(val)
   end
 
   def data_this_month

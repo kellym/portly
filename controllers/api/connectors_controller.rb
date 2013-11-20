@@ -1,4 +1,5 @@
 class Api::ConnectorsController < Api::BaseController
+
   # Public: Creates a new auth user for connecting to this Connector
   post '/*/auths' do |connector_id|
     authorize! connector_id
@@ -65,6 +66,7 @@ class Api::ConnectorsController < Api::BaseController
         h.delete(:socket_type)
         h.delete(:server_port)
         h.delete(:server_host)
+        h.delete(:path)
       end
       h
     end.to_json
@@ -84,6 +86,7 @@ class Api::ConnectorsController < Api::BaseController
           c.delete(:socket_type)
           c.delete(:server_port)
           c.delete(:server_host)
+          c.delete(:path)
         end
         c.to_json
       end
@@ -109,6 +112,7 @@ class Api::ConnectorsController < Api::BaseController
         token_id: current_token.id,
         user_port: request[:port].to_i,
         user_host: request[:host],
+        path: request[:path],
         subdomain: request[:subdomain],
         nickname: request[:nickname],
         cname: request[:cname],
