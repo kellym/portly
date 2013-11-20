@@ -175,7 +175,7 @@ class Connector < ActiveRecord::Base
 
   def path=(val)
     val = '/' + val if val[0]!='/'
-    val.gsub!(/\/*$/, '')
+    val.gsub!(/[\/\s]*$/, '')
     super(val)
   end
 
