@@ -174,6 +174,7 @@ class Connector < ActiveRecord::Base
   end
 
   def path=(val)
+    return super(val) unless val
     val = '/' + val if val[0]!='/'
     val.gsub!(/[\/\s]*$/, '')
     super(val)
