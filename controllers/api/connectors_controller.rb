@@ -163,6 +163,7 @@ class Api::ConnectorsController < Api::BaseController
         }
         data[:auth_type] = request[:auth_type] if request[:auth_type]
         data[:socket_type] = request[:socket_type] if request[:socket_type]
+        data[:path] = request[:path] if request[:path]
         if connector.update_attributes(data)
           EventSource.publish(current_user.id, 'update', id: connector.id, token_id: connector.token_id)
           publish_action "update:#{connector.id}"
