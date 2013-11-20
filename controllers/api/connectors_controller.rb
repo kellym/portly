@@ -66,6 +66,8 @@ class Api::ConnectorsController < Api::BaseController
         h.delete(:socket_type)
         h.delete(:server_port)
         h.delete(:server_host)
+      end
+      if current_token.version < "1.1.2"
         h.delete(:path)
       end
       h
@@ -86,6 +88,8 @@ class Api::ConnectorsController < Api::BaseController
           c.delete(:socket_type)
           c.delete(:server_port)
           c.delete(:server_host)
+        end
+        if current_token.version < "1.1.2"
           c.delete(:path)
         end
         c.to_json
