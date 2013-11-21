@@ -57,6 +57,12 @@ class Tunnel
     #  return
     #end
 
+    if connector.path_changed?
+      tunnel.address_keys.each do |key|
+        Redis.current.hset key, 'folder', connector.path
+      end
+    end
+
     if connector.auth_type_changed?
       tunnel.address_keys.each do |key|
         Redis.current.hset key, 'auth', (connector.auth_type == 'basic')
