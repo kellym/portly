@@ -32,6 +32,7 @@ class Api::TunnelsController < Api::BaseController
         @error = 'exceeded_limit'
         halt 400 #, {error: 'exceeded_limit'}.to_json
       else
+        response.body = {error: tunnel.errors.first.to_s}.to_json
         halt 400
       end
     end
