@@ -301,9 +301,11 @@ class Tunnel
   # Returns a Boolean of false if there is already a connector, true otherwise.
   def address_available?
     address_keys.each do |key|
-      if Redis.current.exists key
-        @errors << :already_connected
-        return false
+      if Redis.current.exists(key)
+        if Redis.current.hget(key, 'connector_id').to_s != @connector_id.to_s
+          @errors << :already_connected
+          return false
+        end
       end
     end
     true
