@@ -7,7 +7,7 @@ class Api::TunnelsController < Api::BaseController
   # Returns data with the ip and port to connect to
   post '/' do
     # require a connector_id
-    halt 400 unless request[:connector_id]
+    halt 400, {error: 'missing_id'}.to_json unless request[:connector_id]
     authorize! request[:connector_id]
 
     # depending on account, must be same IP as current open connectors
@@ -25,15 +25,11 @@ class Api::TunnelsController < Api::BaseController
       if tunnel.errors.include? :not_authorized
         halt 403
       elsif tunnel.errors.include? :already_connected
-        @error = 'already_connected'
-        response.body = {error: 'already_connected'}.to_json
-        halt 400
+        halt 400, {error: 'already_connected'}.to_json
       elsif tunnel.errors.include? :exceeded_limit
-        @error = 'exceeded_limit'
-        halt 400 #, {error: 'exceeded_limit'}.to_json
+        halt 400, {error: 'exceeded_limit'}.to_json
       else
-        response.body = {error: tunnel.errors.first.to_s}.to_json
-        halt 400
+        halt 400, {error: tunnel.errors.first.to_s}.to_json
       end
     end
   end

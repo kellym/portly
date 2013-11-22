@@ -45,9 +45,9 @@ class Api
       response['Content-Type'] = media_type.to_s
     end
 
-    after status: 400 do
-      response.body = {error: @error}.to_json if @error
-    end
+    #after status: 400 do
+    #  response.body = {error: @error}.to_json if @error
+    #end
 
     after status: 404 do
       puts '404'
