@@ -26,7 +26,8 @@ class Api::TunnelsController < Api::BaseController
         halt 403
       elsif tunnel.errors.include? :already_connected
         @error = 'already_connected'
-        halt 400, {error: 'already_connected'}.to_json
+        response.body = {error: 'already_connected'}.to_json
+        halt 400
       elsif tunnel.errors.include? :exceeded_limit
         @error = 'exceeded_limit'
         halt 400 #, {error: 'exceeded_limit'}.to_json
