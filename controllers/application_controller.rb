@@ -157,6 +157,10 @@ class ApplicationController < SharedController
     end
   end
 
+  get '/wordpress-support' do
+    redirect 'http://wordpress.org/plugins/portly-router/', 301
+  end
+
   get '/support' do
     render :support, :layout => user_layout
   end
