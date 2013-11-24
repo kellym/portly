@@ -1,94 +1,140 @@
-.width-100.intro-background
-  .row.intro
-    .large-5.columns
-      %header.emphasis
-        %h1
-          %a{:href => '/'} Portly
-        %p.text-center
-          Share changes to your local web server. <br />
-          No mess and in no time.
-      .trial.text-center.margin-bottom-60
-        %a.button.large{:href => '/signup'} GET STARTED
-        %p Try it for Free
-    .large-7.columns
-.row.gradient
-  .large-12.columns.text-center
-    %h2 Dynamic IPs are a problem of the past.
-    %p
-      Install Portly in seconds and you can immediately share direct access to your local web server. <br />
-      No need to hassle changing your firewall, rerouting IP addresses, or worrying about unwelcome intruders.
-.row.narrow.margin-bottom-20
-  .large-12.columns
-    .p-rocket.bigger.left.margin-top-10
-    .margin-left-120
-      %h3 Fast
-      %p
-        Installs in seconds, and setting up a tunnel is a few clicks away.
-        You can start and stop tunnels from your status bar, from the web, or
-        on your phone.
-.row.narrow.margin-bottom-20
-  .large-12.columns
-    .p-image.bigger.left.margin-top-10
-    .margin-left-120
-      %h3 Customizable
-      %p
-        When your sites are offline, you can set up your own placeholder page to
-        let people know. Direct them elsewhere, or use it as your own About page.
-.row.narrow.margin-bottom-20
-  .large-12.columns
-    .p-shield.bigger.left.margin-top-10
-    .margin-left-120
-      %h3 Secure
-      %p
-        Data travels over a secure SSH tunnel between our server and your computer.
-        All communication comes over an encrypted line, and your sites are
-        accessible over HTTPS or HTTP.  Your IP address is never exposed to the
-        world. In addition, you can set up basic HTTP auth to lock down your sites.
-.row.narrow.margin-bottom-50
-  .large-12.columns
-    .p-stack.bigger.left.margin-top-10
-    .margin-left-120
-      %h3 Versatile
-      %p
-        There's a lot of flexibility in using Portly.  Integrate Pow for easily
-        automating subdomains.  Use Portly to test mobile sites, Facebook
-        integration, and just about anything else where you'll need a public
-        endpoint.
-.row.gradient
-  .large-12.columns.text-center
-    %h2 Speed up development time, host your own blog, and more.
-    %p
-      The more you use Portly, the more uses you'll find for it.  Build prototypes
-      and show them off instantly. <br />Control MythTV and other tools while you are
-      away from home. Route non-Mac computers through your Mac running Portly.
-.row.narrow
-  .large-3.columns
-    .p-facebook.big.text-center.box.margin-top-10
-    %h5.text-center Facebook Testing
-  .large-3.columns
-    .p-mobile.big.text-center.box.margin-top-10
-    %h5.text-center Mobile Testing
-  .large-3.columns
-    .p-folder-open.big.text-center.box.margin-top-10
-    %h5.text-center Access Local Files
-  .large-3.columns
-    .p-windows.big.text-center.box.margin-top-10
-    %h5.text-center Network Computers
-.row.margin-top-50
-  .large-3.columns.large-offset-2
-    %h5.margin-top-30 Start Using Portly
-    %ol
-      %li
-        %a{:href => '/signup'} Sign up
-      %li
-        %a{:href => '/download'} Download the app
-      %li
-        Create a tunnel and go
-  .large-5.left.columns
-    .panel
-      %h5 Already signed up, <br/> or using a business account?
-      %p
-        %a{:href => '/download'} Download
-        the app now and use your account information or
-        an API key to start using Portly.
-  .large-1.columns
+!!!html
+%html.homepage
+  %head
+    %title= App.config.site.title
+    = stylesheet_include_tag 'application'
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %meta(charset='utf-8')
+    %meta{ name: "description", content: @meta_description || "Share changes to your local web server. We'll handle all the SSH tunnels to do the port forwarding."}
+    %script(type="text/javascript" src="//use.typekit.net/xrn5yvu.js")
+    %script(type="text/javascript") try{Typekit.load();}catch(e){}
+    = javascript_include_tag 'application'
+    = javascript_include_tag 'parallax'
+  %body
+    .container
+      %canvas#main-canvas
+      %img.background{src: '/images/home/bg.jpg', 'data-stellar-ratio' => 0.5}
+      = render :'application/_marketing_menu'
+      .width-100
+        .row.intro
+          .large-12.columns
+            %header.emphasis
+              %h2
+                Work remotely. <br />
+                Share changes instantly.
+              %p
+                Show clients work on your local server <br />
+                with no mess and no deployment.
+            .trial.margin-bottom-20
+              %a.button.large{:href => '/signup'} Try Portly for Free
+      .row.width-100
+        .large-12.columns.text-center.dark-bg
+          .demo-top
+            %h3.margin-top-50.margin-bottom-20 Dynamic IP addresses are a problem of the past.
+            %p
+              Install Portly in seconds and you can immediately share direct access to your local web server.  <br />
+              No need to hassle changing your firewall or worrying about unwelcome intruders. Even share from the coffeeshop.
+          .demo
+            .dummy
+            %img{src: '/images/home/demo.jpg', 'data-stellar-ratio' => 0.95, 'data-stellar-vertical-offset' => '700'}
+      .width-100
+        .large-12.columns.shadow-top.white-bg
+          .row.width-normal.margin-top-50.margin-bottom-30
+            .large-4.columns.text-center
+              .icon-home.bigger
+              %h3 Personal Subdomain
+              %p Give clients and co-workers a direct<br /> link to the website you're building.
+            .large-4.columns.text-center.padding-0
+              .icon-social-wordpress.bigger
+              %h3 Easy WordPress Integration
+              %p Install Portly and the zero-config<br /> WordPress plugin with no hassle.
+            .large-4.columns.text-center
+              .icon-home.bigger
+              %h3 Typekit Support
+              %p As a Portly Pro user, select typefaces<br /> from the full Typekit library and<br /> try them out on your site.
+      .width-100
+        .large-12.columns.offwhite-bg
+          .row.narrow.margin-bottom-20
+            .large-12.columns
+              %h3.margin-top-50.margin-bottom-40 Speed up development time, host your own blog, and more.
+              .icon-ios7-timer.bigger.left.margin-top-10
+              .margin-left-120
+                %h4 Fast
+                %p
+                  Installs in seconds, and setting up a port is a few clicks away.
+                  You can start and stop ports from your status bar, from the web, or
+                  on your phone.
+          .row.narrow.margin-bottom-20
+            .large-12.columns
+              .icon-image.bigger.left.margin-top-10
+              .margin-left-120
+                %h4 Customizable
+                %p
+                  When your sites are offline, you can set up your own placeholder page to
+                  let people know. Direct them elsewhere, or use it as your own About page.
+          .row.narrow.margin-bottom-20
+            .large-12.columns
+              .icon-locked.bigger.left.margin-top-10
+              .margin-left-120
+                %h4 Secure
+                %p
+                  Data travels over a secure SSH tunnel between our server and your computer.
+                  All communication comes over an encrypted line, and your sites are
+                  accessible over HTTPS (for Pro) or HTTP.  Your IP address is never exposed to the
+                  world. Pro users can additionally can secure sites with password protection.
+          .row.narrow.margin-bottom-50
+            .large-12.columns
+              .icon-ios7-photos.bigger.left.margin-top-10
+              .margin-left-120
+                %h4 Versatile
+                %p
+                  There's a lot of flexibility in using Portly.  Integrate Pow for easily
+                  automating subdomains.  Use Portly to test mobile sites, Facebook
+                  integration, and just about anything else where you'll need a public
+                  endpoint.
+      .width-100
+        .large-12.columns.dark-bg
+          .row.narrow.margin-top-30.margin-bottom-30.text-center
+            .large-3.columns.small-6
+              .icon-social-facebook.big
+              %h5 Facebook Testing
+            .large-3.columns.small-6
+              .icon-iphone.big
+              %h5 Mobile Testing
+            .large-3.columns.small-6
+              .icon-folder.big
+              %h5 Access Local Files
+            .large-3.columns.small-6
+              .icon-social-windows.big
+              %h5 Network Computers
+
+      .width-100
+        .large-12.columns.white-bg
+          .row
+            .margin-top-50
+              .large-3.columns.large-offset-2.small-12
+                %h5.margin-top-30 Start Using Portly
+                %ol
+                  %li
+                    %a{:href => '/signup'} Sign up
+                  %li
+                    %a{:href => '/download'} Download the app
+                  %li
+                    Start a port and go
+              .large-5.left.columns.small-12
+                .panel
+                  %h5 Already signed up, <br/> or using a business account?
+                  %p
+                    %a{:href => '/download'} Download
+                    the app now and use your account information or
+                    an API key to start using Portly.
+              .large-1.columns.hide-on-small
+
+    = render :'application/_marketing_footer'
+    :coffeescript
+      responsiveNav ".nav-collapse"
+    = render :'application/_analytics'
+    = content_for :javascripts
+    :javascript
+      hljs.initHighlightingOnLoad()
+      $(function(){/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {   window.scrollTo(0, 1); }, 1000); });

@@ -194,16 +194,16 @@ class ApplicationController < SharedController
       redirect '/tunnels'
     else
       @html_class = 'homepage'
-      render :homepage, :layout => :'layouts/marketing'
+      render :homepage, :layout => nil
     end
   end
 
   get '/upgrade' do
     if signed_in?
-      session[:plan] = request[:plan]
+      session[:plan] = request[:plan] || 'pro'
       redirect '/billing', 302
     else
-      redirect "/signup?plan=#{request[:plan]}", 302
+      redirect "/signup?plan=#{request[:plan] || 'pro'}", 302
     end
   end
 

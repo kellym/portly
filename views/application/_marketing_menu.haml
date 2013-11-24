@@ -1,9 +1,8 @@
 %header#main{:class => @show_logo ? '' : 'marketing-header'}
   .row
-    - if @show_logo
-      %h1.logo.black.margin-top-30
-        %a{:href => '/'} Portly
     .large-12.columns
+      %h1.logo.margin-top-35
+        %a{:href => '/'} Portly
       %nav.nav-collapse
         %ul.front-page-nav.menu
           %li= nav_link_to 'Plans', '/plans'

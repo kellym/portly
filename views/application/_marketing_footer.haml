@@ -1,30 +1,32 @@
 %footer
-  .row.padding-top-20
-    .large-3.columns
-      %h6.header Portly
-      %ul.side-nav.padding-top-0
-        %li
-          %a{:href => '/download'} Download
-        %li
-          %a{:href => '/plans'} Plans
-    .large-3.columns
-      %h6.header Support
-      %ul.side-nav.padding-top-0
-        %li
-          %a{:href => '/support'} Help Center
-        %li
-          %a{:href => '/terms'} Terms &amp; Privacy
-        %li
-          %a{:href => '/support?contact'} Contact Us
-    .large-6.columns
-      %h6.header Recent Blog Posts
-      %ul.side-nav.padding-top-0
-        = File.read("./blog/home.html")
-        %li.margin-top-10
-          %a{:href => '/blog'} Read more
-  .copyright.text-center
-    %small &copy; 2013 Portly
-    -#.large-3.large-offset-3.columns.padding-top-75.text-right
-      %small Copyright &copy; 2013 Portly
+  .width-100
+    .large-12.columns.offwhite-bg
+      .row.padding-top-30.padding-bottom-10
+        .large-3.columns
+          %h6.header Portly
+          %ul.side-nav.padding-top-0
+            %li
+              %a{:href => '/download'} Download
+            %li
+              %a{:href => '/plans'} Plans
+        .large-3.columns
+          %h6.header Support
+          %ul.side-nav.padding-top-0
+            %li
+              %a{:href => '/support'} Help Center
+            %li
+              %a{:href => '/terms'} Terms &amp; Privacy
+            %li
+              %a{:href => '/support?contact'} Contact Us
+        .large-6.columns
+          %h6.header Recent Blog Posts
+          %ul.side-nav.padding-top-0
+            = File.read("./blog/home.html")
+            %li.margin-top-10
+              %a{:href => '/blog'} Read more
+  .row.width-100
+    .large-12.columns.dark-bg
+      .copyright.text-center
+        %small &copy; 2013 Portly
 
 
