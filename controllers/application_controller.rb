@@ -203,11 +203,12 @@ class ApplicationController < SharedController
   end
 
   get '/upgrade' do
+    request[:plan] ||= 'glazed'
     if signed_in?
       session[:plan] = request[:plan]
       redirect '/billing', 302
     else
-      redirect "/signup?plan=#{request[:plan]}", 302
+      redirect "/signin?plan=#{request[:plan]}", 302
     end
   end
 
