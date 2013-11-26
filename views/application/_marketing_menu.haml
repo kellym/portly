@@ -1,6 +1,7 @@
+- size = @size || 12
 %header#main{:class => @show_logo ? '' : 'marketing-header'}
   .row
-    .large-12.columns
+    .columns{class: "large-#{size}"}
       %h1.logo.margin-top-35
         %a{:href => '/'} Portly
       %nav.nav-collapse
@@ -9,9 +10,9 @@
           %li= nav_link_to 'Blog', '/blog'
           %li= nav_link_to 'Support', '/support'
           - if signed_in?
-            %li.signin= nav_link_to 'Sign Out', '/signout', class: 'button signout-button'
+            %li.signin= nav_link_to 'Sign Out', '/signout', class: 'button signout-button pink'
           - else
-            %li.signin= nav_link_to 'Sign In', '#!/signin', class: 'button signin-button', 'data-dropdown' => 'signin'
+            %li.signin= nav_link_to 'Sign In', '#!/signin', class: 'button signin-button pink', 'data-dropdown' => 'signin'
       - unless signed_in?
         #signin.f-dropdown
           %form{:action => '/signin', :method => 'post'}
@@ -22,3 +23,8 @@
                 %input.password{:name => 'user[password]', :type => 'password', :placeholder => 'Password'}
               .large-3.columns
                 %button.ss-navigateright.prefix{:type => 'submit'}
+            .row.collapse
+              .large-12.columns
+                %label
+                  %input.checkbox{:name => 'user[remember_me]', :type => 'checkbox' }
+                  Remember me

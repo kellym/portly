@@ -1,0 +1,19 @@
+!!!html
+%html.dark.minimal{:class => @html_class}
+  %head
+    %title= @title ? "#{@title} - Portly" : App.config.site.title
+    = stylesheet_include_tag 'application'
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %meta(charset='utf-8')
+    %meta{ name: "description", content: @meta_description || "Share changes to your local web server. We'll handle all the SSH tunnels to do the port forwarding."}
+    %script(type="text/javascript" src="//use.typekit.net/xrn5yvu.js")
+    %script(type="text/javascript") try{Typekit.load();}catch(e){}
+    = javascript_include_tag 'application'
+  %body
+    = yield
+    = render :'application/_analytics'
+    = content_for :javascripts
+    :javascript
+      hljs.initHighlightingOnLoad()
+      $(function(){/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {   window.scrollTo(0, 1); }, 1000); });
+

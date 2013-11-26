@@ -1,6 +1,8 @@
--#%header.plan-header.margin-top-50.margin-bottom-0.padding-top-0.padding-bottom-60
-  %h1.source.margin-top-0 Check out our Dessert Tray
-  %h5.margin-bottom-0 Pick whatever suits your fancy.
+%header.padding-top-20.padding-bottom-30.margin-bottom-30
+  .row
+    .large-12.columns.text-center
+      %h2.margin-bottom-0 Choose your plan
+      %h5.margin-bottom-0 Pick the plan that best suits your needs. Change plans anytime.
 - if signed_in?
   - button_text = 'Choose this plan'
   - url = '/upgrade'
@@ -8,55 +10,44 @@
   - button_text = 'Sign Up'
   - url = '/signup'
 .content-area
-  .row
-    .large-12.columns.margin-bottom-30.margin-top-30
-      - if signed_in?
-        %h1.text-center Choose your plan
-        %p.text-center.margin-bottom-30
-          Pick a free hot donut or the whole dozen. Change plans anytime. Or
-          %span.tooltipped{:title => '<strong>Try our 1-connection plan for free.</strong><br/> The connection has a 15-minute time limit, but you can start it up as often as you want.'}
-            = succeed '.' do
-              %a{:href => (current_user && current_user.plan && current_user.plan.free?) ? '/tunnels' : "#{url}?plan=free"} Try it free
-      .plan-box
-        %ul.plan-table
-          %li.five
-          %li.price Glazed
-          %li.footer $2.99 a month
-          %li.bullet-item.padding-bottom-25
-            %strong.block.big.margin-bottom-5 2
-            Open Ports
-          %li.bullet-item
-            No timeouts + Auto-reconnect + SSL
-          %li.cta-button
-            %a.button{:href => "#{url}?plan=glazed"}= button_text
-        %ul.plan-table
-          %li.ten
-          %li.price Boston Creme
-          %li.footer $5.99 a month
-          %li.bullet-item.padding-bottom-25
-            %strong.block.big.margin-bottom-5 5
-            Open Ports
-          %li.bullet-item No timeouts + Auto-reconnect + SSL
-          %li.cta-button
-            %a.button{:href => "#{url}?plan=creme"}= button_text
-        %ul.plan-table
-          %li.twenty
-          %li.price Donut Burger
-          %li.footer $9.99 a month
-          %li.bullet-item.padding-bottom-25
-            %strong.block.big.margin-bottom-5 10
-            Open Ports
-          %li.bullet-item
-            No timeouts + Auto-reconnect + SSL
-          %li.cta-button
-            %a.button{:href => "#{url}?plan=burger"}= button_text
-.full-width.gray
-  .row.padding-top-30.padding-bottom-30.negative-margin-bottom-50
-    .large-10.columns
-      If you can't decide right now, try out our limited 1-connection
-      plan for free.
-      .small
-        The connection has a 15-minute time limit, but you can start it up
-        as often as you want.
-    .large-2.columns
-      %a.button.margin-top-10{:href => (current_user && current_user.plan && current_user.plan.free?) ? '/tunnels' : "#{url}?plan=free"} Try it Free
+  .plans
+    .row.free
+      .large-3.columns.icon
+      .large-6.columns
+        %h3 Free
+        %p
+          Great for students, casual testing, and product evaluation.
+        %ul
+          %li 15-minute sessions
+          %li 1 open port
+      .large-3.columns.text-center
+        %a.big.button.margin-top-35.margin-bottom-0{:href => "#{url}?plan=free"}= button_text
+        .weak.big $0/month
+    .row.pro
+      .large-3.columns.icon
+      .large-6.columns
+        %h3 Pro
+        %p
+          Perfect for designers, developers, and freelancers who want to test on mobile or get feedback from clients.
+        %ul
+          %li Auto-reconnecting sessions
+          %li Unlimited open ports
+          %li SSL support
+          %li Typekit library
+          %li Password-protected sites
+      .large-3.columns.text-center
+        %a.big.button.margin-top-50.margin-bottom-0{:href => "#{url}?plan=pro"}= button_text
+        .weak.big $4.99/month
+    .row.elite
+      .large-3.columns.icon
+      .large-6.columns
+        %h3 Unlimited
+        %p
+          Designed for users who need more robust forwarding and who want to install Portly on multiple computers.
+        %ul
+          %li Pro features +
+          %li Unlimited installs
+          %li Raw port forwarding
+      .large-3.columns.text-center
+        %a.big.button.margin-top-50.margin-bottom-0{:href => "#{url}?plan=elite"}= button_text
+        .weak.big $9.99/month

@@ -18,8 +18,8 @@ class Token < ActiveRecord::Base
   before_create :generate_token
   before_create :generate_authorized_key
 
-  default_scope where(:deleted_at => nil)
-  scope :active, where('tokens.computer_name IS NOT NULL AND tokens.deleted_at IS NULL')
+  default_scope { where(:deleted_at => nil) }
+  scope :active, -> { where('tokens.computer_name IS NOT NULL AND tokens.deleted_at IS NULL') }
 
   # Internal: Generates an authentication token for the user to
   # access their data via the app.

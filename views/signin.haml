@@ -1,27 +1,28 @@
-.row
-  .large-5.columns
-    %header.emphasis
-      %h1
-        %a{:href => '/'} Portly
-  .large-7.columns.margin-top-50
-    %h2 Sign in
+.signin
+  .vertical-center
+  .content
+    %h1.logo.centered.margin-bottom-30
+      %a{:href => '/'} Portly
+    %h2.hide Sign in
     %form(action='/signin' method='post')
       %input{:type => 'hidden', :name => 'plan', :value => @plan}
       .row
-        .small-10.columns
+        .small-12.columns
           - if @error
             %small.error= @error
           .row.collapse
-            %label(for='email')
-              Email
-            .small-9.columns
-              %input(type='text' name='user[email]' id='email' value="#{@user[:email]}")
+            .small-12.columns
+              %input(type='text' name='user[email]' id='email' value="#{@user[:email]}" placeholder="Email address")
           .row.collapse
-            %label(for='password')
-              Password
-            .small-9.columns
-              %input(type='password' name='user[password]' id='password' value="#{@user[:password]}")
+            .small-12.columns
+              %input(type='password' name='user[password]' id='password' value="#{@user[:password]}" placeholder="Password")
           .row.collapse
-            %button.radius.button(type='submit') Sign in
-          .row.collapse.margin-10-top
+            .small-6.columns
+              %button.pink.button(type='submit') Sign in
+            .small-6.columns
+              %label
+                %input.checkbox(type='checkbox' name='user[remember_me]' id='remember_me' value="1" checked="#{@remember_me}")
+                Remember me
+
+          .row.collapse.margin-10-top.text-center.small
             %a{:href => '/reset-password'} I forgot my password

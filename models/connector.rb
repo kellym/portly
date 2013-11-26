@@ -24,7 +24,7 @@ class Connector < ActiveRecord::Base
   before_save :get_server_port
   after_save :update_tunnels
 
-  default_scope where(:deleted_at => nil)
+  default_scope { where(:deleted_at => nil) }
 
   def domain
     self.cname.present? ? self.cname : self.full_subdomain
@@ -170,7 +170,7 @@ class Connector < ActiveRecord::Base
   end
 
   def bytes_today
-    @bytes ||= Redis.current.hgetall("bytes:#{self.id}") rescue {'in' => 0, 'out' => 0}
+    @bytes ||= Redis.current.hgetall("bytes:#{self.id}") rescue {'in' => 1, 'out' => 0}
   end
 
   def path=(val)

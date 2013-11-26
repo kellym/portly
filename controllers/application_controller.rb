@@ -21,10 +21,19 @@ class ApplicationController < SharedController
     env['nginx_request']
   end
 
+  before do
+    env['warden'].authenticate unless env['warden'].authenticated?
+  end
+
   get '/signin' do
-    @user = {}
-    @plan = request[:plan]
-    render :signin, :layout => :'layouts/marketing'
+    if signed_in?
+      redirect '/'
+    else
+      @remember_me = cookie(:'user.remember.token') ? true : false
+      @user = {}
+      @plan = request[:plan]
+      render :signin, :layout => :'layouts/minimal'
+    end
   end
 
   get '/signout' do
@@ -49,6 +58,9 @@ class ApplicationController < SharedController
     @user = Hashie::Mash.new(request[:user] || {})
     if User.authenticate(request[:user]['email'], request[:user]['password'])
       authenticate_user!
+      if request[:user]['remember_me']
+        cookie :'user.remember.token', value: current_user.generate_remember_token!, expires: 2.weeks.from_now
+      end
       if request[:plan]
         session[:plan] = request[:plan]
         redirect '/billing', 302
@@ -58,7 +70,7 @@ class ApplicationController < SharedController
     else
       @error = 'The email or password you provided is incorrect.'
       @plan = request[:plan]
-      render :signin, :layout => :'layouts/marketing'
+      render :signin, :layout => :'layouts/minimal'
     end
   end
 
@@ -72,7 +84,7 @@ class ApplicationController < SharedController
     end
     #@plan ||= Plan.free
 
-    render :signup, :layout => :'layouts/marketing'
+    render :signup, :layout => :'layouts/minimal'
   end
 
   post '/signup' do
@@ -98,7 +110,7 @@ class ApplicationController < SharedController
       @form_errors = @user.errors
       @user = Hashie::Mash.new(request[:user] || {})
       @plan = Plan.find(request[:user]['plan_id']) || Plan.free
-      render :signup, :layout => :'layouts/marketing'
+      render :signup, :layout => :'layouts/minimal'
     end
   end
 
@@ -118,14 +130,14 @@ class ApplicationController < SharedController
     @user = User.where(:reset_password_token => token).first
     @token = token
     if @user
-      render :'account/reset_password', :layout => :'layouts/marketing'
+      render :'account/reset_password', :layout => :'layouts/minimal'
     else
       halt 404
     end
   end
 
   get '/reset-password' do
-    render :'account/reset_password', :layout => :'layouts/marketing'
+    render :'account/reset_password', :layout => :'layouts/minimal'
   end
 
   post '/reset-password' do
@@ -139,7 +151,7 @@ class ApplicationController < SharedController
           redirect '/', 302
         else
           @form_errors = @user.errors
-          render :'account/reset_password', :layout => :'layouts/marketing'
+          render :'account/reset_password', :layout => :'layouts/minimal'
         end
       else
         halt 404
@@ -149,10 +161,10 @@ class ApplicationController < SharedController
       if @user
         @user.reset_password!
         @show_logo = true
-        render :'account/reset_password_sent', :layout => :'layouts/marketing'
+        render :'account/reset_password_sent', :layout => :'layouts/minimal'
       else
         @form_errors = nil #@user.errors
-        render :'account/reset_password', :layout => :'layouts/marketing'
+        render :'account/reset_password', :layout => :'layouts/minimal'
       end
     end
   end

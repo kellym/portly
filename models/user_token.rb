@@ -3,7 +3,7 @@ class UserToken < ActiveRecord::Base
   belongs_to :token
   belongs_to :user
 
-  default_scope where(:deleted_at => nil)
+  default_scope { where(:deleted_at => nil) }
 
   validates_presence_of :user_id
   before_create :generate_token

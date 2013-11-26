@@ -1,21 +1,12 @@
-.row.intro
-  .large-5.columns
-    %header.emphasis
-      %h1
-        %a{:href => '/'} Portly
-      %p.text-center
-        Sign up today. <br />
-        %small
-          Already have an account?
-          - if @plan
-            %a{:href => "/signin?plan=#{@plan.reference}"} Sign In
-          - else
-            %a{:href => '/signin'} Sign In
-  .large-7.columns
-    %h2.margin-top-50 Sign up
+.signup
+  .vertical-center
+  .content
+    %h1.logo.centered.margin-bottom-30
+      %a{:href => '/'} Portly
+    %h2.hide Sign up
     %form(action='/signup' method='post')
       .row
-        .small-10.columns
+        .small-12.columns
           - if @plan
             .row.collapse
               %h4.margin-bottom-0.margin-top-0 Selected Plan: #{@plan.name}
@@ -29,29 +20,27 @@
                 %a.small{:href => '/plans'} Change Plan
               %input{type: 'hidden', name: 'user[plan_id]', value: @plan.id}
           .row.collapse
-            %label(for='email')
-              Email
-            .small-9.columns{class: error_class('email')}
-              %input(type='text' name='user[email]' id='email' value="#{@user[:email]}")
+            .small-12.columns{class: error_class('email')}
+              %input(type='text' name='user[email]' id='email' value="#{@user[:email]}" placeholder="Email address")
               = error_message :email
           .row.collapse
-            %label(for='subdomain')
-              Username
-            .small-9.columns{class: error_class('subdomain')}
-              %input(type='text' name='user[subdomain]' id='subdomain' value="#{@user[:subdomain]}")
+            .small-12.columns{class: error_class('subdomain')}
+              %input(type='text' name='user[subdomain]' id='subdomain' value="#{@user[:subdomain]}" placeholder="Username/subdomain")
               = error_message :subdomain
-              .hint.small.mute.negative-margin-top-10.margin-bottom-15 This is also the subdomain for your account.
           .row.collapse
-            %label(for='password')
-              Password
-            .small-9.columns{class: error_class('password')}
-              %input(type='password' name='user[password]' id='password' value="#{@user[:password]}")
+            .small-12.columns{class: error_class('password')}
+              %input(type='password' name='user[password]' id='password' value="#{@user[:password]}" placeholder="Password")
               = error_message :password
           .row.collapse
-            %label(for='password_confirmation')
-              Confirm Password
-            .small-9.columns{class: error_class('password_confirmation')}
-              %input(type='password' name='user[password_confirmation]' id='password_confirmation' value="#{@user[:password_confirmation]}")
+            .small-12.columns{class: error_class('password_confirmation')}
+              %input(type='password' name='user[password_confirmation]' id='password_confirmation' value="#{@user[:password_confirmation]}" placeholder="Confirm password")
               = error_message :password_confirmation
-          .row.collapse
-            %button.radius.button(type='submit') Sign up
+          .row.collapse.text-center
+            %button.pink.button.width-90(type='submit') Sign up
+          .row.collapse.text-center
+            %small
+              Already have an account?
+              - if @plan
+                %a{:href => "/signin?plan=#{@plan.reference}"} Sign In
+              - else
+                %a{:href => '/signin'} Sign In
