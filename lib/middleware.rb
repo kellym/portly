@@ -21,7 +21,7 @@ module Middleware
         use Warden::Manager do |config|
           config.default_scope = :user
           config.scope_defaults :user,
-            :strategies => [:password],
+            :strategies => [:password, :cookie],
             :action     => 'unauthenticated'
           config.scope_defaults :api,
             :strategies => [:api_token, :api_password, :password],

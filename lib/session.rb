@@ -8,8 +8,26 @@ Warden::Manager.before_failure do |env,opts|
   env['breadcrumb'] = []
 end
 
-Warden::Manager.after_authentication do |user,auth,opts|
+#Warden::Manager.after_authentication do |user,auth,opts|
+#  auth.env['rack.cookies']['user.remember.token'] = user.generate_remember_token! # sets its remember_token attribute to some large random value and returns the value
+#end
 
+Warden::Strategies.add(:cookie) do
+  def valid?
+    env['rack.request.cookie_hash']['user.remember.token']
+  end
+
+  def authenticate!
+    if env['rack.request.cookie_hash']['user.remember.token'] && (user = User.find_by_remember_token(env['rack.request.cookie_hash']['user.remember.token']))
+      success! user
+    else
+      fail! "Could not log in"
+    end
+  end
+end
+
+Warden::Manager.before_logout do |user, auth, opts|
+  user.update_attribute :remember_token, nil
 end
 
 Warden::Strategies.add(:password) do

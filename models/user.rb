@@ -129,7 +129,9 @@ class User < ActiveRecord::Base
 
   # Public: Reset the password and send a reset email to the user.
   def reset_password!
-    self.reset_password_token = SecureRandom.hex(32)
+    begin
+      self.reset_password_token = SecureRandom.hex(32)
+    end while User.where(reset_password_token: self.reset_password_token).exists?
     self.reset_password_sent_at = Time.now
     self.save
     UserMailer.reset_password(self.id)
@@ -253,6 +255,14 @@ class User < ActiveRecord::Base
         self.state = 'new'
       end
     end
+  end
+
+  def generate_remember_token!
+    begin
+      self.remember_token = SecureRandom.hex(32)
+    end while User.where(remember_token: self.remember_token).exists?
+    self.save
+    self.remember_token
   end
 
 end
