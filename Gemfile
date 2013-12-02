@@ -48,4 +48,8 @@ group :development do
   gem 'shotgun'
   gem 'bourbon'
   gem 'post_office'
+  gem 'guard'
+  gem 'guard-shell'
+  gem 'guard-handlebars'
+  gem 'guard-haml'
 end
