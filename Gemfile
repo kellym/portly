@@ -51,5 +51,5 @@ group :development do
   gem 'guard'
   gem 'guard-shell'
   gem 'guard-handlebars'
-  gem 'guard-haml'
+  gem 'guard-haml', git: 'https://github.com/kellym/guard-haml.git'
 end
