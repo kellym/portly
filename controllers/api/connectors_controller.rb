@@ -102,13 +102,13 @@ class Api::ConnectorsController < Api::BaseController
           c.delete(:path)
         end
         if current_token.version < "1.3.0"
-          h.delete(:syncing)
-          h.delete(:mirror)
-          h.delete(:pro_user)
-          h.delete(:public_url)
-          h.delete(:local_path)
-          h.delete(:connected)
-          h.delete(:enabled)
+          c.delete(:syncing)
+          c.delete(:mirror)
+          c.delete(:pro_user)
+          c.delete(:public_url)
+          c.delete(:local_path)
+          c.delete(:connected)
+          c.delete(:enabled)
         end
       end
       response.headers["Cache-Control"] = "no-cache, no-store"
