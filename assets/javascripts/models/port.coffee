@@ -68,24 +68,22 @@
       if @computer.online_state() == 'offline'
         'disabled'
       else
-        @state || 'offline'
+        if @get('connected') then 'online' else 'offline'
 
     isOnline: ->
       @status() == 'online'
 
     isConnected: ->
-      @connected || false
+      @get('connected') || false
 
     setState: (status) ->
-      @state = status
+      @set 'connected', status == 'online'
       @trigger 'sync'
 
     connect: ->
-      @connected = true
       @setState 'online'
       @trigger 'sync'
 
     disconnect: ->
-      @connected = false
       @setState 'offline'
       @trigger 'sync'
