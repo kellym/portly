@@ -19,6 +19,10 @@ class PagesController < SharedController
     if connector
       if connector.mirror?
         @path = request[:__portly_request_uri]
+        if request.env['QUERY_STRING'].length + 22 > @path.length
+          @query_string = request.env['QUERY_STRING'][@path.length+22..-1]
+          @path = "#{@path}?#{@query_string}" if @query_string && @query_string.length > 0
+        end
         @path = "#{App.config.cache_path}#{connector.id}#{@path}"
         if File.directory?(@path)
           @path += "index.html"
@@ -32,13 +36,13 @@ class PagesController < SharedController
         halt 304 if env['HTTP_IF_MODIFIED_SINCE'] == last_modified
         response.headers["Last-Modified"] = last_modified
         mime = Rack::Mime.mime_type(File.extname(@path), 'text/html')
-        media_type = mime if mime
+        self.media_type = mime if mime
 
         # NOTE:
         #   We check via File::size? whether this file provides size info
         #   via stat (e.g. /proc files often don't), otherwise we have to
         #   figure it out by reading the whole file into memory.
-        size = File.size?(@path) || Utils.bytesize(File.read(@path))
+        size = File.size?(@path) || Rack::Utils.bytesize(File.read(@path))
 
         ranges = Rack::Utils.byte_ranges(env, size)
         if ranges.nil? || ranges.length > 1
