@@ -5,7 +5,7 @@ class PagesController < SharedController
     if server_name =~ /\.portly\.co$/
       server_name.gsub!(/\-?([^\.])*\.portly\.co$/,'')
       subdomain = $1
-      connector = Connector.joins(:user).where(user: { subdomain: subdomain}, subdomain: server_name).first
+      connector = Connector.joins(:user).where(users: { subdomain: subdomain}, subdomain: server_name).first
     end
     unless connector
       connector = Connector.where(:cname => server_name).first
