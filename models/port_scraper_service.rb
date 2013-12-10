@@ -18,6 +18,7 @@ class PortScraperService
       'page-requisites'     => nil,
       'random-wait'         => nil,
       'timestamping'        => nil,
+      'no-check-certificate'=> nil,
       'header'              => "Accept: text/html",
       'timeout'             => 30,
       'reject'              => 'zip,mpg',
@@ -43,7 +44,7 @@ class PortScraperService
         command +=" --#{action}"
       end
     end
-    command += " #{@connector.public_url}"
+    command += " #{@connector.public_url.gsub(/^https\:/,'http:')}"
     Redis.current.set("#{@connector.id}:syncing", true)
     EventSource.publish(@connector.user_id, 'sync', id: @connector.id, state: 'started')
     system command
