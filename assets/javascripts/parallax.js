@@ -20,10 +20,13 @@ $(function() {
   var demo_canvas = $('#demo-canvas');
   var context = canvas.getContext('2d');
   var demo_context = canvas.getContext('2d');
+  var demo_top = jQuery('.demo-top').offset().top;
 
   var stripe = $('aside');
   var ticking = false;
   var lastScrollY = 0;
+  var width;
+  var height;
 
   function onResize () {
 
@@ -36,21 +39,29 @@ $(function() {
   function onScroll (evt) {
     if(!ticking) {
       ticking = true;
-      requestAnimFrame(updateElements);
+      requestAnimFrame(performScroll);
       lastScrollY = win.scrollY;
     }
   }
 
   function updateElements () {
-
-    var relativeY = lastScrollY / 3000;
-
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, canvas.width, canvas.height);
     width = canvas.width > 1015 ? canvas.width : 1015;
     height = width * bg.height / bg.width;
-    context.drawImage(bg, 0, pos(0, -800, relativeY, 0), width, height);
-    ticking = false;
+    performScroll();
+  }
+
+  function performScroll() {
+    if (lastScrollY > demo_top) {
+      canvas.height = 0;
+      ticking = false;
+    } else {
+      canvas.height = window.innerHeight;
+      var relativeY = lastScrollY * 0.000333;
+      context.drawImage(bg, 0, pos(0, -800, relativeY, 0), width, height);
+      ticking = false;
+    }
   }
 
   function pos(base, range, relY, offset) {
