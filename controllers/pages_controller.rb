@@ -5,14 +5,14 @@ class PagesController < SharedController
     if server_name =~ /\.portly\.co$/
       server_name.gsub!(/\-?([^\.])*\.portly\.co$/,'')
       subdomain = $1
-      connector = Connector.where(:subdomain => server_name).first
+      connector = Connector.joins(:user).where(user: { subdomain: subdomain}, subdomain: server_name).first
     end
     unless connector
       connector = Connector.where(:cname => server_name).first
     end
     if connector
       if connector.mirror?
-        @path = env['REQUEST_URI']
+        @path = request.env['REQUEST_URI']
         #@path.gsub!("/pages/offline", '')
         @path = "#{App.config.cache_path}#{connector.id}#{@path}"
         if File.directory?(@path)
