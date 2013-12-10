@@ -82,8 +82,10 @@
 
     connect: ->
       @connected = true
+      @setState 'online'
       @trigger 'sync'
 
     disconnect: ->
       @connected = false
+      @setState 'offline'
       @trigger 'sync'
