@@ -80,13 +80,13 @@
       @get('connected') || false
 
     setState: (status) ->
-      @set 'connected', status == 'online'
+      @set 'enabled', status == 'online'
       @trigger 'sync'
 
     connect: ->
-      @set 'enabled', true
+      @set 'connected', true
       @trigger 'sync'
 
     disconnect: ->
-      @set 'enabled', false
+      @set 'connected', false
       @trigger 'sync'
