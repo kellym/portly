@@ -15,6 +15,7 @@ class Api
 
     def current_token
       return @token if @token
+      @app_request = false
       if request[:access_token]
         @token = Token.where(:user_id => current_user.id, :code => request[:access_token]).first
       elsif env['warden'].user # this means we're signed in from the app
@@ -22,6 +23,8 @@ class Api
         if request[:token_id]
           @token = Token.where(:user_id => current_user.id, :id => request[:token_id]).first
         else
+          # this request came from the app
+          @app_request = true
           port = Connector.where(:user_id => current_user.id, :id => request[:id]).first
           @token = port.token if port
         end

@@ -60,14 +60,22 @@ class Api::ConnectorsController < Api::BaseController
     connectors = Connector.where(user_id: current_user.id, token_id: current_token.id)
     connectors.map do |c|
       h = c.to_hash
-      if current_token.version < "1.0.0"
-        h.delete(:nickname)
-        h.delete(:socket_type)
-        h.delete(:server_port)
-        h.delete(:server_host)
-      end
-      if current_token.version < "1.1.2"
-        h.delete(:path)
+      if !@app_request
+        if current_token.version < "1.0.0"
+          h.delete(:nickname)
+          h.delete(:socket_type)
+          h.delete(:server_port)
+          h.delete(:server_host)
+        end
+        if current_token.version < "1.1.2"
+          h.delete(:path)
+        end
+        if current_token.version < "1.3.0"
+          h.delete(:syncing)
+          h.delete(:mirror)
+          h.delete(:pro_user)
+          h.delete(:public_url)
+        end
       end
       h
     end.to_json
