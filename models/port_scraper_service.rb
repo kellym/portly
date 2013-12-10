@@ -22,7 +22,7 @@ class PortScraperService
       'timeout'             => 30,
       'reject'              => 'zip,mpg',
       'quota'               => '20m',
-      'directory-prefix'    => "#{ROOT_PATH}/#{App.config.cache_path}#{@connector.id}"
+      'directory-prefix'    => "#{App.config.cache_path}#{@connector.id}"
     }.merge opts
     if @connector.has_authentication?
       user = @connector.auths.first
