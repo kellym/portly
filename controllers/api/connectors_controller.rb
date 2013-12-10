@@ -77,6 +77,7 @@ class Api::ConnectorsController < Api::BaseController
           h.delete(:public_url)
           h.delete(:local_path)
           h.delete(:connected)
+          h.delete(:enabled)
         end
       end
       h
@@ -89,10 +90,8 @@ class Api::ConnectorsController < Api::BaseController
     request[:id] = connector_id
     connector = connector(connector_id)
     if connector
-      if media_type.html?
-        render :'tunnels/_connector.haml', locals: { c: connector, token: current_token }, layout: nil
-      else
-        c = connector.to_hash
+      c = connector.to_hash
+      if !@app_request
         if current_token.version < "1.0.0"
           c.delete(:nickname)
           c.delete(:socket_type)
@@ -102,7 +101,20 @@ class Api::ConnectorsController < Api::BaseController
         if current_token.version < "1.1.2"
           c.delete(:path)
         end
-        response.headers["Cache-Control"] = "no-cache, no-store"
+        if current_token.version < "1.3.0"
+          h.delete(:syncing)
+          h.delete(:mirror)
+          h.delete(:pro_user)
+          h.delete(:public_url)
+          h.delete(:local_path)
+          h.delete(:connected)
+          h.delete(:enabled)
+        end
+      end
+      response.headers["Cache-Control"] = "no-cache, no-store"
+      if media_type.html?
+        render c.to_json, layout: nil
+      else
         c.to_json
       end
     else

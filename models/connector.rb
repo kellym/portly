@@ -87,6 +87,7 @@ class Connector < ActiveRecord::Base
       auths: auths.map { |a| a.to_hash },
       cname: cname,
       connected: connected?,
+      enabled: enabled?,
       host: user_host,
       id: id,
       local_path: local_path,
