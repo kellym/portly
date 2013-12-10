@@ -14,6 +14,6 @@
             {{#each models}}
             %li
               %a{'data-id' => "{{id}}", :title => "{{ip_address}}", :href => "{{dashboard_url}}", :class => "{{online_state}}", data: { container: '#tunnels'} }
-                %span {{name}}
+                %span.title {{name}}
                 %span.small.online-state {{online_state}}
             {{/each}}
