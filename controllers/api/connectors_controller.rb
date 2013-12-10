@@ -202,6 +202,41 @@ class Api::ConnectorsController < Api::BaseController
   # Returns the host, port, path combo.
   def parse_local_path
     if request[:local_path]
+      default_port = 80
+      if request[:local_path].match(/^[A-Za-z]{3,6}:\/\//)
+        scheme, request[:local_path] = request[:local_path].split('://',2)
+        default_port = case scheme.downcase.to_sym
+                       when :http
+                         80
+                       when :https
+                         443
+                       when :ssh
+                         22
+                       when :telnet
+                         23
+                       when :gopher
+                         70
+                       when :ftp
+                         21
+                       when :wais
+                         210
+                       when :news, :nntp
+                         119
+                       when :snews
+                         563
+                       when :cso
+                         105
+                       when :pop
+                         110
+                       when :imap
+                         143
+                       when :smtp
+                         25
+                       else
+                         80
+                       end
+      end
+
       if request[:local_path].match('/')
         request[:local_path], request[:path] = request[:local_path].split('/',2)
       else
@@ -212,7 +247,7 @@ class Api::ConnectorsController < Api::BaseController
       elsif request[:local_path].to_i.to_s == request[:local_path]
         request[:host], request[:port] = 'localhost', request[:local_path]
       else
-        request[:host], request[:port] = request[:local_path].present? ? request[:local_path] : 'localhost', 80
+        request[:host], request[:port] = request[:local_path].present? ? request[:local_path] : 'localhost', default_port
       end
     end
   end
