@@ -10,7 +10,7 @@
           %li= nav_link_to 'Blog', '/blog'
           %li= nav_link_to 'Support', '/support'
           - if signed_in?
-            %li.signin= nav_link_to 'Sign Out', '/signout', class: 'button signout-button pink'
+            %li.signin= nav_link_to 'Dashboard', '/dashboard', class: 'button signout-button pink'
           - else
             %li.signin= nav_link_to 'Sign In', '#!/signin', class: 'button signin-button pink', 'data-dropdown' => 'signin'
       - unless signed_in?

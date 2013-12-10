@@ -13,14 +13,14 @@
     - if signed_in?
       = javascript_include_tag 'eventsource'
   %body{id: @body_class}
-    .container= yield
+    .container
+      = yield
+      .push
+    = render :'application/_marketing_footer'
     #clipboard-container
       %textarea#clipboard
     :coffeescript
       new Portly.DOM.Index()
-      $(document).foundation('reveal forms')
-      $('.tooltipped').tipsy()
-      $('.tooltipped-top').tipsy({ gravity : 's', offset: 10})
       responsiveNav ".nav-collapse"
     = render :'application/_analytics'
     = content_for :javascripts

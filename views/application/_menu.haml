@@ -1,10 +1,35 @@
 %header#main
   .row
-    %h1.logo.margin-top-35
-      %a{:href => '/'} Portly
     .large-12.columns
+      %h1.logo.margin-top-35
+        %a{:href => '/'} Portly
       %nav.nav-collapse
         %ul.front-page-nav
-          %li= nav_link_to 'Tunnels', '/tunnels', restful: true
-          %li= nav_link_to 'Account', '/account'
-          %li= link_to 'Sign Out', '/signout', :class => 'signout'
+          %li= nav_link_to 'Dashboard', '/dashboard', restful: true
+          %li= nav_link_to 'Support', '/support'
+          - if signed_in?
+            %li.btn-group
+              %a.dropdown-toggle.title.button
+                %span.title= current_user.email
+                %span.caret.margin-top-0.icon-arrow-down-b
+              .dropdown
+                %ul
+                  %li= link_to 'Account', '/account'
+                  %li= link_to 'Sign Out', '/signout'
+          - else
+            %li.signin= nav_link_to 'Sign In', '/signin', class: 'button signin-button pink', 'data-dropdown' => 'signin'
+      - unless signed_in?
+        #signin.f-dropdown
+          %form{:action => '/signin', :method => 'post'}
+            .row.collapse.margin-bottom-5
+              %input.email{:name => 'user[email]', :type => 'text', :placeholder => 'Email Address'}
+            .row.collapse
+              .large-9.columns
+                %input.password{:name => 'user[password]', :type => 'password', :placeholder => 'Password'}
+              .large-3.columns
+                %button.ss-navigateright.prefix{:type => 'submit'}
+            .row.collapse
+              .large-12.columns
+                %label
+                  %input.checkbox{:name => 'user[remember_me]', :type => 'checkbox' }
+                  Remember me

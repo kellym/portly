@@ -37,10 +37,9 @@
               = error_message :password_confirmation
           .row.collapse.text-center
             %button.pink.button.width-90(type='submit') Sign up
-          .row.collapse.text-center
-            %small
-              Already have an account?
-              - if @plan
-                %a{:href => "/signin?plan=#{@plan.reference}"} Sign In
-              - else
-                %a{:href => '/signin'} Sign In
+          .row.collapse.text-center.small
+            Already have an account?
+            - if @plan
+              %a{:href => "/signin?plan=#{@plan.reference}"} Sign In
+            - else
+              %a{:href => '/signin'} Sign In

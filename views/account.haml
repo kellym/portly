@@ -1,6 +1,6 @@
 - ordinal = current_user.schedule.good_until.day.ordinalize
 
-- unless current_user.plan.gratis?
+-# unless current_user.plan.gratis?
   .banner{:class => flash[:plan_change] || flash[:card_change] ? 'yellow' : 'white' }
     .row
       .large-12.columns
@@ -12,22 +12,26 @@
           = flash[:plan_change] if flash[:plan_change]
           - unless flash[:card_change] || flash[:plan_change]
             Your account is up to date.
+
+%header
+  .row
+    .large-12.columns.margin-top-20.margin-bottom-10
+      %h2 #{current_user.account.plan.name} Account
 .padding-bottom-50
   .row.padding-top-20.padding-bottom-20
-    .large-12.columns
-      %h3 Your Account
     .large-5.columns
-      %h4 Your Plan: #{current_user.schedule.plan.name}
       .table
         .row
-          .large-6.columns Payment Frequency:
-          .large-6.columns.strong= current_user.account.billing_period.titleize
+          .large-6.columns Payment Frequency
+          .large-6.columns.text-right.strong= current_user.account.billing_period.titleize
         .row
-          .large-6.columns Next Billing Date:
-          .large-6.columns.strong= current_user.schedule.good_until.strftime("%B %e, %Y")
+          .large-6.columns Next Billing Date
+          .large-6.columns.text-right.strong= current_user.schedule.good_until.strftime("%B %e, %Y")
         .row
-          .large-6.columns #{current_user.schedule.plan.name}:
-          .large-6.columns.strong $#{sprintf('%.02f', current_user.schedule.plan.send(current_user.account.billing_period.to_sym))}
+          .large-6.columns
+            Portly #{current_user.account.plan.name}
+            %a.margin-left-10.small{:href => '/plans'} Change Plan
+          .large-6.columns.strong.text-right $#{sprintf('%.02f', current_user.schedule.plan.send(current_user.account.billing_period.to_sym))}
       -#.row
         .large-12.columns
           .panel.callout.radius
@@ -83,23 +87,6 @@
             %strong $3.00
             to apply to your account. That means 1000 people gets you #{(250/current_user.schedule.plan.monthly).to_i}
             years of Portly for free!
-      .row
-        .large-12.columns
-          .panel.radius.text-center.small
-            .row
-              .large-2.columns
-                %strong= current_user.plan.computer_limit
-                <br />Computer#{current_user.plan.computer_limit == 1 ? '' : 's'}
-              .large-2.columns
-                %strong= current_user.plan.tunnel_limit
-                <br />Connection#{current_user.plan.tunnel_limit == 1 ? '' : 's'}
-              .large-3.columns
-                %strong= current_user.plan.free? ? '15 Minute' : 'No'
-                <br />Time Limit
-              .large-2.columns
-                %strong.tooltipped{style: 'line-height: 2.5', :title => "<strong>#{current_user.plan.free? ? "Here's what you're missing" : "Some of your other features"}</strong><br />Auto-reconnects<br />HTTP Basic Authentication<br />Custom Placeholder Pages"} And...
-              .large-3.columns
-                %a.margin-bottom-0.button{:href => '/plans'}= current_user.plan.free? ? "Upgrade" : "Change"
       .row
         .large-12.columns
           %h4 API Keys
