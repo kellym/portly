@@ -3,17 +3,22 @@ class PagesController < SharedController
   get '/offline' do
     server_name = request.env['HTTP_HOST']
     if server_name =~ /\.portly\.co$/
-      server_name.gsub!(/\-?([^\.])*\.portly\.co$/,'')
-      subdomain = $1
-      connector = Connector.joins(:user).where(users: { subdomain: subdomain}, subdomain: server_name).first
+      server_name.gsub!(/([^\.]*)\.portly\.co$/,'')
+      server_name, match, subdomain = $1.rpartition('-')
+      if server_name
+        connector = Connector.joins(:user).where(users: { subdomain: subdomain}, subdomain: server_name).first
+      else
+        subdomain = server_name
+        server_name = ''
+        connector = Connector.joins(:user).where(users: { subdomain: subdomain}, subdomain: server_name).first
+      end
     end
     unless connector
       connector = Connector.where(:cname => server_name).first
     end
     if connector
       if connector.mirror?
-        @path = request.env['HTTP_X_URI']
-        #@path.gsub!("/pages/offline", '')
+        @path = request[:__portly_request_uri]
         @path = "#{App.config.cache_path}#{connector.id}#{@path}"
         if File.directory?(@path)
           @path += "index.html"
