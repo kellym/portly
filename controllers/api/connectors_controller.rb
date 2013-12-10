@@ -76,6 +76,7 @@ class Api::ConnectorsController < Api::BaseController
           h.delete(:pro_user)
           h.delete(:public_url)
           h.delete(:local_path)
+          h.delete(:connected)
         end
       end
       h
