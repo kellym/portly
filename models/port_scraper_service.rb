@@ -25,6 +25,9 @@ class PortScraperService
       'quota'               => '20m',
       'directory-prefix'    => "#{App.config.cache_path}#{@connector.id}"
     }.merge opts
+    if %w(friend unlimited).include? @connector.user.plan.reference
+      @opts['mirror'] = nil
+    end
     if @connector.has_authentication?
       user = @connector.auths.first
       if user
