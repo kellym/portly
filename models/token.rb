@@ -49,6 +49,15 @@ class Token < ActiveRecord::Base
   end
   alias :connected? :online?
 
+  def to_hash
+    {
+      id: self.id,
+      name: self.computer_name,
+      ip_address: self.ip_address,
+      online: online?
+    }
+  end
+
   # Public: Returns the IP address of the currently online socket.
   def ip_address
     return @ip_address if @ip_address

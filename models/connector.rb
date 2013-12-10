@@ -25,6 +25,7 @@ class Connector < ActiveRecord::Base
   after_save :update_tunnels
 
   default_scope { where(:deleted_at => nil) }
+  scope :order_by_name, -> { select('*, cname || subdomain as name').order(:name) }
 
   def domain
     self.cname.present? ? self.cname : self.full_subdomain
@@ -36,11 +37,23 @@ class Connector < ActiveRecord::Base
       if self.subdomain == ''
         "#{user.subdomain}#{App.config.suffix}"
       else
-        "#{self.subdomain}-#{user.subdomain}#{App.config.suffix}"
+        "#{self.subdomain}-#{self.user.full_domain}"
       end
     else
       nil
     end
+  end
+
+  def public_url
+    if self.subdomain == '' || self.user.plan.free?
+      "http://#{domain}"
+    else
+      "https://#{domain}"
+    end
+  end
+
+  def local_path
+    "#{user_host}:#{user_port}#{path}"
   end
 
   # Public: Provides the full subdomain
@@ -70,19 +83,32 @@ class Connector < ActiveRecord::Base
 
   def to_hash
     {
-      id: id,
-      host: user_host,
-      port: user_port,
-      subdomain: subdomain,
-      nickname: nickname,
-      socket_type: socket_type,
-      server_port: server_port,
-      server_host: server_host,
-      cname: cname,
       auth_type: auth_type,
+      auths: auths.map { |a| a.to_hash },
+      cname: cname,
+      host: user_host,
+      id: id,
+      local_path: local_path,
+      mirror: mirror,
+      nickname: nickname,
       path: path,
-      auths: auths.map { |a| a.to_hash }
+      port: user_port,
+      pro_user: !user.plan.free?,
+      public_url: public_url,
+      server_host: server_host,
+      server_port: server_port,
+      socket_type: socket_type,
+      subdomain: subdomain,
+      syncing: syncing?,
     }
+  end
+
+  # Public: Uses the redis key set in PortScraperService to
+  # determine if we're actively syncing the connection or not.
+  #
+  # Returns a Boolean
+  def syncing?
+    !!Redis.current.get("#{self.id}:syncing")
   end
 
   # Public: Uses Redis to determine if the connector is currently online
@@ -91,6 +117,13 @@ class Connector < ActiveRecord::Base
   # Returns a Boolean of the connected status.
   def connected?
     Redis.current.sismember('connectors_online', self.id)
+  end
+
+  # Public: Returns if this connector is using authentication.
+  #
+  # Returns a Boolean.
+  def has_authentication?
+    self.auth_type == 'basic'
   end
 
   # Public: Uses Redis to determine if the connector is enabled,

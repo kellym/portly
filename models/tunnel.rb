@@ -42,6 +42,7 @@ class Tunnel
       #if @publish
       #  Redis.current.publish("socket:#{@token}", "connect:#{@connector_id}|#{connection_string}|#{tunnel_string}")
       #end
+      PortScraperService.queue(@connector_id)
       true
     else
       false
