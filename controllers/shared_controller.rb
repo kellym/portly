@@ -63,7 +63,7 @@ class SharedController < Scorched::Controller
   end
 
   after status: 404 do
-    response.body ||= render :'errors/show', layout: :'layouts/marketing'
+    response.body = @custom_404 || render(:'errors/show', layout: :'layouts/marketing')
   end
 
   after status: 500 do
