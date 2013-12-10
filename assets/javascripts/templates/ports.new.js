@@ -3,21 +3,22 @@
 templates['ports.new'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, self=this, helperMissing=helpers.helperMissing, functionType="function", escapeExpression=this.escapeExpression;
 
 function program1(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\n    <div class='row'>\n      <div class='large-4 columns'>\n        <label class='inline'>Static Mirroring</label>\n      </div>\n      <div class='large-8 columns'>\n        <label>\n          <select name='mirror'>\n            <option value='false' ";
-  if (stack1 = helpers.not_mirror) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = (depth0 && depth0.not_mirror); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
-  buffer += escapeExpression(stack1)
-    + ">Show a placeholder page when offline</option>\n            <option value='true' ";
-  if (stack1 = helpers.mirror) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = (depth0 && depth0.mirror); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "> Show a copy of the site when offline</option>\n          </select>\n        </label>\n      </div>\n    </div>\n    ";
+  var buffer = "", stack1, stack2, options;
+  buffer += "\n    <div class='row'>\n      <div class='large-4 columns'>\n        <label class='inline'>Static Mirroring</label>\n      </div>\n      <div class='large-8 columns'>\n        <label>\n          <select name='mirror'>\n            ";
+  options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data};
+  stack2 = ((stack1 = helpers.select || (depth0 && depth0.select)),stack1 ? stack1.call(depth0, (depth0 && depth0.mirror), options) : helperMissing.call(depth0, "select", (depth0 && depth0.mirror), options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n          </select>\n        </label>\n      </div>\n    </div>\n    ";
   return buffer;
+  }
+function program2(depth0,data) {
+  
+  
+  return "\n            <option value='false'>Show a placeholder page when offline</option>\n            <option value='true'>Show a copy of the site when offline</option>\n            ";
   }
 
   buffer += "<div class='add-modal modal'>\n  <h3>\n    Add a Port\n    <a href='#cancel' rel='modal:close'>Cancel</a>\n  </h3>\n  <form data-action='create'>\n    <div class='row'>\n      <div class='large-4 columns'>\n        <label class='inline connection-label'>Local URL</label>\n      </div>\n      <div class='large-8 columns'>\n        <input class='input connection-string' name='local_path' placeholder='http://localhost:8888' type='text' value='";

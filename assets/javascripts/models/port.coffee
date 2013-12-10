@@ -29,35 +29,30 @@
     setDomain: (val) ->
       @domain_ending = val
 
-    #domain_ending: ->
-    #@get 'domain_ending'
     pro_user: ->
       @get('pro_user')
 
-    mirror: ->
-      @get('mirror') && 'selected=true'
+    mirror: =>
+      @get('mirror')
 
-    not_mirror: ->
-      !@get('mirror') && 'selected=true'
-
-    isSyncing: ->
+    isSyncing: =>
       @get 'syncing'
 
-    startSync: ->
+    startSync: =>
       @set 'syncing', true
       @trigger 'sync'
 
-    stopSync: ->
+    stopSync: =>
       @set 'syncing', false
       @trigger 'sync'
 
-    subdomain: ->
+    subdomain: =>
       @get 'subdomain'
 
-    cname: ->
+    cname: =>
       @get 'cname'
 
-    hasDomain: ->
+    hasDomain: =>
       @get('cname').length > 0
 
     button_title: ->

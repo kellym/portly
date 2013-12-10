@@ -13,12 +13,12 @@
 #= require vendor/dropdown
 #= require application/core
 #= require application/dom
-#= require application/stopwatch
 #= require forms
 #= require vendor/wysihtml5
 #= require vendor/wysihtml5-foundation
 #= require vendor/highlight
 #= require vendor/handlebars.runtime-v1.1.2.js
+#= require application/helpers
 window.onunload = -> {}
 
 

@@ -5,4 +5,3 @@ window.namespace = (name, fn) ->
     @[name].namespace = window.namespace
   fn.apply this[name], []
 
-

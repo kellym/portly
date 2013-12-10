@@ -25,8 +25,10 @@
     .large-8.columns
       %label
         %select{:name => 'mirror'}
-          <option value='false' {{not_mirror}}>Show a placeholder page when offline</option>
-          <option value='true' {{mirror}}> Show a copy of the site when offline</option>
+          {{#select mirror}}
+          %option(value='false') Show a placeholder page when offline
+          %option(value='true') Show a copy of the site when offline
+          {{/select}}
   {{/if}}
   .row
     .large-12.columns.margin-top-20
