@@ -12,7 +12,7 @@ end
 
 guard :shell do
   watch(%r{^(views\/(.+(\.handlebars\.haml)))}) { |m|
-    `cp #{m[1]} assets/templates/#{m[2].gsub('/','.')}`
+    `cp #{m[1]} ./assets/templates/#{m[2].gsub('/','.')}`
   }
 
   # watch for any partials compiled and touch the files that are using them

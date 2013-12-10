@@ -30,7 +30,7 @@ function program3(depth0,data) {
   if (stack1 = helpers.ip_address) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = (depth0 && depth0.ip_address); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
   buffer += escapeExpression(stack1)
-    + "'>\n                <span>";
+    + "'>\n                <span class='title'>";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = (depth0 && depth0.name); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
   buffer += escapeExpression(stack1)
@@ -42,7 +42,7 @@ function program3(depth0,data) {
   return buffer;
   }
 
-  buffer += "<header class='offwhite margin-bottom-20'>\n  <div class='row'>\n    <div class='large-12 columns'>\n      <div class='btn-group'>\n        <a class='button dropdown-toggle' data-dropdown='#computer' href='#'>\n          <div class='valueOfButton'>\n            <span>";
+  buffer += "<header class='offwhite margin-bottom-20'>\n  <div class='row'>\n    <div class='large-12 columns'>\n      <div class='btn-group'>\n        <a class='button dropdown-toggle' data-dropdown='#computer' href='#'>\n          <div class='valueOfButton'>\n            <span class='title'>";
   if (stack1 = helpers.current_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = (depth0 && depth0.current_name); stack1 = typeof stack1 === functionType ? stack1.call(depth0, {hash:{},data:data}) : stack1; }
   buffer += escapeExpression(stack1)
