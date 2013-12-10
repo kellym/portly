@@ -70,7 +70,7 @@
         - if plan == 'unlimited'
           %a.big.button.width-80.margin-top-35.margin-bottom-0.ghost{:href => "#"} Current Plan
         - else
-          %a.big.button.width-80.margin-top-50.margin-bottom-0{:href => "#{url}?plan=upgrade"}
+          %a.big.button.width-80.margin-top-50.margin-bottom-0{:href => "#{url}?plan=unlimited"}
             - if button_text
               = button_text
             - elsif %w(free pro changelog).include? plan
