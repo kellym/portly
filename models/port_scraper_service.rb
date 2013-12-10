@@ -11,10 +11,10 @@ class PortScraperService
       @connector = Connector.find(connector)
     end
     @opts = {
-      'adjust-extension'    => nil,
+      #'adjust-extension'    => nil,
       #'no-directories'      => nil,
       'no-host-directories' => nil,
-      #'convert-links'       => nil,
+      'convert-links'       => nil,
       'page-requisites'     => nil,
       'random-wait'         => nil,
       'timestamping'        => nil,
