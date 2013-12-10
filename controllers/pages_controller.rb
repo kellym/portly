@@ -24,7 +24,7 @@ class PagesController < SharedController
           @path += "index.html"
         end
         if !File.exists?(@path)
-          @custom_404 = render :'pages/show', :layout => nil
+          @custom_404 = render :'pages/show', :layout => nil, locals: { content: nil, logo: nil }
           halt 404
         end
         #puts @path
