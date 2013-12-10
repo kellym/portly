@@ -24,7 +24,7 @@ Thread.new do
           else
             token = Token.select('tokens.id, tokens.user_id').where(:code => socket).first
           end
-          EventSource.publish_to_user(token.user_id, "#{action}", { id: token.id, args: args })
+          EventSource.publish_to_user(token.user_id, "#{action}", { id: token.id, args: args }) if token
         when 'socket_publisher'
           unpacked = MessagePack.unpack(msg)
           LOG.debug unpacked.inspect
@@ -33,7 +33,7 @@ Thread.new do
       end
     end
   rescue => error
-    LOG.error error.to_s
+    LOG.error "SOCKET_MONITOR: #{error.to_s}"
     sleep 1
     retry
   end
@@ -44,7 +44,7 @@ Thread.new do
   begin
     $stdout.sync = true
     @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
-    LOG.debug "connecting to redis again on #{@redis_port}"
+    LOG.debug "Email monitor: connecting to redis again on #{@redis_port}"
     redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
     loop do
       msg = redis.brpoplpush 'email_monitor', 'email_monitor:working', 0
@@ -57,7 +57,7 @@ Thread.new do
       redis.lrem 'email_monitor:working', -1, msg
     end
   rescue => error
-    LOG.error error.to_s
+    LOG.error "EMAIL_MONITOR: #{error.to_s}"
     sleep 1
     retry
   end
@@ -68,7 +68,7 @@ Thread.new do
   begin
     $stdout.sync = true
     @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
-    LOG.debug "connecting to redis again on #{@redis_port}"
+    LOG.debug "Queueable: connecting to redis again on #{@redis_port}"
     redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
     loop do
       msg = redis.brpoplpush 'queue_monitor', 'queue_monitor:working', 0
@@ -80,7 +80,7 @@ Thread.new do
       redis.lrem 'queue_monitor:working', -1, msg
     end
   rescue => error
-    LOG.error error.to_s
+    LOG.error "QUEUE_MONITOR: #{error.to_s}"
     sleep 1
     retry
   end
