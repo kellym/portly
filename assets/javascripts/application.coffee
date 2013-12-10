@@ -6,11 +6,11 @@
 #= require vendor/backbone
 #= require vendor/creditcard
 #= require vendor/autogrow
+#= require vendor/modal
 #= require vendor/menu
 #= require vendor/responsive-nav
-#= require vendor/pjax
 #= require vendor/tipsy
-#= require foundation/index
+#= require vendor/dropdown
 #= require application/core
 #= require application/dom
 #= require application/stopwatch
@@ -18,6 +18,9 @@
 #= require vendor/wysihtml5
 #= require vendor/wysihtml5-foundation
 #= require vendor/highlight
+#= require vendor/handlebars.runtime-v1.1.2.js
+window.onunload = -> {}
+
 
 $ ->
   signin_box = $("#signin")
@@ -42,7 +45,7 @@ $ ->
       data: el.serialize()
       dataType: 'json'
       success: (data) =>
-        el.parent().foundation('reveal', 'close')
+        $.modal.close()
         window.location.reload() if el.data('reload')
     )
   )
