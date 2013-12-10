@@ -4,14 +4,17 @@
     el: '#ports'
 
     events:
-      'click [data-action=new]'      : 'newPort'
-      'click .dropdown a'            : 'changeComputer'
-      'mousedown .inline-input'      : 'focusInlineInput'
-      'blur .inline-input input'     : 'unfocusInlineInput'
+      'click [data-action=new]'                     : 'newPort'
+      'click [data-action="remove-computer"]'       : 'removeComputerView'
+      'submit form[data-action="destroy-computer"]' : 'destroyComputer'
+      'click .dropdown a'                           : 'changeComputer'
+      'mousedown .inline-input'                     : 'focusInlineInput'
+      'blur .inline-input input'                    : 'unfocusInlineInput'
 
     actions_template:     Handlebars.templates['ports._actions']
     blank_slate_template: Handlebars.templates['ports.blank_slate']
     computers_template:   Handlebars.templates['computers._dropdown']
+    destroy_computer_template:   Handlebars.templates['computers.destroy']
 
     initialize: (args) ->
       @domain = args.domain
@@ -39,6 +42,7 @@
       if @computer
         @collection.setComputer @computer
         @token = @computer.id
+      @_computer_view = $ @computers_template(@computers)
       @_views = []
       @collection.each (model) =>
         model.setDomain @domain
@@ -84,6 +88,25 @@
 
     destroyNewView: ->
       delete @new_view if @new_view
+
+    removeComputerView: (e) ->
+      modal = $ @destroy_computer_template(@computer)
+      modal.appendTo @$el
+      modal.modal
+        onClose: ->
+          modal.remove()
+
+    destroyComputer: (e) ->
+      e.preventDefault()
+      @computer.destroy()
+      @computers.setIndex()
+      $.modal.close()
+      if @computers.length == 0
+        window.location.reload()
+      else
+        @computer = @computers.current()
+        Backbone.history.navigate @computer.dashboard_url(),
+          trigger: true
 
     removeView: (view) ->
       i = @_views.indexOf view

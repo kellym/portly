@@ -10,8 +10,10 @@ class DashboardController < SharedController
       else
         render :'ports/index'
       end
-    else
+    elsif current_user.tokens.size == 0
       render :'dashboard/new_user'
+    else
+      redirect '/dashboard'
     end
   end
 

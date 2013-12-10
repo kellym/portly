@@ -1,9 +1,6 @@
 @namespace 'Portly', ->
   class @Computer extends Backbone.Model
 
-    events:
-      "remove" : "destroyModel"
-
     url: ->
       "/api/tokens/#{@get('id')}"
 
@@ -22,3 +19,6 @@
 
     setCollection: (val) ->
       @collection = val
+
+    dashboard_url: ->
+      "/dashboard/#{@get 'id'}-#{@slug()}"

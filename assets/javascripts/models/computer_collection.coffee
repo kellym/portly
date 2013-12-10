@@ -3,6 +3,9 @@
 
     model: Portly.Computer
 
+    events:
+      'remove' : 'destroyModel'
+
     initialize: (models, opts) ->
       opts ||= {}
       @setIndex opts.index
@@ -21,5 +24,13 @@
     more_than_one: ->
       @models.length > 1
 
+    destroyModel: ->
+      @setIndex()
+
     setIndex: (val) ->
-      @index = val
+      if val
+        @index = val
+      else if @at(0)
+        @index = @at(0).get('id')
+      else
+        @index = 0
