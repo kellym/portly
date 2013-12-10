@@ -4,11 +4,13 @@
       %h2.margin-bottom-0 Choose your plan
       %h5.margin-bottom-0 Pick the plan that best suits your needs. Change plans anytime.
 - if signed_in?
-  - button_text = 'Choose this plan'
+  - button_text = nil
   - url = '/upgrade'
+  - plan = current_user.account.plan.reference
 - else
   - button_text = 'Sign Up'
   - url = '/signup'
+  - plan = ''
 .content-area
   .plans
     .row.free
@@ -21,7 +23,14 @@
           %li 15-minute sessions
           %li 1 open port
       .large-3.columns.text-center
-        %a.big.button.margin-top-35.margin-bottom-0{:href => "#{url}?plan=free"}= button_text
+        - if plan == 'free'
+          %a.big.button.width-80.margin-top-35.margin-bottom-0.ghost{:href => "#"} Current Plan
+        - else
+          %a.big.button.width-80.margin-top-35.margin-bottom-0{:href => "#{url}?plan=free"}
+            - if button_text
+              = button_text
+            - else
+              Downgrade
         .weak.big $0/month
     .row.pro
       .large-3.columns.icon
@@ -33,12 +42,21 @@
           %li Auto-reconnecting sessions
           %li Unlimited open ports
           %li SSL support
-          %li Typekit library
+          %li Site mirroring
           %li Password-protected sites
       .large-3.columns.text-center
-        %a.big.button.margin-top-50.margin-bottom-0{:href => "#{url}?plan=pro"}= button_text
+        - if plan == 'pro'
+          .big.button.width-80.margin-top-35.margin-bottom-0.ghost{:href => "#"} Current Plan
+        - else
+          %a.big.button.width-80.margin-top-50.margin-bottom-0{:href => "#{url}?plan=pro"}
+            - if button_text
+              = button_text
+            - elsif plan == 'free'
+              Upgrade
+            - else
+              Downgrade
         .weak.big $4.99/month
-    .row.elite
+    .row.unlimited
       .large-3.columns.icon
       .large-6.columns
         %h3 Unlimited
@@ -49,5 +67,14 @@
           %li Unlimited installs
           %li Raw port forwarding
       .large-3.columns.text-center
-        %a.big.button.margin-top-50.margin-bottom-0{:href => "#{url}?plan=elite"}= button_text
+        - if plan == 'unlimited'
+          %a.big.button.width-80.margin-top-35.margin-bottom-0.ghost{:href => "#"} Current Plan
+        - else
+          %a.big.button.width-80.margin-top-50.margin-bottom-0{:href => "#{url}?plan=elite"}
+            - if button_text
+              = button_text
+            - elsif %w(free pro changelog).include? plan
+              Upgrade
+            - else
+              Downgrade
         .weak.big $9.99/month
