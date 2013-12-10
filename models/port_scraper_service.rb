@@ -27,6 +27,7 @@ class PortScraperService
     }.merge opts
     if %w(friend unlimited).include? @connector.user.plan.reference
       @opts['mirror'] = nil
+      @opts['quota']  = '100m'
     end
     if @connector.has_authentication?
       user = @connector.auths.first
