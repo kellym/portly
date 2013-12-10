@@ -1,5 +1,14 @@
 class Api::TokensController < Api::BaseController
 
+  get '/*' do |token_id|
+    token = Token.where(user_id: current_user.id, id: token_id).first
+    if token
+      token.to_hash.to_json
+    else
+      halt 403
+    end
+  end
+
   get '/*/history.js' do |token_id|
     token = Token.where(:user_id => current_user.id, :id => token_id).first
     if token
