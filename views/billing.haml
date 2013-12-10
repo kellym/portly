@@ -1,9 +1,12 @@
+%header
+  .row
+    .large-12.large-centered.columns.margin-top-30.margin-bottom-30.text-center
+      %h2 Billing Information
 .row
-  .large-10.large-centered.columns
-    %h1.text-center.margin-top-50.margin-bottom-30 Billing Information
+  .large-12.large-centered.columns
     %form.stripe-form
       %input{:type => 'hidden', :name => 'plan', :value => @plan.reference}
-      %p.text-center.margin-bottom-40
+      %p.text-center.margin-bottom-20.margin-top-30
         You're almost there!
         - if current_user.account.customer?
           Verify the billing information below
@@ -13,28 +16,25 @@
         - if current_user.account.customer?
           We'll prorate the new plan until next month.
       .large-3.columns
-        .plan-box
-          %h4.negative-margin-bottom-20 Your Plan
+        .plans.billing
           - case @plan.reference
-            - when 'glazed'
-              .five
-            - when 'creme'
-              .ten
-            - when 'burger'
-              .twenty{style: 'width: 188px'}
-            - when 'changelog'
-              .changelog
+            - when 'pro'
+              .pro
+                .icon
+            - when 'unlimited'
+              .unlimited{style: 'width: 188px'}
+                .icon
             - else
               .free
+                .icon
           .text-center
-            .negative-margin-top-10.strong= @plan.name
-            .small #{@plan.tunnel_limit} open connection#{@plan.tunnel_limit == 1 ? '' : 's'}
+            .negative-margin-top-10.margin-bottom-20.strong.badge= @plan.name
             .small
               %a{href: '/plans'} Change Plan
 
       - if @plan.gratis?
         .large-9.columns
-          %h3.margin-top-60.text-center Are you sure you want to switch to the free plan?
+          %h3.margin-top-30.text-center Are you sure you want to switch to the free plan?
           %p.text-center
             Your ports will
             be limited to 15-minute sessions<br /> and you'll lose some of your
@@ -56,7 +56,8 @@
               %li
                 %label
                   %input{type: 'radio', name: 'billing_period', value: 'yearly'} &nbsp;#{number_to_currency @plan.yearly} / year
-                  .small.mute #{number_to_currency(@plan.yearly / 12)} / month
+                  .small.mute 2 months free
+                  -#{number_to_currency(@plan.yearly / 12)} / month
         .large-6.columns
           = render :'account/_card', :layout => nil, locals: { :card => current_user.account.card, billing: true }
 

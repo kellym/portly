@@ -18,8 +18,8 @@ class Token < ActiveRecord::Base
   before_create :generate_token
   before_create :generate_authorized_key
 
-  default_scope where(:deleted_at => nil)
-  scope :active, where('tokens.computer_name IS NOT NULL AND tokens.deleted_at IS NULL')
+  default_scope { where(:deleted_at => nil) }
+  scope :active, -> { where('tokens.computer_name IS NOT NULL AND tokens.deleted_at IS NULL') }
 
   # Internal: Generates an authentication token for the user to
   # access their data via the app.
@@ -48,6 +48,15 @@ class Token < ActiveRecord::Base
     Redis.current.sismember 'sockets_online', self.code
   end
   alias :connected? :online?
+
+  def to_hash
+    {
+      id: self.id,
+      name: self.computer_name,
+      ip_address: self.ip_address,
+      online: online?
+    }
+  end
 
   # Public: Returns the IP address of the currently online socket.
   def ip_address

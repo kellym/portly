@@ -21,7 +21,7 @@ module Middleware
         use Warden::Manager do |config|
           config.default_scope = :user
           config.scope_defaults :user,
-            :strategies => [:password],
+            :strategies => [:password, :cookie],
             :action     => 'unauthenticated'
           config.scope_defaults :api,
             :strategies => [:api_token, :api_password, :password],
@@ -39,12 +39,7 @@ module Middleware
           provider :github, ::App.config.github_key, ::App.config.github_secret
         end
 
-
-        # Airbrake
         if ENV['RACK_ENV'] == 'production'
-          Airbrake.configure do |config|
-            config.api_key = 'e3008a5af646469d059e3cd9f5d85ac7'
-          end
           use Airbrake::Rack
         end
 

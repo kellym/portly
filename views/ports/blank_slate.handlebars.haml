@@ -1,0 +1,12 @@
+.row
+  .large-12.columns
+    %h3.text-center.margin-top-30.margin-bottom-20 Add a Port to this Computer
+    %p.text-center
+      You can add one here, or via the app you have installed on your computer.
+      <br />
+      = link_to "Add a port", '#', class: 'button large margin-top-30', 'data-action' => 'new'
+      <br />
+      = link_to 'Download the app', '/download'
+      or
+      = link_to 'Remove this computer from my account', "#", 'data-action' => 'remove-computer'
+

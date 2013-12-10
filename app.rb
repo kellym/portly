@@ -31,6 +31,14 @@ end
 # HAML Options
 Haml::Options.defaults[:ugly] = true
 
+
+# Airbrake
+if ENV['RACK_ENV'] == 'production'
+  Airbrake.configure do |config|
+    config.api_key = App.config.airbrake_api_key
+  end
+end
+
 # Dragonfly
 DRAGONFLY = Dragonfly[:images].configure_with(:imagemagick) do |c|
   c.url_format = '/media/:job'

@@ -5,11 +5,9 @@
 
     events:
       'click .trigger'       : 'togglePane'
-      'click .close-reveal'  : 'closeReveal'
       'click a[data-delete]' : 'deletePath'
-      'click a[data-pjax]'   : 'pjaxClick'
       'mouseover .copyable'  : 'setClipboardContent'
-      'pjax:end'             : 'setupContent'
+      'update'               : 'setupContent'
       'change .masked-radios input': 'toggleRadioClass'
 
     initialize: ->
@@ -17,6 +15,9 @@
         @selectClipboard(e)
       $(document).keyup (e) =>
         @deselectClipboard(e)
+      $('.tooltipped').tipsy()
+      $('.tooltipped-top').tipsy({ gravity : 's', offset: 10})
+      $('.btn-group').dropdown()
       @setupContent()
 
     togglePane: (ev) ->
@@ -45,10 +46,6 @@
     toggleRadioClass: (ev) =>
       @setMaskedRadios $(ev.currentTarget).closest('.masked-radios')
 
-    closeReveal: (ev) ->
-      ev.preventDefault()
-      $(ev.currentTarget).closest('.reveal-modal').foundation('reveal', 'close')
-
     deletePath: (ev) ->
       ev.preventDefault()
       el = $(ev.currentTarget)
@@ -61,21 +58,13 @@
         error: (xhr, error_type, error) =>
           alert("We couldn't do that right now, sorry!")
 
-    pjaxClick: (ev) ->
-      ev.preventDefault()
-      container = $(ev.currentTarget).data('container')
-      $.pjax.click(ev,
-        container: container
-        fragment: container
-      )
-
     setupContent: (ev) ->
       $('.copyable').attr('title', "Press #{if navigator.userAgent.indexOf('Mac') is -1 then 'Ctrl' else '&#8984;'} + C to copy")
       $('.copyable').tipsy(gravity: 's', offset: 10)
 
     setClipboardContent: (ev) ->
       el = $(ev.currentTarget)
-      @clipboard = el.text()
+      @clipboard = el.data('copyable') || el.text()
 
     selectClipboard: (e) =>
       # Only do this if there's something to be put on the clipboard, and it

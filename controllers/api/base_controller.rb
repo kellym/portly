@@ -14,11 +14,17 @@ class Api
     end
 
     def current_token
+      return @token if @token
       if request[:access_token]
-        @token ||= Token.where(:user_id => current_user.id, :code => request[:access_token]).first
-      elsif request[:access_id] && env['warden'].user # this means we're signed in from the app
+        @token = Token.where(:user_id => current_user.id, :code => request[:access_token]).first
+      elsif env['warden'].user # this means we're signed in from the app
         # include both the user_id and token_id so we can't hack it
-        @token ||= Token.where(:user_id => current_user.id, :id => request[:access_id]).first
+        if request[:token_id]
+          @token = Token.where(:user_id => current_user.id, :id => request[:token_id]).first
+        else
+          port = Connector.where(:user_id => current_user.id, :id => request[:id]).first
+          @token = port.token if port
+        end
       end
     end
 
@@ -35,6 +41,17 @@ class Api
       @user = env['warden'].user || env['warden'].authenticate!(:scope => :api)
       # check that account is still active
       halt 403 unless @user.active?
+
+      request.body.rewind
+      body = request.body.read
+      if body.length > 2
+        @request_payload = JSON.parse body rescue nil
+        if @request_payload
+          @request_payload.each do |k,v|
+            request[k.to_sym] = v
+          end
+        end
+      end
     end
 
     post '/unauthenticated' do

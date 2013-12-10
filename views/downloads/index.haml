@@ -1,11 +1,17 @@
-%header.plan-header.margin-top-50.margin-bottom-0.padding-top-0.padding-bottom-60
-  %h1.source.margin-top-0 Download and Install Portly
-  %h5.margin-bottom-0 Access your sites and show them off, too.
-.content-area
-  .row
-    .large-10.large-centered.text-center.columns.large-offset-1.margin-bottom-100
-      %a.button.large{:href => '/downloads/current'} Free Download
-      %span.big.margin-left-20
-        = "(#{Version.last.version})"
+.download-page.wide
+  .vertical-center
+  .content
+    %h1.logo.centered.margin-bottom-30
+      %a{:href => '/'} Portly
+    %h3.text-center Download and Install Portly
+    %h5.text-center Access your sites and show them off, too.
+    .row
+      .large-12.large-centered.columns.text-center.margin-top-20
+        %a.button.big.pink{:href => '/downloads/current'} Free Download
+    .row
+      .large-12.large-centered.columns.text-center
+        %strong= "#{Version.last.version}"
         for Mac OS X 10.7 and up
+
+
 

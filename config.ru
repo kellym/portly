@@ -39,6 +39,7 @@ Thread.new do
   end
 end
 
+# Email Monitor
 Thread.new do
   begin
     $stdout.sync = true
@@ -54,6 +55,28 @@ Thread.new do
       puts "Sending email: #{klass}##{action} #{args.inspect}"
       klass.constantize.create(action.to_sym, *args).deliver
       redis.lrem 'email_monitor:working', -1, msg
+    end
+  rescue => error
+    LOG.error error.to_s
+    sleep 1
+    retry
+  end
+end
+
+# Queueable
+Thread.new do
+  begin
+    $stdout.sync = true
+    @redis_host, @redis_port = (ENV['REDIS_HOST']||'127.0.0.1:6379').split(':')
+    LOG.debug "connecting to redis again on #{@redis_port}"
+    redis = Redis.new(:host => @redis_host, :port => @redis_port.to_i)
+    loop do
+      msg = redis.brpoplpush 'queue_monitor', 'queue_monitor:working', 0
+      args = MessagePack.unpack(msg)
+      klass = args.shift
+      # action = args.shift
+      klass.constantize.new(*args).perform
+      redis.lrem 'queue_monitor:working', -1, msg
     end
   rescue => error
     LOG.error error.to_s

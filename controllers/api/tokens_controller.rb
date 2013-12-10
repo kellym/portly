@@ -1,5 +1,14 @@
 class Api::TokensController < Api::BaseController
 
+  get '/*' do |token_id|
+    token = Token.where(user_id: current_user.id, id: token_id).first
+    if token
+      token.to_hash.to_json
+    else
+      halt 403
+    end
+  end
+
   get '/*/history.js' do |token_id|
     token = Token.where(:user_id => current_user.id, :id => token_id).first
     if token
@@ -24,11 +33,11 @@ class Api::TokensController < Api::BaseController
     end
   end
 
-  delete '/*' do |token_code|
-    if token_code == 'current'
-      token_code = current_token.code
+  delete '/*' do |token_id|
+    if token_id == 'current'
+      token_id = current_token.id if current_token
     end
-    token = Token.where(user_id: current_user.id, code: token_code).first
+    token = Token.where(user_id: current_user.id, id: token_id).first
     if token && token.destroy
       halt 204
     else

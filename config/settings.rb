@@ -22,6 +22,7 @@ App.config = {
       host: '0.0.0.0',
       port: 8900
     },
+    airbrake_api_key: 'e3008a5af646469d059e3cd9f5d85ac7',
     stripe_secret_key: 'sk_test_yYgPRbp3ijZjGEZ0IWHHz3T9',
     stripe_publishable_key: 'pk_test_eYBXSPksy20ywx0y50AtHXKE',
     cname_domain: 'tunnel.portly.co',
@@ -36,7 +37,9 @@ App.config = {
       #enable_starttls_auto: true
     },
     assets_path: './public/assets/',
-    server_key_path: '/Users/kelly/w/portly/config/server/'
+    cache_path: './tmp/cache/ports/',
+    server_key_path: '/Users/kelly/w/portly/config/server/',
+    typekit_api_key: 'd70aef3fb1bc0cbff4378e6eaee4d338f48b37b9'
   },
   development: {
     memcache: {

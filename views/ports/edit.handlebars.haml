@@ -1,0 +1,5 @@
+.update-modal.modal
+  %h3
+    Edit Port
+    %a{:href => "#cancel", :rel => "modal:close"} Cancel
+  = render 'ports/_form', action: 'update'

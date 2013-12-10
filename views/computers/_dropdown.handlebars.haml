@@ -1,0 +1,19 @@
+%header.offwhite.margin-bottom-20
+  .row
+    .large-12.columns
+      .btn-group
+        %a.button.dropdown-toggle{'data-dropdown' => '#computer', :href => '#'}
+          .valueOfButton
+            %span {{current_name}}
+            %span.small.online-state {{current_state}}
+          {{#if more_than_one}}
+          %span.caret.small.icon-arrow-down-b
+          {{/if}}
+        .dropdown{style: 'display: none'}
+          %ul
+            {{#each models}}
+            %li
+              %a{'data-id' => "{{id}}", :title => "{{ip_address}}", :href => "{{dashboard_url}}", :class => "{{online_state}}", data: { container: '#tunnels'} }
+                %span {{name}}
+                %span.small.online-state {{online_state}}
+            {{/each}}

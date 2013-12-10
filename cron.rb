@@ -3,7 +3,11 @@
 require 'clockwork'
 require 'redis'
 require 'active_record'
+require 'typekit'
 
+require_relative 'lib/config'
+require_relative 'config/settings'
+require_relative 'lib/typekit'
 
 ROOT_PATH = File.dirname(__FILE__)
 if ENV['RACK_ENV'] == 'development'
@@ -29,6 +33,10 @@ begin
         ActiveRecord::Base.connection.execute("INSERT INTO connector_bytes (connector_id, bytes_total, bytes_in, bytes_out, created_at) VALUES('#{connector_id}', '#{bytes['in'].to_i + bytes['out'].to_i}', '#{bytes['in']}', '#{bytes['out']}', '#{Date.yesterday}')")
         Redis.current.del key
       end
+    end
+
+    every(1.day, 'import_typekit', at: '06:00') do # 1am CST
+      TypekitImport.perform
     end
 
     every(10.minutes, 'deactivate_accounts_that_exceed_bandwidth') do

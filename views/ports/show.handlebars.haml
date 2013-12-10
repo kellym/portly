@@ -1,0 +1,31 @@
+.large-4.columns
+  %span.domain.connected-state{class: "state-{{status}}"}
+    {{#if isOnline}}
+    %a.link.copyable{"data-copyable" => "{{public_url}}", href: "{{public_url}}", target: "_blank"}
+      {{domain}}
+    {{else}}
+    %span.copyable{"data-copyable" => "{{public_url}}"}
+      {{domain}}
+    {{/if}}
+.large-3.columns.hide-for-small
+  %span.local-path
+    {{local_path}}
+.large-2.columns.hide-for-small.text-right
+  {{#if isSyncing }}
+  %span.sync-status Syncing
+  {{/if}}
+.large-3.columns
+  .button-bar
+    %ul.button-group
+      %li
+        %a.wide.button.connect.tooltipped{href: "#", title: "{{connected_title}}", class: "{{status}}", 'data-action' => 'connect'}
+          %span {{button_title}}
+          %span.stopwatch.hide.tooltipped-top{title: "Time since connected"}
+            %span.time{"data-start" => "{{connected_at}}"} 00:00
+    %ul.button-group
+      %li
+        %a.tooltipped-top.button{"data-action" => "edit", title: "Edit this port"}
+          .icon-gear-b
+      %li
+        %a.tooltipped-top.button{"data-action" => "destroy", title: "Delete this port"}
+          .icon-trash-a

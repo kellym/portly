@@ -1,5 +1,6 @@
 @import ../fonts/ss-standard/ss-standard.scss
 @import ../fonts/icons.scss
+@import ../fonts/ionicons.scss
 @import bourbon/bourbon
 @import normalize
 @import foundation
@@ -9,23 +10,140 @@
 @import partials/wysihtml5
 @import partials/highlighter
 @import partials/menu
+@import partials/modal
 
 html, body
   background: $white
   color: $black
   line-height: 2
+  font-family: 'proxima nova'
+  height: 100%
 
 a
   color: $pink
   &:hover
     color: $pink3
 
+p
+  font-weight: 400
+
+h1, h2, h3, h4, h5, h6
+  color: $black2
+  font-family: 'proxima-nova'
+  font-weight: 600
+  .dark-bg &
+    color: $white
+
+h2, h3
+  line-height: 1.3
+
+h2
+  font-size: 2.2em
+
+h3
+  font-size: 1.7em
+  font-weight: 400
+
+.row
+  max-width: 65em
+
+.container
+  position: relative
+  overflow: hidden
+  width: 100%
+  min-height: 100%
+  height: auto !important
+  height: 100%
+  margin: 0 auto -14em
+
+footer
+  padding: 2em 0 0
+  .header
+    color: $pink
+  .copyright
+    background: $black2
+    color: $white
+    padding: 10px 0
+  .side-nav
+    li
+      margin-bottom: 0
+    a
+      display: inline
+      font-size: 0.9em
+      color: $black
+      &:hover
+        color: $gray3
+      small
+        font-size: inherit
+        width: 100px
+        float: left
+  &, .large-12
+    height: 14em
+    clear: both
+
+.push
+  height: 16em
+  clear: both
+
+.width-100
+  max-width: 100% !important
+
+label.inline
+  padding: 0.25em 0
+
+.minimal-column
+  width: 30%
+
+.dark-bg
+  background: $black2
+  color: $white
+
+.white-bg
+  background: $white
+  color: $black
+
+.offwhite-bg
+  background: $white2
+  color: $black
+
+.dark
+  height: 100%
+  min-height: 100%
+  @include linear-gradient(left top, #48424b, #5e5641, $fallback: $black)
+  label
+    color: $white
+  body
+    color: $white
+    height: 100%
+    min-height: 100%
+    background: none
+  h1, h2, h3, h4, h5, h6
+    color: $white
+
+small.error
+  padding: 10px 15px
+
+.smaller
+  @extend .small
+  font-size: 0.6em
+
 header#main
-  box-shadow: 1px 1px 20px #efefef
-  &.marketing-header
-    box-shadow: none
+  height: 120px
+  padding: 10px 0
+  background: $black2
+  .homepage &
+    background: none
   a
-    color: $black
+    color: $white
+
+.container > header
+  background: $white2
+
+.weak
+  color: #acacac
+
+.offwhite
+  background: $white2
 
 header#main.green, header.gray
   background: $green
@@ -33,15 +151,18 @@ header#main.green, header.gray
   a
     color: $white
 
-header.plan-header
-  margin: 40px 0
-  text-align: center
-  h1
-    font-weight: 600
-    color: $black
-    margin-bottom: 0
-  h5
-    color: $gray1
+a.action
+  color: $black2
+  &:hover
+    color: lighten($black2, 30%)
+  span
+    margin-right: 5px
+    position: relative
+    top: 1px
+
+#main-canvas
+  position: fixed
+
 .full-width.gray
   background: $gray7
 
@@ -50,93 +171,71 @@ header.plan-header
   width: 100%
   max-width: 100%
 
-.plan-box
-  @extend .pricing-box
-  width: 100%
-  float: left
-  .five, .ten, .twenty, .free, .changelog
+span.pro
+  display: inline-block
+  width: 48px
+  background: url(/images/pro-icon.png)
+  background-size: 48px 18.5px
+  height: 0
+  padding: 19px 0 0
+  overflow: hidden
+  position: relative
+  top: 1px
+
+.plans
+  .row
+    padding-top: 20px
+    border-bottom: 1px solid $gray7
     width: 100%
-    height: 175px
+    &:hover
+      background-color: lighten($pink4,20%)
+  ul
+    li
+      font-size: 0.9em
+      display: inline-block
+      padding: 0px 10px
+      margin: 0 5px 5px 0
+      border: 1px solid $black2
+      @include radius(5px)
+
+  .icon
     -webkit-filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.1))
     filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.1))
     -webkit-transform: translateZ(0)
-  .five
-    background: url(/images/plans/glazed.png) center center no-repeat
+  .free .icon
+    height: 175px
+    background: url(/images/plans/glazed.png) center 20px no-repeat
     background-size: 188px 100px
-  .ten
-    background: url(/images/plans/creme.png) center center no-repeat
+  .pro .icon
+    height: 190px
+    background: url(/images/plans/creme.png) center 30px no-repeat
     background-size: 188px 105px
-  .twenty
+  .unlimited .icon
+    height: 190px
     background: url(/images/plans/burger.png) center center no-repeat
     background-size: 188px 138px
-  .free
-    background: url(/images/plans/free.png) center center no-repeat
-    background-size: 150px 150px
-  .plan-table
-    @extend .pricing-table
-    &:hover
-      background-color: lighten($pink4,20%)
-    border: none
-    border-left: 1px solid $gray7
-    &:first-child
-      border-left: none
-    .cta-button,
-    .bullet-item
-      background: none
-    .footer
-      height: 20px
-      margin-top: 10px
-      padding-bottom: 30px
-      text-align: center
-      font-style: italic
-      color: $gray4
-      font-size: 1.2em
-    margin-bottom: 0
-    width: 33%
-    float: left
-    .cta-button
-      padding-bottom: 20px
-    .price
-      margin-top: -10px
-      padding-bottom: 0
-      background: none
-      &.gray1
-        border-top: 8px solid $gray1
-      &.gray2
-        border-top: 8px solid $gray2
-      &.gray3
-        border-top: 8px solid $gray3
-      &.gray4
-        border-top: 8px solid $gray4
-      &.gray5
-        border-top: 8px solid $gray5
-      font-family: 'source-sans-pro', sans-serif
-      font-weight: 600
-      font-size: 2em
 
 .homepage
-  font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
   .row
     &.intro
-      max-width: 72em !important
-    &.gradient
+      padding-top: 2.6em
+      height: 25em
+      @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
+        padding-top: 1em
+        height: auto
+    &.dark-bg
       max-width: 100% !important
-      @include linear-gradient(to bottom, $blue4 0%, $white 50px, $fallback: $white)
+      background: $black2
       h2
-        font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
-        margin-top: 40px
+        color: $white
     &.narrow
       max-width: 50em
-      h3
-        margin-bottom: 5px
-      p
-        font-size: 0.8em
   .bigger
     font-size: 5em !important
   .big
     font-size: 3em !important
   .box
-    background: $pink
+    background: $black2
     border: none
     @include radius(5px)
     color: $white
@@ -146,13 +245,8 @@ header.plan-header
     height: 80px
     margin: 0 auto 10px
   .panel
-    @include radius(7px)
-    @include linear-gradient(to bottom, $white 0%, $gray9 100%, $fallback: $white)
-    border: 1px solid $gray7
-    box-shadow: 0 2px 2px 0 $gray9
-    font-family: 'myriad-pro', myriad, 'helvetica neue', sans-serif
-    p
-      color: $blue2
+    background: $white2
+    border: none
 
 .box
   +clearfix
@@ -175,11 +269,66 @@ header.plan-header
 ol
   list-style-position: inside
 
+input
+  font-family: 'proxima-nova'
+
+.signin
+  .vertical-center
+    margin-top: -150px
+  .content
+    height: 300px
+.signup
+  .vertical-center
+    margin-top: -200px
+  .content
+    height: 400px
+.reset-password
+  .vertical-center
+    margin-top: -120px
+  .content
+    height: 240px
+.download-page
+  .vertical-center
+    margin-top: -150px
+  .content
+    height: 300px
+.minimal body > div.wide
+  width: 450px
+
+.minimal
+  & body > div
+    width: 280px
+    margin: 0 auto
+    height: 100%
+    min-height: 100%
+  .vertical-center
+    float: left
+    height: 50%
+  .content
+    clear: both
+  label
+    height: 2.9em
+    line-height: 2.9em
+  input
+    padding: 0 10px
+    line-height: 2.9em
+    height: 2.9em
+    @include radius(2px)
+    &.checkbox
+      padding: 0
+      line-height: auto
+      height: auto
+      @include radius(0)
+      border: 1px solid $white
 h1.logo
-  position: absolute
+  width: 141px
+  float: left
   z-index: 10
-  bottom: -5px
-  left: 40px
+  &.centered
+    float: none
+    margin: 0 auto
+    position: relative
+    left: -3px
   a
     @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
       margin: 0 auto
@@ -211,44 +360,90 @@ header.error-page
     font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
     font-size: 1.5em
 
+@media only screen and (max-width : 767px), screen and (max-device-width : 767px)
+  h3
+    font-size: 1.6em
 
 header.emphasis
-  h1
-    margin-top: 60px
-    a
-      background: url('/images/logo-big.png') no-repeat
-      background-size: 194px 211px
-      width: 194px
-      padding: 211px 0 0
-      height: 0
-      overflow: hidden
-      display: block
-      margin: 0 auto
+  h2
+    color: $white
+    font-family: 'proxima-nova'
+    font-weight: 600
+    font-size: 2.4em
   p
-    font-family: 'myriad-pro', myriad, 'helvetica neue', 'lucida grande', sans-serif
+    color: $white
+    font-family: 'proxima-nova'
     font-size: 1.3em
+    font-weight: 400
+  @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
+    h2
+      font-size: 1.8em
+    p
+      font-size: 1em
 div[id^='lptopspacer']
   height: 0
   position: absolute
   top: 0
   left: 0
 
-@media screen and (min-width: 768px)
-  .intro-background
-    background: url('/images/demo.jpg') no-repeat
-    background-size: 1300px 489px
-    background-position: center 20px
+.shadow-top
+  box-shadow: 0 -10px 15px rgba(0, 0, 0, 0.1)
+
+.homepage
+  .background
+    height: auto
+    width: 100%
+    min-width: 1015px
+    position: fixed
+    margin-top: -25px
+    top: 0
+    left: 0
+    display: none
+  .demo-top
+    height: 120px
+  @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
+    .demo-top
+      height: auto
+  .demo
+    width: 955px
+    max-width: 100%
+    overflow: hidden
+    position: relative
+    margin: -20px auto
+    display: inline-block
+    .dummy
+      margin-top: 36%
+      //height: 358px
+    @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
+      .dummy
+        margin-top: 50%
+    img
+      width: 955px
+      max-width: 100%
+      //height: 408px
+      top: 20px
+      left: 0
+      position: absolute
+
+.input, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea
+  @include radius(3px)
+  box-shadow: none
+  &:focus
+    background: $white
+    box-shadow: 0 0 2px rgba(0,0,0,0.1)
 
 .inline-input
   padding: 0 0.5em
   font-size: 0.875em
   border: 1px solid #ccc
   line-height: 20px
+  height: 2.3125em
   cursor: text
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1)
+  @include radius(3px)
+  //box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1)
   &.focus
-    box-shadow: 0 0 5px #999999
-    background: #fafafa
+    background: $white
+    box-shadow: 0 0 2px rgba(0,0,0,0.1)
     outline: none
     border-color: #999
   input
@@ -269,89 +464,16 @@ div[id^='lptopspacer']
       box-shadow: none
 
 .copyable:hover
-  background: $green3
-  color: $white
+  background: $white2
+  color: $black2
   cursor: pointer
 
-.big-block
-  border-top: 1px solid $gray6
-  padding-top: 10px
-  font-size: 0.9em
-  line-height: 1.6em
-
-.flat-link
-  margin: 10px 10px 0 0
-  @include box-sizing(border-box)
-  width: 80px
-  height: 80px
-  display: block
-  float: right
-  text-align: center
-  line-height: 80px
-  background: $pink3
-  font-size: 1.4em
-  color: $white
-  &.disabled, &.disabled:hover
-    background: $gray5
-  &:hover
-    color: $white
-    background: lighten($pink3, 5%)
 .spacer
   margin: 0 10px 0 0
   width: 0
   height: 80px
   float: right
   overflow: hidden
-.flat-box
-  margin: 10px 0 0 10px
-  @include box-sizing(border-box)
-  width: 80px
-  height: 80px
-  display: block
-  float: right
-  text-align: center
-  line-height: 80px
-  background: $green3
-  font-size: 1.4em
-  color: $white
-  font-family: 'courier-prime', courier
-  &.wide
-    width: 120px
-  &.wider
-    width: 160px
-  &.light
-    background: $green2
-  &.two-line
-    font-size: 1.2em
-    padding: 10px 0
-    line-height: 30px
-
-section.section
-  box-shadow: none
-  h3
-    @include radius(5px 5px 0 0)
-    font-size: 1.4em
-    background: $blue
-    padding: 10px 15px
-    color: $white
-    margin-bottom: 0
-  .p-desktop, .p-laptop
-    color: $yellow
-    padding-right: 10px
-  table
-    border: none
-    margin-bottom: 0
-  footer
-    //margin: 0 -0.9375em
-    padding-top: 0.9375em
-    //.button
-      background: $yellow
-      color: $black
-      @include radius(2px)
-      box-shadow: 0 0 2px $black
-      padding: 10px 15px
-      &:hover
-        background: lighten($yellow, 10)
 
 .large-icon
   font-size: 2em
@@ -359,73 +481,6 @@ section.section
   float: left
   width: 32px
   margin-right: 8px
-
-.sections
-  margin-top: -10px
-
-.summary
-  background: $gray9
-  height: 210px
-  width: 100%
-  margin-bottom: 10px
-  margin-top: -10px
-  padding: 10px
-  .traffic-history
-    color: $white
-    float: left
-    margin-top: 10px
-    margin-left: 10px
-    font-size: 0.8em
-    padding: 10px
-    text-align: center
-    background: $gray6
-    width: 291px
-  canvas, .canvas-frame
-    background: lighten($gray9, 2%)
-    height: 160px
-    width: 562px
-  .canvas-frame
-    float: left
-    margin: 10px 0
-    padding: 10px 12px 0
-    width: 587px
-    height: 170px
-  .percent-used
-    float: left
-    text-align: center
-    font-size: 0.6em
-    line-height: 30px
-    margin-top: 10px
-    margin-left: 32px
-    width: 30px
-    height: 170px
-    background: $gray7
-    position: relative
-    border-bottom: 2px solid $gray5
-    div
-      position: absolute
-      bottom: 0
-      left: 0
-      width: 100%
-      background: $gray5
-      overflow: hidden
-
-.stacked-boxes
-  .flat-box
-    width: 291px
-    margin-top: 0
-    line-height: 62px
-    height: 62px
-
-.state-online
-  background: url(/images/state_online.png) center center no-repeat
-.state-offline
-  background: url(/images/state_offline.png) center center no-repeat
-.state-disabled
-  background: url(/images/state_disabled.png) center center no-repeat !important
-span.state-online, span.state-offline, span.state-disabled
-  background-size: 22px 22px !important
-  padding: 22px 18px 22px 30px
 
 small.state-online, small.state-offline
   background-position: left center
@@ -435,22 +490,12 @@ small.state-online, small.state-offline
   top: -2px
   position: relative
 
-.trial
-  .button
-    margin-bottom: 10px
-  p
-    color: $gray4
-    font-size: 0.9em
-h2
-  color: $black
-  font-size: 2em
-  line-height: 1.3
-
 .signin-button, .signout-button
+  font-weight: 400
   @include radius(5px)
 #signin
-  margin-top: 7px
-  padding: 10px
+  margin-top: 13px
+  padding: 10px 10px 2px
   width: 250px
   max-width: 250px
   &:before
@@ -469,9 +514,6 @@ h2
     right: 25%
     left: 0
 
-h1, h2, h3, h4, h5, h6
-  font-family: "source-sans-pro", sans-serif
-  font-weight: 600
 .interior, .interior body
   background: $white
 .interior #main
@@ -516,14 +558,10 @@ h5
     display: table
     margin-bottom: 20px
 #main ul.front-page-nav
-  //margin-top: 35px
   margin-top: 30px
   margin-bottom: 30px
-  margin-right: 30px
-.homepage #main, .marketing #main
-  .row
-    max-width: 100%
-    border-bottom: 1px solid $gray9
+  margin-right: 0
+
 #main ul.interior-nav
   margin-top: 52px
 #main ul.front-page-nav, #main ul.interior-nav
@@ -532,25 +570,27 @@ h5
   font-size: 1.6em
   float: right
   a
-    font-family: 'brevia'
-    //font-family: open-sans
-    //font-size: 0.6em
+    color: $white
+    font-family: 'proxima-nova'
     font-size: 0.7em
-    text-transform: uppercase !important
     &:hover
-      color: $gray1
+      color: $white2
     &.signin-button, &.signout-button
       color: $white
       width: 150px
       text-align: center
       line-height: 0.8em
       margin-left: 20px
-      margin-top: 3px
+      margin-top: 1px
       box-shadow: none
       &:active
         box-shadow: none
         top: 0
         left: 0
+  @media only screen and (max-width : 52em), screen and (max-device-width : 52em)
+    a
+      display: block
+      width: 100%
   li
     margin-right: 30px
     float: left
@@ -558,26 +598,13 @@ h5
     height: 40px
     line-height: 40px
     text-align: center
+    &.btn-group
+      margin-right: 0
+      width: 200px
+      .button.dropdown-toggle
+        margin-top: 7px
     &.signin
       width: 140px
-
-#main ul.interior-nav
-  margin-top: 25px
-  font-size: 1.6em
-  a
-    padding: 5px 15px
-    text-transform: none
-    &.active
-      background: $green1
-      color: $white
-    &:hover
-      color: $white
-      background: lighten($green, 4%)
-
-  li
-    margin-left: 10px
-    margin-right: 0
-    width: 140px
 
 .subnav
   width: 100%
@@ -698,34 +725,6 @@ h5
       &:hover
         color: $yellow3
 
-h4
-  background: $brown1
-  color: $white
-  font-size: 0.8em
-  padding: 0 10px
-  margin: 10px 0
-  display: inline-block
-  font-family: brevia, sans-serif
-  text-transform: uppercase
-  line-height: 24px
-  position: relative
-  &:after
-    content: ' '
-    height: 0
-    position: absolute
-    width: 0
-    top: 0
-    padding: 0 0 0 0
-    border-width: 12px 12px
-    border-style: solid
-  //&:before
-    left: -20px
-    border-color: $brown1 $brown1 $brown1 transparent
-  &:after
-    right: -24px
-    //border-color: $brown1 transparent $brown1 $brown1
-    border-color: transparent transparent transparent $brown1
-
 .panel
   margin-top: 10px
   background: $gray8
@@ -744,7 +743,136 @@ h4
     padding: 0
     border-bottom: 1px dotted $gray7
     line-height: 40px
+    a
+      line-height: 20px
 
+.btn-group
+  z-index: 10
+  position: relative
+  height: 90px
+  overflow: visible
+  float: left
+  #ports &
+    margin: 5px 0
+
+  .dropdown
+    margin-top: -19px
+    overflow: hidden
+    box-shadow: 0 2px 2px rgba(0,0,0,0.2)
+    &, ul
+      position: static
+      width: 200px
+      text-align: left
+      background: $white
+      background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(30%, #ffffff), color-stop(100%, rgba(255, 255, 255, 0))), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(70%, #ffffff)) 0 100%, -webkit-gradient(radial, 50% 0, 0, 50% 0, 100, color-stop(0%, rgba(50, 49, 49, 0.2)), color-stop(100%, rgba(50, 49, 49, 0))), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, color-stop(0%, rgba(50, 49, 49, 0.2)), color-stop(100%, rgba(50, 49, 49, 0))) 0 100%
+      background: -webkit-linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), -webkit-linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, -webkit-radial-gradient(50% 0, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)), -webkit-radial-gradient(50% 100%, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)) 0 100%
+      background: -moz-linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), -moz-linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, -moz-radial-gradient(50% 0, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)), -moz-radial-gradient(50% 100%, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)) 0 100%
+      background: -o-linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), -o-linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, -o-radial-gradient(50% 0, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)), -o-radial-gradient(50% 100%, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)) 0 100%
+      background: linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, radial-gradient(50% 0, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)), radial-gradient(50% 100%, farthest-side, rgba(50, 49, 49, 0.2), rgba(50, 49, 49, 0)) 0 100%
+      -webkit-background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px
+      -moz-background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px
+      -o-background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px
+      background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px
+      -webkit-border-radius: 0px 0px 5px 5px
+      -moz-border-radius: 0px 0px 5px 5px
+      -ms-border-radius: 0px 0px 5px 5px
+      -o-border-radius: 0px 0px 5px 5px
+      border-radius: 0px 0px 5px 5px
+      background-attachment: local, local, scroll, scroll
+      background-color: white
+      background-repeat: no-repeat
+      -webkit-background-clip: padding-box
+      -moz-background-clip:    padding
+      background-clip:         padding-box
+      @include radius(5px)
+      background-color: $white
+      background-repeat: no-repeat
+      max-height: 200px
+    ul
+      list-style-type: none
+      top: 0
+      overflow-x: hidden
+      overflow-y: scroll
+      .small
+        font-size: 0.5em
+        float: right
+        margin-right: 10px
+        line-height: 25px
+      li a
+        display: block
+        width: 100%
+        color: $black2
+        padding: 5px 15px
+      li.selected
+        background: $black2
+        a
+          color: $white
+      li:first-child
+        padding-top: 7px
+
+  #main ul.front-page-nav &
+    a
+      display: block
+      font-size: 0.5em
+      font-weight: 400
+      line-height: auto
+    li
+      text-align: left
+      width: 100%
+      height: auto
+      line-height: 25px
+      &.selected
+        background: $white
+      &:first-child
+        padding-top: 6px
+      a
+        color: $black2
+        background: $white2
+        &:hover
+          background: $white
+    .button
+      text-align: left
+    .dropdown
+      box-shadow: 0 2px 2px rgba(0,0,0,0.2)
+
+  .button
+    &.dropdown-toggle
+      margin: 15px 0 0
+      width: 200px
+      height: 60px
+      padding: 10px
+      border-radius: 5px
+      background: $white2
+      border: 1px solid lighten($black2, 50%)
+      font-weight: 600
+      font-size: 1.4em
+      color: $black2
+      #main ul.front-page-nav &
+        width: 200px
+        height: 32px
+        font-size: 0.5em
+        font-weight: 400
+        background: $black4
+        span.title
+          overflow: hidden
+          float: left
+          width: 160px
+    .caret
+      margin-top: -5px
+      margin-right: -3px
+      float: right
+    .valueOfButton span
+      float: left
+      clear: both
+      &.small
+        font-size: 0.7em
+
+  .valueOfButton
+    display: block
+    float: left
+
+  .online-state
+    text-transform: uppercase
 
 .headline
   font-weight: 900
@@ -833,25 +961,79 @@ select
     //color: $black2
     font-family: 'courier-prime', courier
     line-height: 0.9
-.button
-  border: none
-  background: $pink
-  //box-shadow: 1px 1px 0 0 #c43f28
+
+.badge
+  background: $black2
+  @include radius(5px)
+  padding: 0px 25px
   color: $white
-  &:active
-    //position: relative
-    //top: 1px
-    //left: 1px
-    //box-shadow: none
+  display: inline-block
+
+.button-bar
+  .button-group
+    float: right
+    margin-right: 0
+    margin-left: 0.625em
+    & > li
+      @include button-group-style($radius: 2px)
+    .button, button
+      &, &:hover
+        @include radius(0)
+        border: 1px solid $gray6
+        background: $white2
+        color: $black2
+        padding: 8px 12px
+        margin-bottom: 0
+        font-weight: 400
+      &:hover
+        background: lighten($white2, 10%)
+      &.wide
+        padding: 8px 24px
+      &.connect
+        width: 80px
+      &.disabled, &.disabled:hover, &.disabled:active
+        box-shadow: none
+        background: lighten($white2, 5%)
+        color: $gray6
+        border: 1px solid lighten($gray6, 5%)
+        opacity: 1.0
+    //border: 1px solid $black2
+
+.button, button
+  box-shadow: none
+  &.disabled, &[disabled]
+    background: $gray5
+    border: 1px solid $gray5
+    &:hover
+      background: $gray6
+      border: 1px solid $gray6
+  &.ghost, &.ghost:hover, &.ghost:active
+    cursor: default
+    background: $white2
+    border: 1px solid lighten($black2, 50%)
+    color: $black2
+
+  border: none
+  background: $black2
+  @include radius(3px)
+  box-shadow: none
+  color: $white
   &:hover
     border: none
-    background: lighten($pink, 5%)
+    background: lighten($black2, 10%)
+  &.pink
+    background: $pink
+    &:hover
+      border: none
+      background: lighten($pink, 5%)
+
   &.large
-    font-family: 'brevia'
+    font-family: 'proxima-nova'
     font-size: 1.4em
+    font-weight: 600
     padding: 0.8em 1.6em
     @include radius(5px)
-    box-shadow: 3px 3px 0 0 #c43f28
+    box-shadow: 3px 3px 3px 0 rgba(0,0,0,0.1)
     &:active
       position: relative
       top: 2px
@@ -859,28 +1041,43 @@ select
       box-shadow: 1px 1px 0 0 #c43f28
   &.connect, &.disconnect
     line-height: 1
-.section
-  margin-bottom: 100px
-  box-shadow: 0 2px 5px $black
+#ports
   .connector
-    background: $gray9
-    line-height: 110px
-    padding-bottom: 10px
-    .header
-      //border-top: 5px solid $black3
-      background: $bluegray
+    padding: 20px 0
+    border-bottom: 1px dotted $gray7
+    .sync-status
+      padding: 5px 10px
+      background: $black4
       color: $white
-      line-height: 40px
-      font-size: 0.8em
-      a
-        padding-bottom: 2px
-        line-height: 38px
-        color: $white
-        border-bottom: 1px dotted $white
+      text-transform: uppercase
+      font-size: 0.7em
+      font-weight: 200
+      @include radius(3px)
     .domain
+      padding-left: 30px
       cursor: pointer
-    &:nth-child(even)
-      background: $gray10
+      position: relative
+      &:before
+        cursor: default
+        display: block
+        top: -1px
+        left: 0
+        position: absolute
+        content: ''
+        width: 20px
+        height: 20px
+        overflow: hidden
+        background: $gray7
+        @include radius(10px)
+      &.state-online:before
+        background: $green
+      &.state-offline:before
+        background: $red
+      &.state-disabled:before
+        background: $gray7 !important
+      a
+        color: $black2
+        border-bottom: 1px dotted $black2
     @media only screen and ( max-width : 767px )
       .state-online, .state-offline, .state-disabled
         margin-left: 5px
@@ -904,77 +1101,13 @@ select
           display: none
       .hide-for-tiny
         display: none
-      //.tiny-row
-        width: 100%
-        &.short
-          line-height: 50px
-          margin-bottom: 20px
-          .small-6
-            width: 100%
-            text-align: center
-            .button
-              width: 80%
 
-.reveal-modal h2
-  font-size: 1.4em
-  font-family: 'brevia', sans-serif
-  text-transform: uppercase
-  margin-bottom: 20px
-
-.reveal-modal.add-modal, .reveal-modal.update-modal
-  width: 50%
-  margin-left: -25%
-  box-shadow: 2px 2px 5px rgba(0,0,0,.2)
-  @media only screen and (max-width : 767px), screen and (max-device-width : 767px)
-    width: 90%
-    margin-left: -45%
-    h2
-      font-size: 1.4em
-
-.reveal-modal-bg
-  background: rgba(0,0,0,0.25)
-
-footer
-  @include linear-gradient(to bottom, lighten($blue4, 10%), $white 100%, $fallback: $blue2)
-  border-top: 1px solid $gray9
-  margin-top: 50px
-  padding: 30px 0 0
+.marketing .content
   .row
-    max-width: 52em
-  .header
-    color: $pink
-  .copyright
-    margin-top: 30px
-    background: $gray2
-    color: $white
-    padding: 10px 0
-  .side-nav
-    li
-      margin-bottom: 0
-    a
-      font-size: 0.9em
-      color: $black
-      &:hover
-        color: $gray3
-      small
-        font-size: inherit
-        width: 100px
-        float: left
+    max-width: 50em
 
-button
-  box-shadow: none
-  background: $pink
-  border: 1px solid $pink2
-  &:hover
-    background: lighten($pink, 5%)
-    border: 1px solid $pink3
-  &.disabled, &[disabled]
-    background: $gray5
-    border: 1px solid $gray5
-    &:hover
-      background: $gray6
-      border: 1px solid $gray6
-
+aside
+  padding: 10px 15px
 
 ul.wysihtml5-toolbar
   font-size: 0.8em
@@ -1017,7 +1150,7 @@ ul.wysihtml5-toolbar
     input, .custom
       display: none
     &:not(.selected):hover
-      border-color: $blue2
+      border-color: $black2
     &.selected
       background: rgba(black, .02)
       .avatar
@@ -1040,7 +1173,7 @@ ul.wysihtml5-toolbar
     label
       border-radius: 5px
       border: 1px solid $gray7
-      font-size: 13px
+      font-size: 15px
       height: 150px
       line-height: 1.2em
       margin: 0px
@@ -1076,20 +1209,19 @@ ul.wysihtml5-toolbar
       margin-bottom: 10px
     h3
       margin-top: 10px
-      font-family: 'source-sans-pro', sans-serif
       font-weight: 600
       font-size: 2em
     label
       border-radius: 5px
       border: 3px solid $gray7
-      font-size: 13px
+      font-size: 15px
       line-height: 1.2em
       margin: 0px
       padding: 10px
       text-align: center
-      opacity: .5
+      opacity: .8
       &.selected
-        border: 3px solid $blue
+        border: 3px solid $black2
         background: white
         opacity: 1
       .image

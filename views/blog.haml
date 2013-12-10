@@ -1,7 +1,10 @@
 - if @index
-  .row.full-width
-    .box.without-sides
-      %h1.margin-top-30.margin-bottom-50.text-center Recently at Portly
-.row
-  .large-9.large-centered.columns.margin-top-50
-    = @file.join ''
+  %header
+    .blog
+      .row
+        .large-12.large-centered.columns
+          %h2.text-center.margin-top-30.margin-bottom-30 Recently at Portly
+.content
+  .row
+    .large-12.columns.margin-top-50.large-centered
+      = @file.join ''

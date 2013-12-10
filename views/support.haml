@@ -1,59 +1,63 @@
-.row
-  .large-10.large-centered.columns
-    %h1.text-center.margin-top-50.margin-bottom-30 Tricks, Tips, and Help
-    %p
-      Portly is pretty new, so don't be surprised if you discover a glitch or
-      find that something is still a bit underdocumented.  We're in bootstrap
-      mode, which puts you in a good spot to give us your feedback.
-    %p
-      Take a look through some of our tricks and tips below, and if something
-      else is still on your mind, feel free to shoot us an email at
-      = succeed '.' do
-        %a{href: 'mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#064;&#103;&#101;&#116;&#112;&#111;&#114;&#116;&#108;&#121;&#046;&#099;&#111;&#109;'} &#115;&#117;&#112;&#112;&#111;&#114;&#116;&#064;&#103;&#101;&#116;&#112;&#111;&#114;&#116;&#108;&#121;&#046;&#099;&#111;&#109;
-.row
-  .large-10.large-centered.columns.large-offset-1.margin-bottom-30
-    %h2 Use your own domain name
-    %p
-      Portly gives you a subdomain to host all your sites, but if you're feeling adventurous, you can
-      use your own domain name by entering it into the "Personal Domain" field when adding a tunnel.
-      All you need to do at that point is set up a CNAME record at your DNS provider with the address
-      "tunnel.portly.co". As soon as that information is propogated, you'll be able to access your site.
-    %p
-      Please note, though, that custom domains are currently only available by HTTP.  Since SSL certificates
-      are tied to a domain name, we can't provide one for your personal domain.  We're looking at adding
-      support to upload your own certificates, though.  If this is something that interests you, send us
-      an email.
-.row
-  .large-10.large-centered.columns.large-offset-1.margin-bottom-30
-    %h2 Use a wildcard to integrate with Pow
-    %p
-      Just because you have a limited number of connections available to you doesn't mean we
-      want to limit the number of sites you can host.  Every connection takes resources to handle
-      delegation and monitoring, but we're totally fine with you beating the system and taking
-      on the responsibility of handling the delegation side of it.  Take a look at
-      %a{href: 'http://pow.cx/'} Pow
-      if you aren't already using it.
-    %p
-      The setup is pretty easy on both sides. On the Portly side, just create a new tunnel with the
-      subdomain path of <code>*</code>. On the Pow side, edit <strong>~/.powconfig</strong> and add an
-      additional domain to your <strong>POW_DOMAINS</strong> variable in your
-      settings:
-    %pre
-      %code
-        export POW_DOMAINS=dev,your_subdomain.portly.co
-    %p
-      You'll have to reinstall a slightly modified version of Pow after that to handle dashes for subdomains, but it's a one-liner and you'll be able to set up
-      and endless number of sites at <strong>whatever-your_subdomain.portly.co</strong>.
-    %pre
-      %code
-        curl portly.co/pow | sh
+%header.margin-bottom-30
+  .row
+    .large-12.columns
+      %h2.margin-top-30.margin-bottom-30.text-center Tricks, Tips, and Help
+.content
+  .row
+    .large-12.columns
+      %p
+        Portly is pretty new, so don't be surprised if you discover a glitch or
+        find that something is still a bit underdocumented.  We're in bootstrap
+        mode, which puts you in a good spot to give us your feedback.
+      %p
+        Take a look through some of our tricks and tips below, and if something
+        else is still on your mind, feel free to shoot us an email at
+        = succeed '.' do
+          %a{href: 'mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#064;&#103;&#101;&#116;&#112;&#111;&#114;&#116;&#108;&#121;&#046;&#099;&#111;&#109;'} &#115;&#117;&#112;&#112;&#111;&#114;&#116;&#064;&#103;&#101;&#116;&#112;&#111;&#114;&#116;&#108;&#121;&#046;&#099;&#111;&#109;
+  .row
+    .large-12.columns.margin-bottom-30
+      %h2 Use your own domain name
+      %p
+        Portly gives you a subdomain to host all your sites, but if you're feeling adventurous, you can
+        use your own domain name by entering it into the "Personal Domain" field when adding a tunnel.
+        All you need to do at that point is set up a CNAME record at your DNS provider with the address
+        "tunnel.portly.co". As soon as that information is propogated, you'll be able to access your site.
+      %p
+        Please note, though, that custom domains are currently only available by HTTP.  Since SSL certificates
+        are tied to a domain name, we can't provide one for your personal domain.  We're looking at adding
+        support to upload your own certificates, though.  If this is something that interests you, send us
+        an email.
+  .row
+    .large-12.columns.margin-bottom-30
+      %h2 Use a wildcard to integrate with Pow
+      %p
+        Just because you have a limited number of connections available to you doesn't mean we
+        want to limit the number of sites you can host.  Every connection takes resources to handle
+        delegation and monitoring, but we're totally fine with you beating the system and taking
+        on the responsibility of handling the delegation side of it.  Take a look at
+        %a{href: 'http://pow.cx/'} Pow
+        if you aren't already using it.
+      %p
+        The setup is pretty easy on both sides. On the Portly side, just create a new tunnel with the
+        subdomain path of <code>*</code>. On the Pow side, edit <strong>~/.powconfig</strong> and add an
+        additional domain to your <strong>POW_DOMAINS</strong> variable in your
+        settings:
+      %pre
+        %code
+          export POW_DOMAINS=dev,your_subdomain.portly.co
+      %p
+        You'll have to reinstall a slightly modified version of Pow after that to handle dashes for subdomains, but it's a one-liner and you'll be able to set up
+        and endless number of sites at <strong>whatever-your_subdomain.portly.co</strong>.
+      %pre
+        %code
+          curl portly.co/pow | sh
 
-.row
-  .large-10.large-centered.columns.large-offset-1.margin-bottom-30
-    %h2 Super-fast login
-    %p
-      If you use a password-remembering tool like LastPass or 1Password
-      that auto-populates the email and password fields in the
-      sign-in popup, there's a faster way to login.
-    %p
-      Double-click the "Sign In" button when it's pre-populated and you'll automatically sign in.
+  .row
+    .large-12.columns.margin-bottom-30
+      %h2 Super-fast login
+      %p
+        If you use a password-remembering tool like LastPass or 1Password
+        that auto-populates the email and password fields in the
+        sign-in popup, there's a faster way to login.
+      %p
+        Double-click the "Sign In" button when it's pre-populated and you'll automatically sign in.
