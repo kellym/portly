@@ -47,7 +47,7 @@ class ApplicationController < SharedController
         session[:plan] = request[:plan]
         redirect '/billing', 302
       else
-        redirect '/', 302
+        redirect '/dashboard', 302
       end
     else
       @error = 'The email or password you provided is incorrect.'
