@@ -28,10 +28,10 @@
           .large-6.columns Next Billing Date
           .large-6.columns.text-right.strong= current_user.schedule.good_until.strftime("%B %e, %Y")
         .row
-          .large-6.columns
+          .large-8.columns
             Portly #{current_user.account.plan.name}
             %a.margin-left-10.small{:href => '/plans'} Change Plan
-          .large-6.columns.strong.text-right $#{sprintf('%.02f', current_user.schedule.plan.send(current_user.account.billing_period.to_sym))}
+          .large-4.columns.strong.text-right $#{sprintf('%.02f', current_user.schedule.plan.send(current_user.account.billing_period.to_sym))}
       -#.row
         .large-12.columns
           .panel.callout.radius
