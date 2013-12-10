@@ -155,6 +155,10 @@ class ApplicationController < SharedController
     end
   end
 
+  get '/wordpress-support' do
+    redirect 'http://wordpress.org/plugins/portly-router/', 301
+  end
+
   get '/support' do
     render :support, :layout => user_layout
   end
@@ -193,11 +197,12 @@ class ApplicationController < SharedController
   end
 
   get '/upgrade' do
+    request[:plan] ||= 'pro'
     if signed_in?
-      session[:plan] = request[:plan] || 'pro'
+      session[:plan] = request[:plan]
       redirect '/billing', 302
     else
-      redirect "/signup?plan=#{request[:plan] || 'pro'}", 302
+      redirect "/signin?plan=#{request[:plan]}", 302
     end
   end
 
