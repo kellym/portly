@@ -3,6 +3,7 @@ class SharedController < Scorched::Controller
   config[:show_http_error_pages] = false
   render_defaults << { :engine => :haml, :layout => :'layouts/application' }
 
+  include Middleware
   include ViewHelpers
 
   def current_user
@@ -13,8 +14,30 @@ class SharedController < Scorched::Controller
     !!env['warden'].user
   end
 
+  def authenticate_user!
+    env['warden'].authenticate! unless env['warden'].authenticated?
+  end
+
+  def api_request?
+    request[:client_id] || request[:access_token]
+  end
+
+  def nginx_request?
+    env['nginx_request']
+  end
+
+  before do
+    env['warden'].authenticate unless env['warden'].authenticated?
+  end
+
+
+
   def media_type
     @media_type ||= MediaType.new(env['HTTP_ACCEPT'])
+  end
+
+  def media_type=(val)
+    @media_type = val
   end
 
   # Flash session storage helper.
@@ -40,11 +63,11 @@ class SharedController < Scorched::Controller
   end
 
   after status: 404 do
-    response.body = render :'errors/show'
+    response.body = render :'errors/show', layout: :'layouts/marketing'
   end
 
   after status: 500 do
-    response.body = render :'errors/show'
+    response.body = render :'errors/show', layout: :'layouts/marketing'
   end
 
 end

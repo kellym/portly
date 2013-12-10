@@ -7,27 +7,9 @@ SOCKETS = Hash.new {|h, k| h[k] = [] }
 
 class ApplicationController < SharedController
 
-  include Middleware
-
-  def authenticate_user!
-    env['warden'].authenticate! unless env['warden'].authenticated?
-  end
-
-  def api_request?
-    request[:client_id] || request[:access_token]
-  end
-
-  def nginx_request?
-    env['nginx_request']
-  end
-
-  before do
-    env['warden'].authenticate unless env['warden'].authenticated?
-  end
-
   get '/signin' do
     if signed_in?
-      redirect '/'
+      redirect '/dashboard'
     else
       @remember_me = cookie(:'user.remember.token') ? true : false
       @user = {}
@@ -61,7 +43,7 @@ class ApplicationController < SharedController
       if request[:user]['remember_me']
         cookie :'user.remember.token', value: current_user.generate_remember_token!, expires: 2.weeks.from_now
       end
-      if request[:plan]
+      if request[:plan] && request[:plan] != ''
         session[:plan] = request[:plan]
         redirect '/billing', 302
       else
@@ -75,16 +57,20 @@ class ApplicationController < SharedController
   end
 
   get '/signup' do
-    @user = {}
-    if request[:plan]
-      @plan = Plan.where(reference: request[:plan], invite_required: false).first
-    elsif session[:invite_id]
-      invite = Invite.includes(:affiliate => :plan).find(session[:invite_id])
-      @plan = invite.affiliate.plan if invite
-    end
-    #@plan ||= Plan.free
+    if signed_in?
+      redirect '/dashboard'
+    else
+      @user = {}
+      if request[:plan]
+        @plan = Plan.where(reference: request[:plan], invite_required: false).first
+      elsif session[:invite_id]
+        invite = Invite.includes(:affiliate => :plan).find(session[:invite_id])
+        @plan = invite.affiliate.plan if invite
+      end
+      #@plan ||= Plan.free
 
-    render :signup, :layout => :'layouts/minimal'
+      render :signup, :layout => :'layouts/minimal'
+    end
   end
 
   post '/signup' do
@@ -99,7 +85,7 @@ class ApplicationController < SharedController
       session.delete :invite_id if session[:invite_id]
       env['warden'].set_user @user, :event => :authentication
       session[:new_user] = true
-      if free_plan_chosen
+      if @user.plan.free?
         redirect '/tunnels', 302
       elsif @user.plan.id != free_id
         redirect '/billing', 302
@@ -202,12 +188,8 @@ class ApplicationController < SharedController
 
   # Public: The homepage for the site.
   get '/' do
-    if signed_in?
-      redirect '/tunnels'
-    else
-      @html_class = 'homepage'
-      render :homepage, :layout => nil
-    end
+    @html_class = 'homepage'
+    render :homepage, :layout => nil
   end
 
   get '/upgrade' do
@@ -221,11 +203,15 @@ class ApplicationController < SharedController
 
   get '/download' do
     @show_logo = true
-    render :'downloads/index', :layout => signed_in? ? :'layouts/application' : :'layouts/marketing'
+    render :'downloads/index', :layout => :'layouts/minimal'
   end
 
   get '/pricing' do
     redirect '/plans', 301
+  end
+
+  get '/tunnels' do
+    redirect '/dashboard', 301
   end
 
   get '/plans' do
@@ -238,23 +224,7 @@ class ApplicationController < SharedController
     render :about, :layout => :'layouts/marketing'
   end
 
-  get '/tunnels' do
-    authenticate_user!
-    @computers = current_user.tokens.active.sort_by { |t| t.online? ? 0 : 1 }
-    render :'tunnels/index'
-  end
-
-  get '/tunnels/*' do |token_id|
-    authenticate_user!
-    @token = Token.where(id: token_id, user_id: current_user.id)
-    halt 404 unless @token
-    @computers = current_user.tokens.active.sort_by { |t| (t.id == token_id.to_i) ? 0 : (t.online? ? 1 : 2) }
-    @pjax = env['HTTP_X_PJAX']
-    #puts env.inspect
-    render :'tunnels/index', layout: (@pjax ? false : :'layouts/application')
-  end
-
-  get '/subscribe/tunnels' do |channel|
+  get '/subscribe/ports' do |channel|
     authenticate_user!
     body = EventSource.new(current_user.id)
     SOCKETS[current_user.id] << body
@@ -279,7 +249,7 @@ class ApplicationController < SharedController
       if media_type.html?
         redirect '/account', 302
       else
-        ''
+        '{}'
       end
     else
       if media_type.html?
@@ -338,7 +308,7 @@ class ApplicationController < SharedController
                 current_user.connectors.update_all(socket_type: 'http', server_port: nil)
               end
               current_user.tokens.each do |token|
-                token.authorized_key.save_to_file
+                token.authorized_key.save_to_file if token.authorized_key
                 Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
                 if plan.free?
                   Redis.current.sadd 'free_plan', token
@@ -416,6 +386,7 @@ class ApplicationController < SharedController
   self << {pattern: '/auth', priority: 10, target: ::AuthController}
   self << {pattern: '/pages', priority: 10, target: ::PagesController}
   self << {pattern: '/downloads', priority: 10, target: ::DownloadsController}
+  self << {pattern: '/dashboard', priority: 10, target: ::DashboardController}
 
   get '/invites/*' do |invite_code|
     invite = Invite.where(code: invite_code, user_id: nil).first
