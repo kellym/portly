@@ -17,7 +17,6 @@ class Api::TunnelsController < Api::BaseController
                         token: current_token.code)
 
     if tunnel.save
-      PortScraperService.queue(request[:connector_id].to_i)
       response.status = 201
       unless publish_action "connect:#{request[:connector_id]}|#{tunnel.connection_string}|#{tunnel.tunnel_string}"
         tunnel.to_json
