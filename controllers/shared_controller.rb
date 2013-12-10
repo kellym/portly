@@ -31,6 +31,9 @@ class SharedController < Scorched::Controller
   end
 
 
+  def custom_404=(val)
+    @custom_404 = val
+  end
 
   def media_type
     @media_type ||= MediaType.new(env['HTTP_ACCEPT'])
