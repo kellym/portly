@@ -74,6 +74,7 @@ Thread.new do
       msg = redis.brpoplpush 'queue_monitor', 'queue_monitor:working', 0
       args = MessagePack.unpack(msg)
       klass = args.shift
+      puts "putting class: #{klass} with action."
       # action = args.shift
       klass.constantize.new(*args).perform
       redis.lrem 'queue_monitor:working', -1, msg

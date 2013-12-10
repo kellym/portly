@@ -1,6 +1,6 @@
 class PagesController < SharedController
 
-  get '/offline/**' do
+  get '/offline' do
     server_name = request.env['HTTP_HOST']
     if server_name =~ /\.portly\.co$/
       server_name.gsub!(/\-?([^\.])*\.portly\.co$/,'')
