@@ -1,0 +1,12 @@
+#ports
+
+- content_for :javascripts do
+  = javascript_include_tag 'ports'
+  :coffeescript
+    nil = 0
+    new Portly.Ports.Router
+      pro: #{current_user.plan.free? ? 'false' : 'true'}
+      domain: '-#{current_user.full_domain}'
+      collection: new Portly.PortCollection([#{@collection}])
+      computers: new Portly.ComputerCollection([#{@computers}],
+        index: #{@id})

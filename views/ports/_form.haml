@@ -1,0 +1,34 @@
+%form{'data-action' => action}
+  .row
+    .large-4.columns
+      %label.inline.connection-label Local URL
+    .large-8.columns
+      %input.input.connection-string{:name => "local_path", :placeholder => "http://localhost:8888", :type => "text", :value => "{{local_path}}"}
+  .row
+    .large-4.columns
+      %label.inline Subdomain
+    .large-8.columns
+      .inline-input
+        %input.input.subdomain{:name => "subdomain", :placeholder => "", :type => "text", :value => "{{subdomain}}"}
+          {{domain_ending}}
+      .margin-bottom-10.smaller.mute Use an asterisk (<strong>*{{domain_ending}}</strong>) to create a catch-all tunnel
+  .row
+    .large-4.columns
+      %label.inline Personal Domain
+    .large-8.columns
+      %input.input.margin-bottom-0.cname{:name => "cname", :placeholder => "", :type => "text", :value => "{{cname}}"}
+      .smaller.margin-bottom-10.mute Point your CNAME record to #{App.config.cname_domain}
+  {{#if pro_user}}
+  .row
+    .large-4.columns
+      %label.inline Static Mirroring
+    .large-8.columns
+      %label
+        %select{:name => 'mirror'}
+          <option value='false' {{not_mirror}}>Show a placeholder page when offline</option>
+          <option value='true' {{mirror}}> Show a copy of the site when offline</option>
+  {{/if}}
+  .row
+    .large-12.columns.margin-top-20
+      %button.margin-bottom-0{:type => "submit"} Save
+

@@ -1,0 +1,12 @@
+.destroy-modal.modal
+  %h3
+    Remove Port
+    %a{:href => "#cancel", :rel => "modal:close"} Cancel
+  %form{'data-action' => 'destroy'}
+    .row
+      .large-12.columns
+        Are you sure you want to remove this port?
+    .row
+      .large-12.columns.margin-top-20
+        %button.margin-bottom-0{:type => "submit"} Confirm removal
+
