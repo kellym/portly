@@ -75,6 +75,7 @@ App.config = {
       host: '72.14.178.208',
       port: 8900
     },
+    cache_path: '/var/www/portly/shared/tmp/ports/',
     mail: {
       address: 'smtp.mandrillapp.com',
       port: 587,
