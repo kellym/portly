@@ -34,7 +34,6 @@ class Api::ConnectorsController < Api::BaseController
   put '/*/auths' do |connector_id|
     authorize! connector_id
     ConnectorAuth.where(connector_id: connector_id.to_i).destroy_all
-    puts request[:auths].inspect
     auths= JSON.parse(request[:auths])
     auths['auths'].each do |auth|
       ConnectorAuth.create(connector_id: connector_id.to_i, username: auth['username'], password: auth['password'])
@@ -77,6 +76,7 @@ class Api::ConnectorsController < Api::BaseController
   # Public: Get a current connector for the user.
   get '/*' do |connector_id|
     authorize! connector_id
+    request[:id] = connector_id
     connector = connector(connector_id)
     if connector
       if media_type.html?
@@ -92,6 +92,7 @@ class Api::ConnectorsController < Api::BaseController
         if current_token.version < "1.1.2"
           c.delete(:path)
         end
+        response.headers["Cache-Control"] = "no-cache, no-store"
         c.to_json
       end
     else
@@ -109,8 +110,8 @@ class Api::ConnectorsController < Api::BaseController
   #
   # Returns a Status code of 201 on creation, or 400/409 otherwise.
   post '/' do
-    if request[:connection_string] || (request[:port] && request[:host])
-      parse_connection_string
+    if request[:local_path] || (request[:port] && request[:host])
+      parse_local_path
       data = {
         user_id: current_user.id,
         token_id: current_token.id,
@@ -149,8 +150,8 @@ class Api::ConnectorsController < Api::BaseController
   # Returns a Status code of 200 on update, or 400/401.
   put '/*' do |connector_id|
     authorize! connector_id
-    if (request[:port] && request[:host]) || request[:connection_string]
-      parse_connection_string
+    if (request[:port] && request[:host]) || request[:local_path]
+      parse_local_path
       connector = connector(connector_id)
       if connector
         data = {
@@ -161,6 +162,7 @@ class Api::ConnectorsController < Api::BaseController
           subdomain: request[:subdomain],
           cname: request[:cname]
         }
+        data[:mirror] = request[:mirror] == 'true' if request[:mirror] && current_user.can?(:mirror)
         data[:auth_type] = request[:auth_type] if request[:auth_type]
         data[:socket_type] = request[:socket_type] if request[:socket_type]
         data[:path] = request[:path] if request[:path]
@@ -182,6 +184,8 @@ class Api::ConnectorsController < Api::BaseController
   # Public: Destroy a current connector and make sure to destroy any tunnels.
   delete '/*' do |connector_id|
     authorize! connector_id
+    request[:id] = connector_id
+    current_token # load the token before the connector is destroyed
     connector = connector(connector_id.to_i)
     if connector
       connector.destroy
@@ -195,15 +199,20 @@ class Api::ConnectorsController < Api::BaseController
   # Public: Parses the connection string supplied and assigns the values to
   # :host and :request
   #
-  # Returns the host, port combo.
-  def parse_connection_string
-    if request[:connection_string]
-      if request[:connection_string].match(':')
-        request[:host], request[:port] = request[:connection_string].split(':',2)
-      elsif request[:connection_string].to_i.to_s == request[:connection_string]
-        request[:host], request[:port] = 'localhost', request[:connection_string]
+  # Returns the host, port, path combo.
+  def parse_local_path
+    if request[:local_path]
+      if request[:local_path].match('/')
+        request[:local_path], request[:path] = request[:local_path].split('/',2)
       else
-        request[:host], request[:port] = request[:connection_string].present? ? request[:connection_string] : 'localhost', 80
+        request[:path] = ''
+      end
+      if request[:local_path].match(':')
+        request[:host], request[:port] = request[:local_path].split(':',2)
+      elsif request[:local_path].to_i.to_s == request[:local_path]
+        request[:host], request[:port] = 'localhost', request[:local_path]
+      else
+        request[:host], request[:port] = request[:local_path].present? ? request[:local_path] : 'localhost', 80
       end
     end
   end
