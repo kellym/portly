@@ -12,7 +12,7 @@ class PagesController < SharedController
     end
     if connector
       if connector.mirror?
-        @path = request.env['REQUEST_URI']
+        @path = request.env['HTTP_X_URI']
         #@path.gsub!("/pages/offline", '')
         @path = "#{App.config.cache_path}#{connector.id}#{@path}"
         if File.directory?(@path)
