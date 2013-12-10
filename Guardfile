@@ -1,5 +1,3 @@
-# A sample Guardfile
-# More info at https://github.com/guard/guard#readme
 require './config/dependencies'
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 require './config/settings'
