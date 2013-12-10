@@ -8,6 +8,7 @@ end
 
 class User < ActiveRecord::Base
   extend Forwardable
+  include Ability
 
   GIGABYTE = 1073741824
 
