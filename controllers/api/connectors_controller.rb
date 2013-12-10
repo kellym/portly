@@ -84,6 +84,11 @@ class Api::ConnectorsController < Api::BaseController
     end.to_json
   end
 
+  get '/*/sync' do |connector_id|
+    PortScraperService.queue(connector_id.to_i)
+    halt 200
+  end
+
   # Public: Get a current connector for the user.
   get '/*' do |connector_id|
     authorize! connector_id

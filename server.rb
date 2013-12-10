@@ -78,7 +78,6 @@ class EventServer < EM::Connection
         redis.sadd "connectors_enabled:#{token}", connector do
           LOG.debug "-- publishing that connector #{connector} is set as #{state} at #{token}"
           redis.publish 'socket_monitor', "#{token}:state:#{connector}:on"
-          redis.lpush "queue_monitor", ['PortScraperService',connector].to_msgpack
         end
       else
         redis.srem "connectors_enabled:#{token}", connector do
