@@ -764,8 +764,8 @@ h5
       float: left
       width: 220px
     &, ul
-      position: static
       width: 250px
+      position: static
       text-align: left
       background: $white
       background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(30%, #ffffff), color-stop(100%, rgba(255, 255, 255, 0))), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(70%, #ffffff)) 0 100%, -webkit-gradient(radial, 50% 0, 0, 50% 0, 100, color-stop(0%, rgba(50, 49, 49, 0.2)), color-stop(100%, rgba(50, 49, 49, 0))), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, color-stop(0%, rgba(50, 49, 49, 0.2)), color-stop(100%, rgba(50, 49, 49, 0))) 0 100%
@@ -838,11 +838,13 @@ h5
       text-align: left
     .dropdown
       box-shadow: 0 2px 2px rgba(0,0,0,0.2)
+      &, ul
+        width: 200px
 
   .button
     &.dropdown-toggle
       margin: 15px 0 0
-      width: 200px
+      width: 250px
       height: 60px
       padding: 10px
       border-radius: 5px
@@ -852,8 +854,7 @@ h5
       font-size: 1.4em
       color: $black2
       #main ul.front-page-nav &
-        &, ul
-          width: 200px
+        width: 200px
         height: 32px
         font-size: 0.5em
         font-weight: 400
