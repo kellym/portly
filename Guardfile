@@ -18,8 +18,8 @@ guard :shell do
   }
 
   # watch for any partials compiled and touch the files that are using them
-  watch(%r{^(views\/.+\/)((\_.+)(\.haml))}) { |m|
-    `grep -l -R #{m[3]} #{m[1]} | xargs touch`
+  watch(%r{^((views\/)(.+\/\_.+))(\.haml)}) { |m|
+    `grep -l -R #{m[3]} #{m[2]} | xargs touch`
   }
 end
 
