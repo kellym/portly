@@ -44,7 +44,7 @@ class PortScraperService
         command +=" --#{action}"
       end
     end
-    command += " #{@connector.public_url.gsub(/^https\:/,'http:')}"
+    command += " #{@connector.public_url}"
     Redis.current.set("#{@connector.id}:syncing", true)
     EventSource.publish(@connector.user_id, 'sync', id: @connector.id, state: 'started')
     system command
