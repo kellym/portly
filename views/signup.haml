@@ -9,15 +9,13 @@
         .small-12.columns
           - if @plan
             .row.collapse
-              %h4.margin-bottom-0.margin-top-0 Selected Plan: #{@plan.name}
-              - unless @plan.gratis?
+              %h3.margin-bottom-0.margin-top-0 Selected Plan: #{@plan.name}
+              -# unless @plan.gratis?
                 .small.panel.small-9.margin-bottom-0
                   %h5.margin-bottom-0= "#{number_to_currency @plan.monthly}/month or #{number_to_currency @plan.yearly}/year"
                   = "#{@plan.computer_limit} computer#{@plan.computer_limit == 1 ? '' : 's'}"
                   <br />
                   = "#{@plan.tunnel_limit} simultaneously open tunnel#{@plan.tunnel_limit == 1 ? '' : 's'}"
-              .margin-bottom-20
-                %a.small{:href => '/plans'} Change Plan
               %input{type: 'hidden', name: 'user[plan_id]', value: @plan.id}
           .row.collapse
             .small-12.columns{class: error_class('email')}
