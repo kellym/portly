@@ -37,7 +37,7 @@ App.config = {
       #enable_starttls_auto: true
     },
     assets_path: './public/assets/',
-    cache_path: './tmp/cache/ports/',
+    cache_path: "/Users/kelly/w/portly/tmp/cache/ports/",
     server_key_path: '/Users/kelly/w/portly/config/server/',
     typekit_api_key: 'd70aef3fb1bc0cbff4378e6eaee4d338f48b37b9'
   },

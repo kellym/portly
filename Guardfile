@@ -1,3 +1,5 @@
+ROOT_PATH = File.dirname(__FILE__)
+
 require './config/dependencies'
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 require './config/settings'
