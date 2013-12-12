@@ -25,7 +25,7 @@ class PagesController < SharedController
         end
         @path = "#{App.config.cache_path}#{connector.id}#{@path}"
         if File.directory?(@path)
-          @path += "index.html"
+          @path = @path.sub(/(\/)+\Z/, '') + "/index.html"
         end
         if !File.exists?(@path)
           self.custom_404 = render(:'pages/show', :layout => nil, locals: { content: nil, logo: nil })
