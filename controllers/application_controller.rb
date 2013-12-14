@@ -8,7 +8,7 @@ SOCKETS = Hash.new {|h, k| h[k] = [] }
 class ApplicationController < SharedController
 
   get '/changelogsentme' do
-    invite = InviteCreationService.new.create(affiliate_id: 1)
+    invite = InviteCreationService.new.create(affiliate_id: 2)
     session[:invite_id] = invite.id
     redirect '/', 302
   end
