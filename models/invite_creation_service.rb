@@ -6,7 +6,7 @@ class InviteCreationService
 
   def create(params)
     @invite_klass.create(params).tap do |i|
-      @mailer_klass.invite i.id if i.persisted?
+      @mailer_klass.invite i.id if i.persisted? && i.email.present?
     end
   end
 end

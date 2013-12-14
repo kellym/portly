@@ -4,8 +4,8 @@ class Invite < ActiveRecord::Base
   belongs_to :affiliate
 
   validates :affiliate_id, presence: true
-  validates :email, presence: true
-  validates :email, uniqueness: { scope: :affiliate_id }
+  # validates :email, presence: true
+  validates :email, uniqueness: { scope: :affiliate_id }, allow_blank: true
 
   before_create :generate_token
   before_create :assign_plan_id

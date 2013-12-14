@@ -9,7 +9,9 @@
         .small-12.columns
           - if @plan
             .row.collapse
-              %h3.margin-bottom-0.margin-top-0 Selected Plan: #{@plan.name}
+              %h5.text-center.margin-top-0.margin-bottom-0 Selected Plan: #{@plan.name}
+              - if @special
+                %h6.text-center.margin-bottom-0.margin-top-0= @special
               -# unless @plan.gratis?
                 .small.panel.small-9.margin-bottom-0
                   %h5.margin-bottom-0= "#{number_to_currency @plan.monthly}/month or #{number_to_currency @plan.yearly}/year"
@@ -17,7 +19,7 @@
                   <br />
                   = "#{@plan.tunnel_limit} simultaneously open tunnel#{@plan.tunnel_limit == 1 ? '' : 's'}"
               %input{type: 'hidden', name: 'user[plan_id]', value: @plan.id}
-          .row.collapse
+          .row.collapse.margin-top-20
             .small-12.columns{class: error_class('email')}
               %input(type='text' name='user[email]' id='email' value="#{@user[:email]}" placeholder="Email address")
               = error_message :email

@@ -43,6 +43,15 @@ class Account < ActiveRecord::Base
     @stripe_card ||= customer.cards.retrieve(card.card_id)
   end
 
+  # Public: This returns the name of the stripe plan.
+  def stripe_plan
+    if self.plan && !self.plan.free?
+      "#{self.plan.reference}_#{self.billing_period || 'monthly'}"
+    else
+      "free"
+    end
+  end
+
   # Internal: Generates the unique account code for internal referencing.
   def generate_account_code
     self.code ||= loop do

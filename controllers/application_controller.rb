@@ -7,6 +7,12 @@ SOCKETS = Hash.new {|h, k| h[k] = [] }
 
 class ApplicationController < SharedController
 
+  get '/changelogsentme' do
+    invite = InviteCreationService.new.create(affiliate_id: 1)
+    session[:invite_id] = invite.id
+    redirect '/', 302
+  end
+
   get '/signin' do
     if signed_in?
       redirect '/dashboard'
@@ -19,7 +25,7 @@ class ApplicationController < SharedController
   end
 
   get '/signout' do
-    env['warden'].logout
+    env['warden'].logout if signed_in?
     redirect '/'
   end
 
@@ -65,7 +71,10 @@ class ApplicationController < SharedController
         @plan = Plan.where(reference: request[:plan], invite_required: false).first
       elsif session[:invite_id]
         invite = Invite.includes(:affiliate => :plan).find(session[:invite_id])
-        @plan = invite.affiliate.plan if invite
+        if invite
+          @plan = invite.affiliate.plan
+          @special = invite.affiliate.description
+        end
       end
       #@plan ||= Plan.free
 
@@ -82,10 +91,15 @@ class ApplicationController < SharedController
     request[:user]['plan_id'] ||= free_id
     @user = UserCreationService.new.create(request[:user])
     if @user.persisted?
-      session.delete :invite_id if session[:invite_id]
+      invite_free = false
+      if session[:invite_id]
+        invite = Invite.find(session[:invite_id])
+        session.delete :invite_id
+        invite_free = invite.affiliate.trial_length.to_i > 0
+      end
       env['warden'].set_user @user, :event => :authentication
       session[:new_user] = true
-      if @user.plan.free?
+      if @user.plan.free? || invite_free
         redirect '/tunnels', 302
       elsif @user.plan.id != free_id
         redirect '/billing', 302
