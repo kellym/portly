@@ -19,8 +19,11 @@ class UserCreationService
             plan: u.account.stripe_plan
           }
           subscription[:coupon] = u.invite.affiliate.coupon if u.invite.affiliate.coupon
-          subscription[:trial_end] = u.invite.affiliate.trial_length.days.from_now.to_i if u.invite.affiliate.trial_length.to_i > 0
-          puts subscription.inspect
+          trial_length = u.invite.affiliate.trial_length.to_i
+          if trial_length > 0
+            subscription[:trial_end] = trial_length.days.from_now.to_i
+            u.schedule.update_column(:good_until, trial_length.days.from_now)
+          end
           customer.update_subscription(subscription)
         end
       end

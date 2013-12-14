@@ -69,10 +69,11 @@ class ApplicationController < SharedController
       @user = {}
       if request[:plan]
         @plan = Plan.where(reference: request[:plan], invite_required: false).first
-      elsif session[:invite_id]
+      end
+      if session[:invite_id]
         invite = Invite.includes(:affiliate => :plan).find(session[:invite_id])
         if invite
-          @plan = invite.affiliate.plan
+          @plan ||= invite.affiliate.plan
           @special = invite.affiliate.description
         end
       end
