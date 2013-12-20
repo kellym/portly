@@ -34,7 +34,11 @@ class Api::ConnectorsController < Api::BaseController
   put '/*/auths' do |connector_id|
     authorize! connector_id
     ConnectorAuth.where(connector_id: connector_id.to_i).destroy_all
-    auths= JSON.parse(request[:auths])
+    if request[:auths].nil? || request[:auths] == ""
+      auths = {}
+    else
+      auths= JSON.parse(request[:auths])
+    end
     auths['auths'].each do |auth|
       ConnectorAuth.create(connector_id: connector_id.to_i, username: auth['username'], password: auth['password'])
     end
