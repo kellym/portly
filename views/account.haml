@@ -21,12 +21,13 @@
   .row.padding-top-20.padding-bottom-20
     .large-5.columns
       .table
-        .row
-          .large-6.columns Payment Frequency
-          .large-6.columns.text-right.strong= current_user.account.billing_period.titleize
-        .row
-          .large-6.columns Next Billing Date
-          .large-6.columns.text-right.strong= current_user.schedule.good_until.strftime("%B %e, %Y")
+        - unless current_user.account.plan.free?
+          .row
+            .large-6.columns Payment Frequency
+            .large-6.columns.text-right.strong= current_user.account.billing_period.titleize
+          .row
+            .large-6.columns Next Billing Date
+            .large-6.columns.text-right.strong= current_user.schedule.good_until.strftime("%B %e, %Y")
         .row
           .large-8.columns
             Portly #{current_user.account.plan.name}
