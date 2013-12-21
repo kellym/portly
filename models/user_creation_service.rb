@@ -9,10 +9,7 @@ class UserCreationService
       if u.persisted?
         @mailer_klass.signup u.id
         u.invite.mark_as_used_by(u) if u.invite
-        customer = Stripe::Customer.create(
-          :description => u.id
-        )
-        u.account.set_customer(customer)
+        create_stripe_customer(u)
         u.activate!
         if u.invite
           subscription = {
@@ -24,9 +21,16 @@ class UserCreationService
             subscription[:trial_end] = trial_length.days.from_now.to_i
             u.schedule.update_column(:good_until, trial_length.days.from_now)
           end
-          customer.update_subscription(subscription)
+          u.account.customer.update_subscription(subscription)
         end
       end
     end
+  end
+
+  def create_stripe_customer(u)
+    customer = Stripe::Customer.create(
+      :description => u.id
+    )
+    u.account.set_customer(customer)
   end
 end

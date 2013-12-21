@@ -307,6 +307,7 @@ class ApplicationController < SharedController
         plan ||= current_user.Plan.where(reference: 'free').first
         if plan.gratis?
           stripe_plan = 'free'
+          billing_period = 'monthly'
         else
           stripe_plan = "#{plan.reference}_#{billing_period}"
         end
