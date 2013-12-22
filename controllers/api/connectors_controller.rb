@@ -39,10 +39,12 @@ class Api::ConnectorsController < Api::BaseController
     else
       auths= JSON.parse(request[:auths])
     end
-    auths['auths'].each do |auth|
-      ConnectorAuth.create(connector_id: connector_id.to_i, username: auth['username'], password: auth['password'])
+    if auths['auths']
+      auths['auths'].each do |auth|
+        ConnectorAuth.create(connector_id: connector_id.to_i, username: auth['username'], password: auth['password'])
+      end
+      publish_action "auths:#{connector_id}"
     end
-    publish_action "auths:#{connector_id}"
   end
 
   # Public: Delete a user for the basic_auth of a Connector
