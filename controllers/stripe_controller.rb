@@ -14,7 +14,7 @@ class StripeController < SharedController
   def charge_succeeded
     user = User.includes(:account).where('accounts.customer_id' => @result.customer).first
     if user
-      time = Time.at(user.account.customer.subscription.current_period_end) + 1.day
+      time = Time.at(user.account.customer.subscription.current_period_end)
       user.account.update_column(:billing_period, user.account.customer.subscription.plan.interval + 'ly')
       user.schedule.update_column(:good_until, time)
     end

@@ -43,9 +43,18 @@ class Account < ActiveRecord::Base
     @stripe_card ||= customer.cards.retrieve(card.card_id)
   end
 
+  # Public: Set the billing period to one of the two correct options.
+  def billing_period=(period)
+    if %w(monthly yearly).include? period.to_s
+      super
+    else
+      super 'monthly'
+    end
+  end
+
   # Public: This returns the name of the stripe plan.
   def stripe_plan
-    if self.plan && !self.plan.free?
+    if self.plan && !self.plan.gratis?
       "#{self.plan.reference}_#{self.billing_period || 'monthly'}"
     else
       "free"
