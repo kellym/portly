@@ -124,3 +124,59 @@ namespace :versions do
   end
 
 end
+
+namespace :sitemap do
+
+  desc 'generates the sitemap'
+  task :generate do
+    require ROOT_PATH + "/config/sitemap.rb"
+    controller_path = ROOT_PATH + "/controllers/"
+    view_path = ROOT_PATH + "/views/"
+    sitemap = %Q[<?xml version="1.0" encoding="UTF-8"?>\n]
+    sitemap << %Q[<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n]
+    SITEMAP.values.each do |url|
+      if url[:lastmod]
+        if url[:lastmod].is_a? Proc
+          lastmod = url[:lastmod].call
+        elsif url[:lastmod].is_a? String
+          lastmod = url[:lastmod]
+        else
+          lastmod = url[:lastmod].to_s(:db)
+        end
+      else
+        lastmod = Time.new(2013, 3, 15)
+        if url[:controller]
+          newmod = File.mtime("#{controller_path}#{url[:controller]}_controller.rb")
+          lastmod = newmod if lastmod < newmod
+        end
+        if url[:view]
+          newmod = File.mtime("#{view_path}#{url[:view]}")
+          lastmod = newmod if lastmod < newmod
+        end
+        if url[:file]
+          newmod = File.mtime("#{ROOT_PATH}#{url[:file]}")
+          lastmod = newmod if lastmod < newmod
+        end
+        lastmod = lastmod.to_s(:db)
+      end
+      sitemap += <<URL
+  <url>
+    <loc>https://portly.co#{url[:url]}</loc>
+    <lastmod>#{lastmod}</lastmod>
+    <changefreq>#{url[:changefreq] || 'weekly'}</changefreq>
+    <priority>#{url[:priority] || 0.5}</priority>
+  </url>
+URL
+    end
+    sitemap << File.read(ROOT_PATH + "/blog/sitemap.xml")
+    sitemap << "</urlset>";
+    File.open(ROOT_PATH + "/public/sitemap.xml", "w+") do |f|
+      f.write sitemap
+    end
+    File.open(ROOT_PATH + "/public/sitemap.xml.gz", "w+") do |f|
+      gz = Zlib::GzipWriter.new(f)
+      gz.write sitemap
+      gz.close
+    end
+  end
+end
