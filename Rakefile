@@ -137,11 +137,12 @@ namespace :sitemap do
     SITEMAP.values.each do |url|
       if url[:lastmod]
         if url[:lastmod].is_a? Proc
-          lastmod = url[:lastmod].call
-        elsif url[:lastmod].is_a? String
+          url[:lastmod] = url[:lastmod].call
+        end
+        if url[:lastmod].is_a? String
           lastmod = url[:lastmod]
         else
-          lastmod = url[:lastmod].to_s(:db)
+          lastmod = url[:lastmod].iso8601
         end
       else
         lastmod = Time.new(2013, 3, 15)
@@ -157,7 +158,7 @@ namespace :sitemap do
           newmod = File.mtime("#{ROOT_PATH}#{url[:file]}")
           lastmod = newmod if lastmod < newmod
         end
-        lastmod = lastmod.to_s(:db)
+        lastmod = lastmod.iso8601
       end
       sitemap += <<URL
   <url>
