@@ -135,6 +135,7 @@ namespace :sitemap do
   end
   desc 'generates the sitemap'
   task :generate do
+    filepath = '/var/www/portly/current/'
     require ROOT_PATH + "/config/sitemap.rb"
     controller_path = ROOT_PATH + "/controllers/"
     view_path = ROOT_PATH + "/views/"
@@ -163,7 +164,7 @@ namespace :sitemap do
           lastmod = newmod if lastmod < newmod
         end
         if url[:file]
-          file = "#{ROOT_PATH}#{url[:file]}"
+          file = "#{filepath}#{url[:file]}"
           newmod = mtime file
           lastmod = newmod if lastmod < newmod
         end
