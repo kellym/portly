@@ -23,6 +23,6 @@
         .large-6.columns
           %h6.header Recent Blog Posts
           %ul.side-nav.padding-top-0
-            = File.read("./blog/home.html")
+            = File.read("./blog/home.html", File.size("./blog/home.html"))
             %li.margin-top-10
               %a{:href => '/blog'} Read more
