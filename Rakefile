@@ -135,7 +135,7 @@ namespace :sitemap do
   end
   desc 'generates the sitemap'
   task :generate do
-    filepath = '/var/www/portly/current/'
+    filepath = '/var/www/portly/shared'
     require ROOT_PATH + "/config/sitemap.rb"
     controller_path = ROOT_PATH + "/controllers/"
     view_path = ROOT_PATH + "/views/"

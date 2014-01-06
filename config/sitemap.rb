@@ -47,7 +47,7 @@ SITEMAP = {
     url: '/downloads/current',
     changefreq: 'daily',
     priority: 0.5,
-    lastmod: proc { Dir[ROOT_PATH + '/downloads'].map { |f| File.mtime(f) }.max }
+    lastmod: proc { Dir['/var/www/portly/shared/public/downloads'].map { |f| File.mtime(f) }.max }
   },
   terms: {
     url: '/terms',
