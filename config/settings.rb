@@ -62,7 +62,7 @@ App.config = {
 
   },
   production: {
-    host: 'getportly.com',
+    host: 'portly.co',
     tcp_ip: '198.58.107.26',
     forwarding_server: {
       localhost: 'localhost',
