@@ -97,6 +97,10 @@ task :'socket:restart' => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} ruby tracking_control.rb restart && #{bundle_prefix} ruby server_control.rb restart]
 end
 
+task :'sitemap:generate' => :environment do
+  queue! %[#{bundle_prefix} rake sitemap:generate]
+end
+
 task :tux => :environment do
   queue! %[cd /var/www/portly/current/ && #{bundle_prefix} tux]
 end
@@ -116,6 +120,7 @@ task :deploy => :environment do
     to :launch do
       invoke :get_release
       invoke :'db:migrate'
+      invoke :'sitemap:generate'
       invoke :'thin:restart'
       #invoke :'socket:start'
       #invoke :'data_monitor:start'

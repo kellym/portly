@@ -73,6 +73,7 @@ GEM
       dotenv (>= 0.7)
       thor (>= 0.13.6)
     formatador (0.2.4)
+    git (1.2.5)
     guard (2.2.4)
       formatador (>= 0.2.4)
       listen (~> 2.1)
@@ -248,6 +249,7 @@ DEPENDENCIES
   eventmachine
   file-tail
   foreman
+  git
   guard
   guard-haml!
   guard-handlebars

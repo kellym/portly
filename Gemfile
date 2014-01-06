@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'git'
 gem 'rack'
 gem 'rspec'
 gem 'activesupport'

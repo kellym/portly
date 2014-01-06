@@ -1,6 +1,7 @@
 require './app'
 require 'uglifier'
 require 'yui/compressor'
+require 'git'
 
 #require 'bundler/setup'
 #require 'logger'
@@ -127,6 +128,11 @@ end
 
 namespace :sitemap do
 
+  def mtime(file)
+    DateTime.strptime %x(git log -1 --format='%ci' #{file}).strip, '%Y-%m-%d %H:%M:%S %z'
+  rescue
+    File.mtime file
+  end
   desc 'generates the sitemap'
   task :generate do
     require ROOT_PATH + "/config/sitemap.rb"
@@ -147,15 +153,18 @@ namespace :sitemap do
       else
         lastmod = Time.new(2013, 3, 15)
         if url[:controller]
-          newmod = File.mtime("#{controller_path}#{url[:controller]}_controller.rb")
+          file = "#{controller_path}#{url[:controller]}_controller.rb"
+          newmod = mtime file
           lastmod = newmod if lastmod < newmod
         end
         if url[:view]
-          newmod = File.mtime("#{view_path}#{url[:view]}")
+          file = "#{view_path}#{url[:view]}"
+          newmod = mtime file
           lastmod = newmod if lastmod < newmod
         end
         if url[:file]
-          newmod = File.mtime("#{ROOT_PATH}#{url[:file]}")
+          file = "#{ROOT_PATH}#{url[:file]}"
+          newmod = mtime file
           lastmod = newmod if lastmod < newmod
         end
         lastmod = lastmod.iso8601
