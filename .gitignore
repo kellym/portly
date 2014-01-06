@@ -4,3 +4,7 @@ tmp/
 downloads/
 log/*
 *.log
+
+public/sitemap.xml
+
+public/sitemap.xml.gz
