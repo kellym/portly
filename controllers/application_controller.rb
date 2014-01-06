@@ -181,7 +181,7 @@ class ApplicationController < SharedController
   def parse_blog(page)
     filename = "./blog/#{page}"
     if File.exists?(filename)
-      @file = File.read(filename).lines
+      @file = File.read(filename, File.size(filename)).lines
       @title = @file.shift.chomp
       @meta_description = @file.shift.chomp
       @file
