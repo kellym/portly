@@ -9,7 +9,7 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
-set :domain, 'getportly.com'
+set :domain, 'portly.co'
 set :deploy_to, '/var/www/portly'
 set :repository, 'git@github.com:kellym/portly.git'
 set :branch, 'master'
