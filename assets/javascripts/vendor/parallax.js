@@ -23,6 +23,7 @@ $(function() {
   var demo_context = canvas.getContext('2d');
   var demo_top = jQuery('.demo-top').offset().top;
 
+  var splash = jQuery('#splash');
   var stripe = $('aside');
   var ticking = false;
   var lastScrollY = 0;
@@ -33,6 +34,8 @@ $(function() {
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    splash.height(window.innerHeight > 330 ? window.innerHeight : 330);
+    demo_top = jQuery('.demo-top').offset().top;
 
     updateElements(win.scrollY);
   }
@@ -48,8 +51,12 @@ $(function() {
   function updateElements () {
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    width = canvas.width > 1015 ? canvas.width : 1015;
+    width = canvas.width;
     height = width * bg.height / bg.width;
+    if (height < canvas.height) {
+      height = canvas.height;
+      width = height * bg.width / bg.height;
+    }
     performScroll();
   }
 
