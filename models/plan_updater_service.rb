@@ -46,11 +46,11 @@ class PlanUpdaterService
         # Add/remove tokens from the free_plan list.
         @user.tokens.each do |token|
           token.authorized_key.save_to_file if token.authorized_key
-          Redis.current.publish("socket:#{token}", "plan:#{plan.name.downcase}")
+          Redis.current.publish("socket:#{token.code}", "plan:#{plan.name.downcase}")
           if plan.free?
-            Redis.current.sadd 'free_plan', token
+            Redis.current.sadd 'free_plan', token.code
           else
-            Redis.current.srem 'free_plan', token
+            Redis.current.srem 'free_plan', token.code
           end
         end
         return true
